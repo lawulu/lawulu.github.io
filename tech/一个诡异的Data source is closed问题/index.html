@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+<meta name="pinterest" content="nopin">
+<meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+<meta name="generator" content="Hugo 0.17" />
+
+
+
+<link rel="canonical" href="https://lawulu.github.io/tech/%E4%B8%80%E4%B8%AA%E8%AF%A1%E5%BC%82%E7%9A%84Data%20source%20is%20closed%E9%97%AE%E9%A2%98/">
+
+
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/solarized_dark.min.css">
+    <title>一个诡异的Data source is closed问题 - 个人博客</title>
+    
+<meta name="description" content="问题由起 因为某些问题（这个问题稍后再提），将线上的DBCP版本从1.4升级到2.1，大概扫了一下官方文档，没有迁移指南，只是几个属性名称变了，感觉问题不大，直接升级。升级之后，UT一下，通过。但是上线之后一直报下面错误： &amp;gt;Cause: org.springframework.jdbc.CannotGetJdbcConnectionException: Could not get JDBC Connection; nested exception is java.sql.SQLException: Data source is closed at org.apache.ibatis.exceptions.ExceptionFactory.wrapException(ExceptionFactory.java:23) at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:107) at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:98) at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:386) &amp;hellip; 43 more问题背景  项目因为需要动态切换数据源，使用的是&#43;&#43;AbstractRoutingDataSource&#43;&#43; 需要动态切换的数据源比较多，项目初始化时候通过&#43;&#43;BeanDefinitionBuilder&#43;&#43;来根据数据库配置动态创建数据源，而报错的连接正是动态生成的的数据源。问题定位 为什么UT测试成功 原来是UT的时候，因为配置文件，测试其实走的是&#43;&#43;AbstractRoutingDataSource&#43;&#43;的默认的数据源，并没有走动态生成的数据源怀疑是参数问题或者其他原因 只设置JDBC Url，依旧报错；换成dbcp，不报错。AbstractRoutingDataSource的问题？ 使用XML配置，没有问题  至此，基本确认是&#43;&#43;DBCP2&#43;&#43;和&#43;&#43;BeanDefinitionBuilder&#43;&#43;的问题查看源码和Debug BasicDataSource DBCP1和2有什么区别？ DBCP2实现了更多的接口：public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBeanRegistration, AutoCloseable  查看DBCP2创建链接和销毁的地方 是没有Create Connection还是什么时候被Close了？ 被Close了 this.beanDefinitionMap.put(beanName, beanDefinition); if (oldBeanDefinition !">
+
+<meta property="og:title" content="一个诡异的Data source is closed问题 - 个人博客">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://lawulu.github.io/tech/%E4%B8%80%E4%B8%AA%E8%AF%A1%E5%BC%82%E7%9A%84Data%20source%20is%20closed%E9%97%AE%E9%A2%98/">
+<meta property="og:image" content="https://lawulu.github.io/images/default.png">
+<meta property="og:site_name" content="个人博客">
+<meta property="og:description" content="问题由起 因为某些问题（这个问题稍后再提），将线上的DBCP版本从1.4升级到2.1，大概扫了一下官方文档，没有迁移指南，只是几个属性名称变了，感觉问题不大，直接升级。升级之后，UT一下，通过。但是上线之后一直报下面错误： &amp;gt;Cause: org.springframework.jdbc.CannotGetJdbcConnectionException: Could not get JDBC Connection; nested exception is java.sql.SQLException: Data source is closed at org.apache.ibatis.exceptions.ExceptionFactory.wrapException(ExceptionFactory.java:23) at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:107) at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:98) at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:386) &amp;hellip; 43 more问题背景  项目因为需要动态切换数据源，使用的是&#43;&#43;AbstractRoutingDataSource&#43;&#43; 需要动态切换的数据源比较多，项目初始化时候通过&#43;&#43;BeanDefinitionBuilder&#43;&#43;来根据数据库配置动态创建数据源，而报错的连接正是动态生成的的数据源。问题定位 为什么UT测试成功 原来是UT的时候，因为配置文件，测试其实走的是&#43;&#43;AbstractRoutingDataSource&#43;&#43;的默认的数据源，并没有走动态生成的数据源怀疑是参数问题或者其他原因 只设置JDBC Url，依旧报错；换成dbcp，不报错。AbstractRoutingDataSource的问题？ 使用XML配置，没有问题  至此，基本确认是&#43;&#43;DBCP2&#43;&#43;和&#43;&#43;BeanDefinitionBuilder&#43;&#43;的问题查看源码和Debug BasicDataSource DBCP1和2有什么区别？ DBCP2实现了更多的接口：public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBeanRegistration, AutoCloseable  查看DBCP2创建链接和销毁的地方 是没有Create Connection还是什么时候被Close了？ 被Close了 this.beanDefinitionMap.put(beanName, beanDefinition); if (oldBeanDefinition !">
+<meta property="og:locale" content="ja_JP">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="个人博客">
+<meta name="twitter:url" content="https://lawulu.github.io/tech/%E4%B8%80%E4%B8%AA%E8%AF%A1%E5%BC%82%E7%9A%84Data%20source%20is%20closed%E9%97%AE%E9%A2%98/">
+<meta name="twitter:title" content="一个诡异的Data source is closed问题 - 个人博客">
+<meta name="twitter:description" content="问题由起 因为某些问题（这个问题稍后再提），将线上的DBCP版本从1.4升级到2.1，大概扫了一下官方文档，没有迁移指南，只是几个属性名称变了，感觉问题不大，直接升级。升级之后，UT一下，通过。但是上线之后一直报下面错误： &amp;gt;Cause: org.springframework.jdbc.CannotGetJdbcConnectionException: Could not get JDBC Connection; nested exception is java.sql.SQLException: Data source is closed at org.apache.ibatis.exceptions.ExceptionFactory.wrapException(ExceptionFactory.java:23) at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:107) at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:98) at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:386) &amp;hellip; 43 more问题背景  项目因为需要动态切换数据源，使用的是&#43;&#43;AbstractRoutingDataSource&#43;&#43; 需要动态切换的数据源比较多，项目初始化时候通过&#43;&#43;BeanDefinitionBuilder&#43;&#43;来根据数据库配置动态创建数据源，而报错的连接正是动态生成的的数据源。问题定位 为什么UT测试成功 原来是UT的时候，因为配置文件，测试其实走的是&#43;&#43;AbstractRoutingDataSource&#43;&#43;的默认的数据源，并没有走动态生成的数据源怀疑是参数问题或者其他原因 只设置JDBC Url，依旧报错；换成dbcp，不报错。AbstractRoutingDataSource的问题？ 使用XML配置，没有问题  至此，基本确认是&#43;&#43;DBCP2&#43;&#43;和&#43;&#43;BeanDefinitionBuilder&#43;&#43;的问题查看源码和Debug BasicDataSource DBCP1和2有什么区别？ DBCP2实现了更多的接口：public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBeanRegistration, AutoCloseable  查看DBCP2创建链接和销毁的地方 是没有Create Connection还是什么时候被Close了？ 被Close了 this.beanDefinitionMap.put(beanName, beanDefinition); if (oldBeanDefinition !">
+<meta name="twitter:image" content="https://lawulu.github.io/images/default.png">
+
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "NewsArticle",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id":"https:\/\/lawulu.github.io\/"
+    },
+    "headline": "一个诡异的Data source is closed问题 - 个人博客",
+    "image": {
+      "@type": "ImageObject",
+      "url": "https:\/\/lawulu.github.io\/images\/default.png",
+      "height": 800,
+      "width": 800
+    },
+    "datePublished": "2015-12-19T00:00:00JST",
+    "dateModified": "2015-12-19T00:00:00JST",
+    "author": {
+      "@type": "Person",
+      "name": "个人博客"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "个人博客",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https:\/\/lawulu.github.io\/images/logo.png",
+        "width": 600,
+        "height": 60
+      }
+    },
+    "description": "问题由起 因为某些问题（这个问题稍后再提），将线上的DBCP版本从1.4升级到2.1，大概扫了一下官方文档，没有迁移指南，只是几个属性名称变了，感觉问题不大，直接升级。升级之后，UT一下，通过。但是上线之后一直报下面错误： \x26gt;Cause: org.springframework.jdbc.CannotGetJdbcConnectionException: Could not get JDBC Connection; nested exception is java.sql.SQLException: Data source is closed at org.apache.ibatis.exceptions.ExceptionFactory.wrapException(ExceptionFactory.java:23) at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:107) at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:98) at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:386) \x26hellip; 43 more\n问题背景  项目因为需要动态切换数据源，使用的是\x2b\x2bAbstractRoutingDataSource\x2b\x2b 需要动态切换的数据源比较多，项目初始化时候通过\x2b\x2bBeanDefinitionBuilder\x2b\x2b来根据数据库配置动态创建数据源，而报错的连接正是动态生成的的数据源。\n问题定位 为什么UT测试成功 原来是UT的时候，因为配置文件，测试其实走的是\x2b\x2bAbstractRoutingDataSource\x2b\x2b的默认的数据源，并没有走动态生成的数据源\n怀疑是参数问题或者其他原因 只设置JDBC Url，依旧报错；换成dbcp，不报错。\nAbstractRoutingDataSource的问题？ 使用XML配置，没有问题\n  至此，基本确认是\x2b\x2bDBCP2\x2b\x2b和\x2b\x2bBeanDefinitionBuilder\x2b\x2b的问题\n查看源码和Debug BasicDataSource DBCP1和2有什么区别？ DBCP2实现了更多的接口：\npublic class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBeanRegistration, AutoCloseable  查看DBCP2创建链接和销毁的地方 是没有Create Connection还是什么时候被Close了？ 被Close了\n this.beanDefinitionMap.put(beanName, beanDefinition); if (oldBeanDefinition !"
+  }
+</script>
+
+
+    <link href="https://lawulu.github.io/css/styles.css" rel="stylesheet">
+  </head>
+
+  <body>
+    
+    
+    
+
+    <header class="l-header">
+      <nav class="navbar navbar-default">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="https://lawulu.github.io/">个人博客</a>
+          </div>
+
+          
+
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <div class="container">
+        
+<div class="row">
+  <div class="col-md-8">
+
+    <nav class="p-crumb">
+      <ol class="breadcrumb">
+        <li><a href="https://lawulu.github.io/"><i class="fa fa-home" aria-hidden="true"></i></a></li>
+        
+        <li itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb"><a href="https://lawulu.github.io/tech/" itemprop="url"><span itemprop="title">tech</span></a></li>
+        
+        <li class="active">一个诡异的Data source is closed问题</li>
+      </ol>
+    </nav>
+
+    <article class="single">
+  <header>
+    <ul class="p-facts">
+      <li><i class="fa fa-calendar" aria-hidden="true"></i><time datetime="2015-12-19T00:00:00JST">Dec 19, 2015</time></li>
+      <li><i class="fa fa-bookmark" aria-hidden="true"></i><a href="https://lawulu.github.io/tech/">tech</a></li>
+      
+    </ul>
+
+    <h1 class="title">一个诡异的Data source is closed问题</h1>
+  </header>
+
+  
+
+  <div class="article-body">
+
+<h3 id="问题由起">问题由起</h3>
+
+<p>因为某些问题（这个问题稍后再提），将线上的DBCP版本从1.4升级到2.1，大概扫了一下官方文档，没有迁移指南，只是几个属性名称变了，感觉问题不大，直接升级。升级之后，UT一下，通过。但是上线之后一直报下面错误：
+&gt;Cause: org.springframework.jdbc.CannotGetJdbcConnectionException: Could not get JDBC Connection; nested exception is java.sql.SQLException: Data source is closed
+    at org.apache.ibatis.exceptions.ExceptionFactory.wrapException(ExceptionFactory.java:23)
+    at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:107)
+    at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:98)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+    at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:386)
+    &hellip; 43 more</p>
+
+<h3 id="问题背景">问题背景</h3>
+
+<ul>
+<li>项目因为需要动态切换数据源，使用的是++AbstractRoutingDataSource++</li>
+
+<li><p>需要动态切换的数据源比较多，项目初始化时候通过++BeanDefinitionBuilder++来根据数据库配置动态创建数据源，而报错的连接正是动态生成的的数据源。</p>
+
+<h3 id="问题定位">问题定位</h3>
+
+<h4 id="为什么ut测试成功">为什么UT测试成功</h4>
+
+<p>原来是UT的时候，因为配置文件，测试其实走的是++AbstractRoutingDataSource++的默认的数据源，并没有走动态生成的数据源</p>
+
+<h4 id="怀疑是参数问题或者其他原因">怀疑是参数问题或者其他原因</h4>
+
+<p>只设置JDBC Url，依旧报错；换成dbcp，不报错。</p>
+
+<h4 id="abstractroutingdatasource的问题">AbstractRoutingDataSource的问题？</h4>
+
+<p>使用XML配置，没有问题</p></li>
+</ul>
+
+<p><strong>至此，基本确认是++DBCP2++和++BeanDefinitionBuilder++</strong>的问题</p>
+
+<h3 id="查看源码和debug">查看源码和Debug</h3>
+
+<h4 id="basicdatasource-dbcp1和2有什么区别">BasicDataSource DBCP1和2有什么区别？</h4>
+
+<p>DBCP2实现了更多的接口：</p>
+
+<pre><code>public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBeanRegistration, AutoCloseable 
+
+</code></pre>
+
+<h4 id="查看dbcp2创建链接和销毁的地方">查看DBCP2创建链接和销毁的地方</h4>
+
+<p>是没有Create Connection还是什么时候被Close了？
+被Close了</p>
+
+<pre><code>
+		this.beanDefinitionMap.put(beanName, beanDefinition);
+
+		if (oldBeanDefinition != null || containsSingleton(beanName)) {
+			resetBeanDefinition(beanName);
+		}
+		
+		
+</code></pre>
+
+<pre><code>protected void resetBeanDefinition(String beanName) {
+		// Remove the merged bean definition for the given bean, if already created.
+		clearMergedBeanDefinition(beanName);
+
+		// Remove corresponding bean from singleton cache, if any. Shouldn't usually
+		// be necessary, rather just meant for overriding a context's default beans
+		// (e.g. the default StaticMessageSource in a StaticApplicationContext).
+		destroySingleton(beanName);
+
+		// Reset all bean definitions that have the given bean as parent (recursively).
+		for (String bdName : this.beanDefinitionNames) {
+			if (!beanName.equals(bdName)) {
+				BeanDefinition bd = this.beanDefinitionMap.get(bdName);
+				if (beanName.equals(bd.getParentName())) {
+					resetBeanDefinition(bdName);
+				}
+			}
+		}
+	}
+
+</code></pre>
+
+<p>原来Spring创建Bean的时候会检查是否有oldBeanDefinition,如果有则销毁之。而DBCP2实现了AutoCloseable接口，在这里直接被Close了。</p>
+
+<h4 id="为什么有oldbeandefinition">为什么有oldBeanDefinition？</h4>
+
+<p>为了支持另一种类型的数据源，引入了一个Bug，会在Spring BeanFactory里面引入重复的定义，因为在AbstractRoutingDataSource中是正确的，所以一直没有发现这个问题。第二次会销毁上次的Bean。
+其实在DBCP1时候，也会销毁，但是因为在动态定义的时候没有定义destroy-method=&ldquo;close&rdquo;，其实会引起内存的泄露？</p>
+
+<p>结论：很多看似运行完好的软件其实都危机四伏..</p>
+</div>
+
+  <footer class="article-footer">
+    
+    
+    
+    <section class="bordered">
+      <header>
+        <div class="panel-title">CATEGORIES</div>
+      </header>
+      <div>
+        <ul class="p-terms">
+          
+          <li><a href="https://lawulu.github.io/categories/tech/">Tech</a></li>
+          
+        </ul>
+      </div>
+    </section>
+    
+    
+    
+    <section class="bordered">
+      <header>
+        <div class="panel-title">TAGS</div>
+      </header>
+      <div>
+        <ul class="p-terms">
+          
+          <li><a href="https://lawulu.github.io/tags/java/">java</a></li>
+          
+          <li><a href="https://lawulu.github.io/tags/dbcp/">Dbcp</a></li>
+          
+        </ul>
+      </div>
+    </section>
+    
+    
+  </footer>
+
+</article>
+
+
+    <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'inza9hi';
+    var disqus_identifier = 'https:\/\/lawulu.github.io\/tech\/%E4%B8%80%E4%B8%AA%E8%AF%A1%E5%BC%82%E7%9A%84Data%20source%20is%20closed%E9%97%AE%E9%A2%98\/';
+    var disqus_title = '一个诡异的Data source is closed问题';
+    var disqus_url = 'https:\/\/lawulu.github.io\/tech\/%E4%B8%80%E4%B8%AA%E8%AF%A1%E5%BC%82%E7%9A%84Data%20source%20is%20closed%E9%97%AE%E9%A2%98\/';
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+  </div>
+
+  <div class="col-md-4">
+    
+<aside class="l-sidebar">
+
+  <section class="panel panel-default">
+    <div class="panel-heading">
+      <div class="panel-title">LATESTS</div>
+    </div>
+    <div class="list-group">
+      
+      <a href="https://lawulu.github.io/tech/%E4%B8%80%E4%B8%AA%E8%AF%A1%E5%BC%82%E7%9A%84Data%20source%20is%20closed%E9%97%AE%E9%A2%98/" class="list-group-item">一个诡异的Data source is closed问题</a>
+      
+      <a href="https://lawulu.github.io/tech/%E4%B8%80%E6%AC%A1Ajax%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E8%B0%83%E8%AF%95%E8%BF%87%E7%A8%8B/" class="list-group-item">一次Ajax上传文件的调试过程</a>
+      
+    </div>
+  </section>
+
+  
+  <section class="panel panel-default">
+    <div class="panel-heading">
+      <div class="panel-title">CATEGORY</div>
+    </div>
+    <div class="list-group">
+      
+      <a href="https://lawulu.github.io/categories/tech" class="list-group-item">tech</a>
+      
+    </div>
+  </section>
+  
+  <section class="panel panel-default">
+    <div class="panel-heading">
+      <div class="panel-title">TAG</div>
+    </div>
+    <div class="list-group">
+      
+      <a href="https://lawulu.github.io/tags/chrome" class="list-group-item">chrome</a>
+      
+      <a href="https://lawulu.github.io/tags/dbcp" class="list-group-item">dbcp</a>
+      
+      <a href="https://lawulu.github.io/tags/java" class="list-group-item">java</a>
+      
+      <a href="https://lawulu.github.io/tags/js" class="list-group-item">js</a>
+      
+    </div>
+  </section>
+  
+
+</aside>
+
+
+  </div>
+</div>
+
+      </div>
+    </main>
+
+    <footer class="l-footer">
+      <div class="container">
+        <p><span class="h-logo">&copy; 个人博客</span></p>
+        <aside>
+          <p>Powered by <a href="https://gohugo.io/">Hugo</a>.</p>
+          <p><a href="https://github.com/dim0627/hugo_theme_beg">Beg</a> designed by <a href="http://yet.unresolved.xyz/">Daisuke Tsuji</a>.</p>
+        </aside>
+      </div>
+    </footer>
+
+    <script src="//code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </body>
+</html>
+

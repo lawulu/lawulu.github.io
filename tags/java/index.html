@@ -60,7 +60,7 @@
       <li><article class="li">
   <header>
     <ul class="p-facts">
-      <li><i class="fa fa-calendar" aria-hidden="true"></i><time datetime="2015-12-19T00:00:00JST">Dec 19, 2015</time></li>
+      <li><i class="fa fa-calendar" aria-hidden="true"></i><time datetime="2015-10-19T00:00:00JST">Oct 19, 2015</time></li>
       <li><i class="fa fa-bookmark" aria-hidden="true"></i><a href="https://lawulu.github.io/tech/">tech</a></li>
       
     </ul>
@@ -84,6 +84,26 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
 </article>
 </li>
       
+      <li><article class="li">
+  <header>
+    <ul class="p-facts">
+      <li><i class="fa fa-calendar" aria-hidden="true"></i><time datetime="0001-01-01T00:00:00JST">Jan 1, 0001</time></li>
+      <li><i class="fa fa-bookmark" aria-hidden="true"></i><a href="https://lawulu.github.io/tech/">tech</a></li>
+      
+    </ul>
+    <h2 class="title"><a href="https://lawulu.github.io/tech/%E4%B8%80%E7%A7%8D%E7%BB%9F%E4%B8%80%E7%9A%84API%E7%AD%BE%E5%90%8D%E6%A0%A1%E9%AA%8C%E6%96%B9%E6%B3%95/">一种统一的API签名校验实现</a></h2>
+  </header>
+
+  
+  <div class="summary">##签名方法: ####Header: @RequestHeader(value = &ldquo;x-header-timestamp&rdquo;) Long timestamp, @RequestHeader(value = &ldquo;x-header-appid&rdquo;) String appid, @RequestHeader(value = &ldquo;x-header-sign&rdquo;) String sign ####源串 orignalString: HttpMethod=URI&amp;Param1=Value1&amp;Param2=Value2RequestBodySeckeyTimestamp 注1:Method大写 注2:为方便期间Param不排序,如果出问题再说 注3:ResustBody可能为空 注4:SecKey跟AppId是一一对应. ####签名 sign: sign=Md5(orignalString).toUpperCase 暂时只支持MD5 ##实现: 原则上,应该和业务逻辑代码分离,不影响业务逻辑代码的开发 ####1 根据注解Mapping需要检查签名的方法 例如:Spring @ControllerAdvice(annotations = RestController.class) 如需要,可自定义自己的注解 ####2 获取参数 @ModelAttribute public void checkSign(HttpServletRequest request, HttpServletResponse response, @RequestBody(required=false) String requestbody, @RequestHeader(value = &ldquo;x-header-timestamp&rdquo;) Long timestamp, @RequestHeader(value = &ldquo;x-header-appid&rdquo;) String appid, @RequestHeader(value = &ldquo;x-header-sign&rdquo;) String sign) ####3 计算签名 可能需要在GLobalExceptionHandler中增加
+@ExceptionHandler(ServletRequestBindingException.class) @ResponseStatus(HttpStatus.BAD_REQUEST) @ResponseBody ErrorMessage handleServletRequestBindingException(ServletRequestBindingException ex) { LOGGER.</div>
+
+  <footer>
+    <a href="https://lawulu.github.io/tech/%E4%B8%80%E7%A7%8D%E7%BB%9F%E4%B8%80%E7%9A%84API%E7%AD%BE%E5%90%8D%E6%A0%A1%E9%AA%8C%E6%96%B9%E6%B3%95/" title="一种统一的API签名校验实现">Read More…</a>
+  </footer>
+</article>
+</li>
+      
     </ul>
 
     
@@ -100,9 +120,11 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     </div>
     <div class="list-group">
       
+      <a href="https://lawulu.github.io/tech/%E4%B8%80%E6%AC%A1Ajax%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E8%B0%83%E8%AF%95%E8%BF%87%E7%A8%8B/" class="list-group-item">一次Ajax上传文件的调试过程</a>
+      
       <a href="https://lawulu.github.io/tech/%E4%B8%80%E4%B8%AA%E8%AF%A1%E5%BC%82%E7%9A%84Data%20source%20is%20closed%E9%97%AE%E9%A2%98/" class="list-group-item">一个诡异的Data source is closed问题</a>
       
-      <a href="https://lawulu.github.io/tech/%E4%B8%80%E6%AC%A1Ajax%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E8%B0%83%E8%AF%95%E8%BF%87%E7%A8%8B/" class="list-group-item">一次Ajax上传文件的调试过程</a>
+      <a href="https://lawulu.github.io/tech/%E4%B8%80%E7%A7%8D%E7%BB%9F%E4%B8%80%E7%9A%84API%E7%AD%BE%E5%90%8D%E6%A0%A1%E9%AA%8C%E6%96%B9%E6%B3%95/" class="list-group-item">一种统一的API签名校验实现</a>
       
     </div>
   </section>
@@ -125,13 +147,17 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     </div>
     <div class="list-group">
       
+      <a href="https://lawulu.github.io/tags/java" class="list-group-item">java</a>
+      
       <a href="https://lawulu.github.io/tags/chrome" class="list-group-item">chrome</a>
       
       <a href="https://lawulu.github.io/tags/dbcp" class="list-group-item">dbcp</a>
       
-      <a href="https://lawulu.github.io/tags/java" class="list-group-item">java</a>
-      
       <a href="https://lawulu.github.io/tags/js" class="list-group-item">js</a>
+      
+      <a href="https://lawulu.github.io/tags/sign" class="list-group-item">sign</a>
+      
+      <a href="https://lawulu.github.io/tags/spring" class="list-group-item">spring</a>
       
     </div>
   </section>

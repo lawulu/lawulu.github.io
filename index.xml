@@ -233,8 +233,9 @@ multipartFiles = {LinkedMultiValueMap@8884}  size = 0
 
 &lt;h3 id=&#34;签名方法&#34;&gt;签名方法:&lt;/h3&gt;
 
+&lt;h4 id=&#34;header&#34;&gt;Header:&lt;/h4&gt;
+
 &lt;pre&gt;&lt;code&gt;
-#### Header:
 @RequestHeader(value = &amp;quot;x-header-timestamp&amp;quot;) Long timestamp,
 @RequestHeader(value = &amp;quot;x-header-appid&amp;quot;) String appid,
 @RequestHeader(value = &amp;quot;x-header-sign&amp;quot;) String sign
@@ -273,21 +274,21 @@ HttpMethod=URI&amp;amp;Param1=Value1&amp;amp;Param2=Value2RequestBodySeckeyTimes
 			@RequestHeader(value = &amp;quot;x-header-timestamp&amp;quot;) Long timestamp,
 			@RequestHeader(value = &amp;quot;x-header-appid&amp;quot;) String appid,
 			@RequestHeader(value = &amp;quot;x-header-sign&amp;quot;) String sign) 
-            ```
-
-#### 3 计算签名
-可能需要在GLobalExceptionHandler中增加
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;pre&gt;&lt;code&gt;@ExceptionHandler(ServletRequestBindingException.class) 
-    @ResponseStatus(HttpStatus.BAD_REQUEST) 
-    @ResponseBody 
-    ErrorMessage handleServletRequestBindingException(ServletRequestBindingException ex) {  
+&lt;h4 id=&#34;3-计算签名&#34;&gt;3 计算签名&lt;/h4&gt;
 
-        LOGGER.debug(&amp;quot;handleServletRequestBindingException&amp;quot;, ex);
-        return new ErrorMessage(ErrorCode.INVALID_HEADER.getCode(), ex.getMessage());//TODO
-    }
-    ```
+&lt;p&gt;可能需要在GLobalExceptionHandler中增加&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;
+    @ExceptionHandler(ServletRequestBindingException.class) 
+    	@ResponseStatus(HttpStatus.BAD_REQUEST)	
+    	@ResponseBody 
+    	ErrorMessage handleServletRequestBindingException(ServletRequestBindingException ex) {	
+    		
+    		LOGGER.debug(&amp;quot;handleServletRequestBindingException&amp;quot;, ex);
+    		return new ErrorMessage(ErrorCode.INVALID_HEADER.getCode(), ex.getMessage());//TODO
+    	}
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;h3 id=&#34;注意-因为在controlleradvice消费了request的inputstream-所以需要在前面的filter中copy一份request出来&#34;&gt;注意：因为在ControllerAdvice消费了Request的InputStream，所以需要在前面的Filter中Copy一份Request出来&lt;/h3&gt;

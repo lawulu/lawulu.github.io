@@ -95,10 +95,10 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
   </header>
 
   
-  <div class="summary">签名方法:  #### Header: @RequestHeader(value = &quot;x-header-timestamp&quot;) Long timestamp, @RequestHeader(value = &quot;x-header-appid&quot;) String appid, @RequestHeader(value = &quot;x-header-sign&quot;) String sign  源串 orignalString:  HttpMethod=URI&amp;Param1=Value1&amp;Param2=Value2RequestBodySeckeyTimestamp  注1:Method大写 注2:为方便期间Param不排序,如果出问题再说 注3:ResustBody可能为空 注4:SecKey跟AppId是一一对应.
+  <div class="summary">签名方法: Header:  @RequestHeader(value = &quot;x-header-timestamp&quot;) Long timestamp, @RequestHeader(value = &quot;x-header-appid&quot;) String appid, @RequestHeader(value = &quot;x-header-sign&quot;) String sign  源串 orignalString:  HttpMethod=URI&amp;Param1=Value1&amp;Param2=Value2RequestBodySeckeyTimestamp  注1:Method大写 注2:为方便期间Param不排序,如果出问题再说 注3:ResustBody可能为空 注4:SecKey跟AppId是一一对应.
 签名 sign: sign=Md5(orignalString).toUpperCase  暂时只支持MD5 ##实现: 原则上,应该和业务逻辑代码分离,不影响业务逻辑代码的开发
 1 根据注解Mapping需要检查签名的方法 例如:Spring @ControllerAdvice(annotations = RestController.class) 如需要,可自定义自己的注解
-2 获取参数  @ModelAttribute public void checkSign(HttpServletRequest request, HttpServletResponse response, @RequestBody(required=false) String requestbody, @RequestHeader(value = &quot;x-header-timestamp&quot;) Long timestamp, @RequestHeader(value = &quot;x-header-appid&quot;) String appid, @RequestHeader(value = &quot;x-header-sign&quot;) String sign) ``` #### 3 计算签名 可能需要在GLobalExceptionHandler中增加  @ExceptionHandler(ServletRequestBindingException.</div>
+2 获取参数  @ModelAttribute public void checkSign(HttpServletRequest request, HttpServletResponse response, @RequestBody(required=false) String requestbody, @RequestHeader(value = &quot;x-header-timestamp&quot;) Long timestamp, @RequestHeader(value = &quot;x-header-appid&quot;) String appid, @RequestHeader(value = &quot;x-header-sign&quot;) String sign)  3 计算签名 可能需要在GLobalExceptionHandler中增加</div>
 
   <footer>
     <a href="https://lawulu.github.io/tech/%E4%B8%80%E7%A7%8D%E7%BB%9F%E4%B8%80%E7%9A%84API%E7%AD%BE%E5%90%8D%E6%A0%A1%E9%AA%8C%E6%96%B9%E6%B3%95/" title="一种统一的API签名校验实现">Read More…</a>

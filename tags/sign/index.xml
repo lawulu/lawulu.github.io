@@ -10,36 +10,50 @@
     <item>
       <title>一种统一的API签名校验实现</title>
       <link>https://lawulu.github.io/tech/%E4%B8%80%E7%A7%8D%E7%BB%9F%E4%B8%80%E7%9A%84API%E7%AD%BE%E5%90%8D%E6%A0%A1%E9%AA%8C%E6%96%B9%E6%B3%95/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 10 Aug 2015 00:00:00 +0000</pubDate>
       
       <guid>https://lawulu.github.io/tech/%E4%B8%80%E7%A7%8D%E7%BB%9F%E4%B8%80%E7%9A%84API%E7%AD%BE%E5%90%8D%E6%A0%A1%E9%AA%8C%E6%96%B9%E6%B3%95/</guid>
-      <description>&lt;p&gt;##签名方法:
-####Header:
-@RequestHeader(value = &amp;ldquo;x-header-timestamp&amp;rdquo;) Long timestamp,
+      <description>
+
+&lt;h3 id=&#34;签名方法&#34;&gt;签名方法:&lt;/h3&gt;
+
+&lt;h4 id=&#34;header&#34;&gt;Header:&lt;/h4&gt;
+
+&lt;p&gt;@RequestHeader(value = &amp;ldquo;x-header-timestamp&amp;rdquo;) Long timestamp,
 @RequestHeader(value = &amp;ldquo;x-header-appid&amp;rdquo;) String appid,
-@RequestHeader(value = &amp;ldquo;x-header-sign&amp;rdquo;) String sign
-####源串 orignalString:
-HttpMethod=URI&amp;amp;Param1=Value1&amp;amp;Param2=Value2RequestBodySeckeyTimestamp
+@RequestHeader(value = &amp;ldquo;x-header-sign&amp;rdquo;) String sign&lt;/p&gt;
+
+&lt;h4 id=&#34;源串-orignalstring&#34;&gt;源串 orignalString:&lt;/h4&gt;
+
+&lt;p&gt;HttpMethod=URI&amp;amp;Param1=Value1&amp;amp;Param2=Value2RequestBodySeckeyTimestamp
 注1:Method大写
 注2:为方便期间Param不排序,如果出问题再说
 注3:ResustBody可能为空
-注4:SecKey跟AppId是一一对应.
-####签名 sign:
-sign=Md5(orignalString).toUpperCase
+注4:SecKey跟AppId是一一对应.&lt;/p&gt;
+
+&lt;h4 id=&#34;签名-sign&#34;&gt;签名 sign:&lt;/h4&gt;
+
+&lt;p&gt;sign=Md5(orignalString).toUpperCase
 暂时只支持MD5
 ##实现:
-原则上,应该和业务逻辑代码分离,不影响业务逻辑代码的开发
-####1 根据注解Mapping需要检查签名的方法
-例如:Spring @ControllerAdvice(annotations = RestController.class)
-如需要,可自定义自己的注解
-####2 获取参数
-@ModelAttribute
+原则上,应该和业务逻辑代码分离,不影响业务逻辑代码的开发&lt;/p&gt;
+
+&lt;h4 id=&#34;1-根据注解mapping需要检查签名的方法&#34;&gt;1 根据注解Mapping需要检查签名的方法&lt;/h4&gt;
+
+&lt;p&gt;例如:Spring @ControllerAdvice(annotations = RestController.class)
+如需要,可自定义自己的注解&lt;/p&gt;
+
+&lt;h4 id=&#34;2-获取参数&#34;&gt;2 获取参数&lt;/h4&gt;
+
+&lt;p&gt;@ModelAttribute
     public void checkSign(HttpServletRequest request, HttpServletResponse response, @RequestBody(required=false) String requestbody,
             @RequestHeader(value = &amp;ldquo;x-header-timestamp&amp;rdquo;) Long timestamp,
             @RequestHeader(value = &amp;ldquo;x-header-appid&amp;rdquo;) String appid,
-            @RequestHeader(value = &amp;ldquo;x-header-sign&amp;rdquo;) String sign)
-####3 计算签名
-可能需要在GLobalExceptionHandler中增加&lt;/p&gt;
+            @RequestHeader(value = &amp;ldquo;x-header-sign&amp;rdquo;) String sign)&lt;/p&gt;
+
+&lt;h4 id=&#34;3-计算签名&#34;&gt;3 计算签名&lt;/h4&gt;
+
+&lt;p&gt;可能需要在GLobalExceptionHandler中增加&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;@ExceptionHandler(ServletRequestBindingException.class) 
     @ResponseStatus(HttpStatus.BAD_REQUEST) 
@@ -51,7 +65,7 @@ sign=Md5(orignalString).toUpperCase
     }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;##需要在Filter中Copy一份Request出来:&lt;/p&gt;
+&lt;h3 id=&#34;需要在filter中copy一份request出来&#34;&gt;需要在Filter中Copy一份Request出来&lt;/h3&gt;
 </description>
     </item>
     

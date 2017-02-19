@@ -2,10 +2,10 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>个人博客</title>
-    <link>https://lawulu.github.io/tags/spring/index.xml</link>
+    <link>https://lawulu.github.io/tags/%E5%AE%89%E5%85%A8/index.xml</link>
     <description>Recent content on 个人博客</description>
     <generator>Hugo -- gohugo.io</generator>
-    <atom:link href="https://lawulu.github.io/tags/spring/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://lawulu.github.io/tags/%E5%AE%89%E5%85%A8/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>一种统一的API签名校验实现</title>

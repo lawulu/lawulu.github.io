@@ -16,21 +16,21 @@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/solarized_dark.min.css">
     <title>一种统一的API签名校验实现 - 个人博客</title>
     
-<meta name="description" content="签名方法: Header: @RequestHeader(value = &amp;ldquo;x-header-timestamp&amp;rdquo;) Long timestamp, @RequestHeader(value = &amp;ldquo;x-header-appid&amp;rdquo;) String appid, @RequestHeader(value = &amp;ldquo;x-header-sign&amp;rdquo;) String sign源串 orignalString: HttpMethod=URI&amp;amp;Param1=Value1&amp;amp;Param2=Value2RequestBodySeckeyTimestamp 注1:Method大写 注2:为方便期间Param不排序,如果出问题再说 注3:ResustBody可能为空 注4:SecKey跟AppId是一一对应.签名 sign: sign=Md5(orignalString).toUpperCase 暂时只支持MD5 ##实现: 原则上,应该和业务逻辑代码分离,不影响业务逻辑代码的开发1 根据注解Mapping需要检查签名的方法 例如:Spring @ControllerAdvice(annotations = RestController.class) 如需要,可自定义自己的注解2 获取参数 @ModelAttribute public void checkSign(HttpServletRequest request, HttpServletResponse response, @RequestBody(required=false) String requestbody, @RequestHeader(value = &amp;ldquo;x-header-timestamp&amp;rdquo;) Long timestamp, @RequestHeader(value = &amp;ldquo;x-header-appid&amp;rdquo;) String appid, @RequestHeader(value = &amp;ldquo;x-header-sign&amp;rdquo;) String sign)3 计算签名 可能需要在GLobalExceptionHandler中增加@ExceptionHandler(ServletRequestBindingException.class) @ResponseStatus(HttpStatus.BAD_REQUEST) @ResponseBody ErrorMessage handleServletRequestBindingException(ServletRequestBindingException ex) { LOGGER.">
+<meta name="description" content="签名方法:  #### Header: @RequestHeader(value = &amp;quot;x-header-timestamp&amp;quot;) Long timestamp, @RequestHeader(value = &amp;quot;x-header-appid&amp;quot;) String appid, @RequestHeader(value = &amp;quot;x-header-sign&amp;quot;) String sign  源串 orignalString:  HttpMethod=URI&amp;amp;Param1=Value1&amp;amp;Param2=Value2RequestBodySeckeyTimestamp  注1:Method大写 注2:为方便期间Param不排序,如果出问题再说 注3:ResustBody可能为空 注4:SecKey跟AppId是一一对应.签名 sign: sign=Md5(orignalString).toUpperCase  暂时只支持MD5 ##实现: 原则上,应该和业务逻辑代码分离,不影响业务逻辑代码的开发1 根据注解Mapping需要检查签名的方法 例如:Spring @ControllerAdvice(annotations = RestController.class) 如需要,可自定义自己的注解2 获取参数  @ModelAttribute public void checkSign(HttpServletRequest request, HttpServletResponse response, @RequestBody(required=false) String requestbody, @RequestHeader(value = &amp;quot;x-header-timestamp&amp;quot;) Long timestamp, @RequestHeader(value = &amp;quot;x-header-appid&amp;quot;) String appid, @RequestHeader(value = &amp;quot;x-header-sign&amp;quot;) String sign) ``` #### 3 计算签名 可能需要在GLobalExceptionHandler中增加  @ExceptionHandler(ServletRequestBindingException.">
 
 <meta property="og:title" content="一种统一的API签名校验实现 - 个人博客">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://lawulu.github.io/tech/%E4%B8%80%E7%A7%8D%E7%BB%9F%E4%B8%80%E7%9A%84API%E7%AD%BE%E5%90%8D%E6%A0%A1%E9%AA%8C%E6%96%B9%E6%B3%95/">
 <meta property="og:image" content="https://lawulu.github.io/images/default.png">
 <meta property="og:site_name" content="个人博客">
-<meta property="og:description" content="签名方法: Header: @RequestHeader(value = &amp;ldquo;x-header-timestamp&amp;rdquo;) Long timestamp, @RequestHeader(value = &amp;ldquo;x-header-appid&amp;rdquo;) String appid, @RequestHeader(value = &amp;ldquo;x-header-sign&amp;rdquo;) String sign源串 orignalString: HttpMethod=URI&amp;amp;Param1=Value1&amp;amp;Param2=Value2RequestBodySeckeyTimestamp 注1:Method大写 注2:为方便期间Param不排序,如果出问题再说 注3:ResustBody可能为空 注4:SecKey跟AppId是一一对应.签名 sign: sign=Md5(orignalString).toUpperCase 暂时只支持MD5 ##实现: 原则上,应该和业务逻辑代码分离,不影响业务逻辑代码的开发1 根据注解Mapping需要检查签名的方法 例如:Spring @ControllerAdvice(annotations = RestController.class) 如需要,可自定义自己的注解2 获取参数 @ModelAttribute public void checkSign(HttpServletRequest request, HttpServletResponse response, @RequestBody(required=false) String requestbody, @RequestHeader(value = &amp;ldquo;x-header-timestamp&amp;rdquo;) Long timestamp, @RequestHeader(value = &amp;ldquo;x-header-appid&amp;rdquo;) String appid, @RequestHeader(value = &amp;ldquo;x-header-sign&amp;rdquo;) String sign)3 计算签名 可能需要在GLobalExceptionHandler中增加@ExceptionHandler(ServletRequestBindingException.class) @ResponseStatus(HttpStatus.BAD_REQUEST) @ResponseBody ErrorMessage handleServletRequestBindingException(ServletRequestBindingException ex) { LOGGER.">
+<meta property="og:description" content="签名方法:  #### Header: @RequestHeader(value = &amp;quot;x-header-timestamp&amp;quot;) Long timestamp, @RequestHeader(value = &amp;quot;x-header-appid&amp;quot;) String appid, @RequestHeader(value = &amp;quot;x-header-sign&amp;quot;) String sign  源串 orignalString:  HttpMethod=URI&amp;amp;Param1=Value1&amp;amp;Param2=Value2RequestBodySeckeyTimestamp  注1:Method大写 注2:为方便期间Param不排序,如果出问题再说 注3:ResustBody可能为空 注4:SecKey跟AppId是一一对应.签名 sign: sign=Md5(orignalString).toUpperCase  暂时只支持MD5 ##实现: 原则上,应该和业务逻辑代码分离,不影响业务逻辑代码的开发1 根据注解Mapping需要检查签名的方法 例如:Spring @ControllerAdvice(annotations = RestController.class) 如需要,可自定义自己的注解2 获取参数  @ModelAttribute public void checkSign(HttpServletRequest request, HttpServletResponse response, @RequestBody(required=false) String requestbody, @RequestHeader(value = &amp;quot;x-header-timestamp&amp;quot;) Long timestamp, @RequestHeader(value = &amp;quot;x-header-appid&amp;quot;) String appid, @RequestHeader(value = &amp;quot;x-header-sign&amp;quot;) String sign) ``` #### 3 计算签名 可能需要在GLobalExceptionHandler中增加  @ExceptionHandler(ServletRequestBindingException.">
 <meta property="og:locale" content="ja_JP">
 
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="个人博客">
 <meta name="twitter:url" content="https://lawulu.github.io/tech/%E4%B8%80%E7%A7%8D%E7%BB%9F%E4%B8%80%E7%9A%84API%E7%AD%BE%E5%90%8D%E6%A0%A1%E9%AA%8C%E6%96%B9%E6%B3%95/">
 <meta name="twitter:title" content="一种统一的API签名校验实现 - 个人博客">
-<meta name="twitter:description" content="签名方法: Header: @RequestHeader(value = &amp;ldquo;x-header-timestamp&amp;rdquo;) Long timestamp, @RequestHeader(value = &amp;ldquo;x-header-appid&amp;rdquo;) String appid, @RequestHeader(value = &amp;ldquo;x-header-sign&amp;rdquo;) String sign源串 orignalString: HttpMethod=URI&amp;amp;Param1=Value1&amp;amp;Param2=Value2RequestBodySeckeyTimestamp 注1:Method大写 注2:为方便期间Param不排序,如果出问题再说 注3:ResustBody可能为空 注4:SecKey跟AppId是一一对应.签名 sign: sign=Md5(orignalString).toUpperCase 暂时只支持MD5 ##实现: 原则上,应该和业务逻辑代码分离,不影响业务逻辑代码的开发1 根据注解Mapping需要检查签名的方法 例如:Spring @ControllerAdvice(annotations = RestController.class) 如需要,可自定义自己的注解2 获取参数 @ModelAttribute public void checkSign(HttpServletRequest request, HttpServletResponse response, @RequestBody(required=false) String requestbody, @RequestHeader(value = &amp;ldquo;x-header-timestamp&amp;rdquo;) Long timestamp, @RequestHeader(value = &amp;ldquo;x-header-appid&amp;rdquo;) String appid, @RequestHeader(value = &amp;ldquo;x-header-sign&amp;rdquo;) String sign)3 计算签名 可能需要在GLobalExceptionHandler中增加@ExceptionHandler(ServletRequestBindingException.class) @ResponseStatus(HttpStatus.BAD_REQUEST) @ResponseBody ErrorMessage handleServletRequestBindingException(ServletRequestBindingException ex) { LOGGER.">
+<meta name="twitter:description" content="签名方法:  #### Header: @RequestHeader(value = &amp;quot;x-header-timestamp&amp;quot;) Long timestamp, @RequestHeader(value = &amp;quot;x-header-appid&amp;quot;) String appid, @RequestHeader(value = &amp;quot;x-header-sign&amp;quot;) String sign  源串 orignalString:  HttpMethod=URI&amp;amp;Param1=Value1&amp;amp;Param2=Value2RequestBodySeckeyTimestamp  注1:Method大写 注2:为方便期间Param不排序,如果出问题再说 注3:ResustBody可能为空 注4:SecKey跟AppId是一一对应.签名 sign: sign=Md5(orignalString).toUpperCase  暂时只支持MD5 ##实现: 原则上,应该和业务逻辑代码分离,不影响业务逻辑代码的开发1 根据注解Mapping需要检查签名的方法 例如:Spring @ControllerAdvice(annotations = RestController.class) 如需要,可自定义自己的注解2 获取参数  @ModelAttribute public void checkSign(HttpServletRequest request, HttpServletResponse response, @RequestBody(required=false) String requestbody, @RequestHeader(value = &amp;quot;x-header-timestamp&amp;quot;) Long timestamp, @RequestHeader(value = &amp;quot;x-header-appid&amp;quot;) String appid, @RequestHeader(value = &amp;quot;x-header-sign&amp;quot;) String sign) ``` #### 3 计算签名 可能需要在GLobalExceptionHandler中增加  @ExceptionHandler(ServletRequestBindingException.">
 <meta name="twitter:image" content="https://lawulu.github.io/images/default.png">
 
 
@@ -65,7 +65,7 @@
         "height": 60
       }
     },
-    "description": "签名方法: Header: @RequestHeader(value = \x26ldquo;x-header-timestamp\x26rdquo;) Long timestamp, @RequestHeader(value = \x26ldquo;x-header-appid\x26rdquo;) String appid, @RequestHeader(value = \x26ldquo;x-header-sign\x26rdquo;) String sign\n源串 orignalString: HttpMethod=URI\x26amp;Param1=Value1\x26amp;Param2=Value2RequestBodySeckeyTimestamp 注1:Method大写 注2:为方便期间Param不排序,如果出问题再说 注3:ResustBody可能为空 注4:SecKey跟AppId是一一对应.\n签名 sign: sign=Md5(orignalString).toUpperCase 暂时只支持MD5 ##实现: 原则上,应该和业务逻辑代码分离,不影响业务逻辑代码的开发\n1 根据注解Mapping需要检查签名的方法 例如:Spring @ControllerAdvice(annotations = RestController.class) 如需要,可自定义自己的注解\n2 获取参数 @ModelAttribute public void checkSign(HttpServletRequest request, HttpServletResponse response, @RequestBody(required=false) String requestbody, @RequestHeader(value = \x26ldquo;x-header-timestamp\x26rdquo;) Long timestamp, @RequestHeader(value = \x26ldquo;x-header-appid\x26rdquo;) String appid, @RequestHeader(value = \x26ldquo;x-header-sign\x26rdquo;) String sign)\n3 计算签名 可能需要在GLobalExceptionHandler中增加\n@ExceptionHandler(ServletRequestBindingException.class) @ResponseStatus(HttpStatus.BAD_REQUEST) @ResponseBody ErrorMessage handleServletRequestBindingException(ServletRequestBindingException ex) { LOGGER."
+    "description": "签名方法:  #### Header: @RequestHeader(value = \x26quot;x-header-timestamp\x26quot;) Long timestamp, @RequestHeader(value = \x26quot;x-header-appid\x26quot;) String appid, @RequestHeader(value = \x26quot;x-header-sign\x26quot;) String sign  源串 orignalString:  HttpMethod=URI\x26amp;Param1=Value1\x26amp;Param2=Value2RequestBodySeckeyTimestamp  注1:Method大写 注2:为方便期间Param不排序,如果出问题再说 注3:ResustBody可能为空 注4:SecKey跟AppId是一一对应.\n签名 sign: sign=Md5(orignalString).toUpperCase  暂时只支持MD5 ##实现: 原则上,应该和业务逻辑代码分离,不影响业务逻辑代码的开发\n1 根据注解Mapping需要检查签名的方法 例如:Spring @ControllerAdvice(annotations = RestController.class) 如需要,可自定义自己的注解\n2 获取参数  @ModelAttribute public void checkSign(HttpServletRequest request, HttpServletResponse response, @RequestBody(required=false) String requestbody, @RequestHeader(value = \x26quot;x-header-timestamp\x26quot;) Long timestamp, @RequestHeader(value = \x26quot;x-header-appid\x26quot;) String appid, @RequestHeader(value = \x26quot;x-header-sign\x26quot;) String sign) ``` #### 3 计算签名 可能需要在GLobalExceptionHandler中增加  @ExceptionHandler(ServletRequestBindingException."
   }
 </script>
 
@@ -130,24 +130,30 @@
 
 <h3 id="签名方法">签名方法:</h3>
 
-<h4 id="header">Header:</h4>
-
-<p>@RequestHeader(value = &ldquo;x-header-timestamp&rdquo;) Long timestamp,
-@RequestHeader(value = &ldquo;x-header-appid&rdquo;) String appid,
-@RequestHeader(value = &ldquo;x-header-sign&rdquo;) String sign</p>
+<pre><code>
+#### Header:
+@RequestHeader(value = &quot;x-header-timestamp&quot;) Long timestamp,
+@RequestHeader(value = &quot;x-header-appid&quot;) String appid,
+@RequestHeader(value = &quot;x-header-sign&quot;) String sign
+</code></pre>
 
 <h4 id="源串-orignalstring">源串 orignalString:</h4>
 
-<p>HttpMethod=URI&amp;Param1=Value1&amp;Param2=Value2RequestBodySeckeyTimestamp
-注1:Method大写
+<pre><code>
+HttpMethod=URI&amp;Param1=Value1&amp;Param2=Value2RequestBodySeckeyTimestamp
+</code></pre>
+
+<p>注1:Method大写
 注2:为方便期间Param不排序,如果出问题再说
 注3:ResustBody可能为空
 注4:SecKey跟AppId是一一对应.</p>
 
 <h4 id="签名-sign">签名 sign:</h4>
 
-<p>sign=Md5(orignalString).toUpperCase
-暂时只支持MD5
+<pre><code>sign=Md5(orignalString).toUpperCase
+</code></pre>
+
+<p>暂时只支持MD5
 ##实现:
 原则上,应该和业务逻辑代码分离,不影响业务逻辑代码的开发</p>
 
@@ -158,15 +164,17 @@
 
 <h4 id="2-获取参数">2 获取参数</h4>
 
-<p>@ModelAttribute
-    public void checkSign(HttpServletRequest request, HttpServletResponse response, @RequestBody(required=false) String requestbody,
-            @RequestHeader(value = &ldquo;x-header-timestamp&rdquo;) Long timestamp,
-            @RequestHeader(value = &ldquo;x-header-appid&rdquo;) String appid,
-            @RequestHeader(value = &ldquo;x-header-sign&rdquo;) String sign)</p>
+<pre><code>
+@ModelAttribute
+	public void checkSign(HttpServletRequest request, HttpServletResponse response, @RequestBody(required=false) String requestbody,
+			@RequestHeader(value = &quot;x-header-timestamp&quot;) Long timestamp,
+			@RequestHeader(value = &quot;x-header-appid&quot;) String appid,
+			@RequestHeader(value = &quot;x-header-sign&quot;) String sign) 
+            ```
 
-<h4 id="3-计算签名">3 计算签名</h4>
-
-<p>可能需要在GLobalExceptionHandler中增加</p>
+#### 3 计算签名
+可能需要在GLobalExceptionHandler中增加
+</code></pre>
 
 <pre><code>@ExceptionHandler(ServletRequestBindingException.class) 
     @ResponseStatus(HttpStatus.BAD_REQUEST) 
@@ -176,9 +184,10 @@
         LOGGER.debug(&quot;handleServletRequestBindingException&quot;, ex);
         return new ErrorMessage(ErrorCode.INVALID_HEADER.getCode(), ex.getMessage());//TODO
     }
+    ```
 </code></pre>
 
-<h3 id="需要在filter中copy一份request出来">需要在Filter中Copy一份Request出来</h3>
+<h3 id="注意-因为在controlleradvice消费了request的inputstream-所以需要在前面的filter中copy一份request出来">注意：因为在ControllerAdvice消费了Request的InputStream，所以需要在前面的Filter中Copy一份Request出来</h3>
 </div>
 
   <footer class="article-footer">
@@ -211,7 +220,7 @@
           
           <li><a href="https://lawulu.github.io/tags/spring/">spring</a></li>
           
-          <li><a href="https://lawulu.github.io/tags/sign/">sign</a></li>
+          <li><a href="https://lawulu.github.io/tags/%E5%AE%89%E5%85%A8/">安全</a></li>
           
         </ul>
       </div>
@@ -285,9 +294,9 @@
       
       <a href="https://lawulu.github.io/tags/js" class="list-group-item">js</a>
       
-      <a href="https://lawulu.github.io/tags/sign" class="list-group-item">sign</a>
-      
       <a href="https://lawulu.github.io/tags/spring" class="list-group-item">spring</a>
+      
+      <a href="https://lawulu.github.io/tags/%E5%AE%89%E5%85%A8" class="list-group-item">安全</a>
       
     </div>
   </section>

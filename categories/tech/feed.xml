@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>璐濒殉漂流记</title>
+    <link>https://lawulu.github.io/categories/tech/feed/index.xml</link>
+    <description>Recent content on 璐濒殉漂流记</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <atom:link href="https://lawulu.github.io/categories/tech/feed/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>一次Ajax上传文件的调试过程</title>
+      <link>https://lawulu.github.io/post/%E4%B8%80%E6%AC%A1Ajax%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E8%B0%83%E8%AF%95%E8%BF%87%E7%A8%8B/</link>
+      <pubDate>Sat, 19 Dec 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://lawulu.github.io/post/%E4%B8%80%E6%AC%A1Ajax%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E8%B0%83%E8%AF%95%E8%BF%87%E7%A8%8B/</guid>
+      <description>
+
+&lt;h3 id=&#34;js端&#34;&gt;Js端&lt;/h3&gt;
+
+&lt;p&gt;使用的FormData&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var formData = new FormData();
+    var actionUrl = &amp;quot;/report/agentUpload&amp;quot;;
+    var form = new FormData();
+    form.append(&amp;quot;file&amp;quot;, $(&amp;quot;#reportFile&amp;quot; )[0]);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open(&amp;quot;post&amp;quot;, actionUrl, true);
+    xhr.onload = function () {
+         alert(&amp;quot;上传完成!&amp;quot;);
+    };
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;server端&#34;&gt;Server端&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;public String upload(HttpServletRequest request, @RequestParam(value=&amp;quot;file&amp;quot;,required = true) MultipartFile file, ModelMap model)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;但是就是取不到，报错：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Required MultipartFile parameter &#39;file&#39; is not present
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;server端的问题&#34;&gt;Server端的问题？&lt;/h3&gt;
+
+&lt;h4 id=&#34;是否发到了server&#34;&gt;是否发到了Server？&lt;/h4&gt;
+
+&lt;p&gt;看Network：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;------WebKitFormBoundaryNLPhxKE21THaBaN1
+Content-Disposition: form-data; name=&amp;quot;file&amp;quot;
+
+[object HTMLInputElement]
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;貌似是正确的，在Server端确认一下，将参数加上required=false
+查看request:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;multipartParameters = {HashMap@8882}  size = 1
+multipartParameterContentTypes = {HashMap@8883}  size = 1
+multipartFiles = {LinkedMultiValueMap@8884}  size = 0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;即其实Request里面有东西，但是multipartFiles没有东西……
+其实这时候应该已经看出问题了，因为那个值是一个String，但是没注意，自己盲目以为只要带multipartParameters就是文件&lt;/p&gt;
+
+&lt;p&gt;debug到CommonsMultipartResolver的resolveMultipart方法，里面有这段判断&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;protected MultipartParsingResult parseFileItems(List&amp;lt;FileItem&amp;gt; fileItems, String encoding) {
+		MultiValueMap&amp;lt;String, MultipartFile&amp;gt; multipartFiles = new LinkedMultiValueMap&amp;lt;String, MultipartFile&amp;gt;();
+		Map&amp;lt;String, String[]&amp;gt; multipartParameters = new HashMap&amp;lt;String, String[]&amp;gt;();
+		Map&amp;lt;String, String&amp;gt; multipartParameterContentTypes = new HashMap&amp;lt;String, String&amp;gt;();
+
+		// Extract multipart files and multipart parameters.
+		for (FileItem fileItem : fileItems) {
+			if (fileItem.isFormField()) {
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;如果是false…就往MultipartFile里面填值。
+难道是Content-type的问题？&lt;/p&gt;
+
+&lt;h3 id=&#34;去js端&#34;&gt;去Js端&lt;/h3&gt;
+
+&lt;p&gt;先找到如何打印Formdata的：
+&lt;a href=&#34;http://stackoverflow.com/questions/17066875/how-to-inspect-formdata&#34;&gt;http://stackoverflow.com/questions/17066875/how-to-inspect-formdata&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;for (var pair of formData.entries()) {
+    console.log(pair[0]+ &#39;, &#39; + pair[1]); 
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;打印的东西是：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;file, [object HTMLInputElement]
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;决定采用原始的document.getElementById(&amp;ldquo;reportFile&amp;rdquo;).files[]&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;lastModifiedDate: Tue Dec 20 2015 10:39:39 GMT+0800 (CST)name: &amp;quot;工作簿1.xlsx&amp;quot;size: 23168type: &amp;quot;application/vnd.openxmlformats-officedocument.spreadsheetml.sheet&amp;quot;webkitRelativePath: &amp;quot;&amp;quot;__proto__: File
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;最终发现问题：
+应该用&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; $(&amp;quot;#reportFile&amp;quot; )[0].files[0]
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;结论&#34;&gt;结论&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;++&lt;strong&gt;盲目的去搜索其实非常浪费时间&lt;/strong&gt;++&lt;/li&gt;
+&lt;li&gt;要善用Chrome Console&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>一个诡异的Data source is closed问题</title>
+      <link>https://lawulu.github.io/post/%E4%B8%80%E4%B8%AA%E8%AF%A1%E5%BC%82%E7%9A%84Data%20source%20is%20closed%E9%97%AE%E9%A2%98/</link>
+      <pubDate>Mon, 19 Oct 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://lawulu.github.io/post/%E4%B8%80%E4%B8%AA%E8%AF%A1%E5%BC%82%E7%9A%84Data%20source%20is%20closed%E9%97%AE%E9%A2%98/</guid>
+      <description>
+
+&lt;h3 id=&#34;问题由起&#34;&gt;问题由起&lt;/h3&gt;
+
+&lt;p&gt;因为某些问题（这个问题稍后再提），将线上的DBCP版本从1.4升级到2.1，大概扫了一下官方文档，没有迁移指南，只是几个属性名称变了，感觉问题不大，直接升级。升级之后，UT一下，通过。但是上线之后一直报下面错误：
+&amp;gt;Cause: org.springframework.jdbc.CannotGetJdbcConnectionException: Could not get JDBC Connection; nested exception is java.sql.SQLException: Data source is closed
+    at org.apache.ibatis.exceptions.ExceptionFactory.wrapException(ExceptionFactory.java:23)
+    at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:107)
+    at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:98)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+    at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:386)
+    &amp;hellip; 43 more&lt;/p&gt;
+
+&lt;h3 id=&#34;问题背景&#34;&gt;问题背景&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;项目因为需要动态切换数据源，使用的是++AbstractRoutingDataSource++&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;需要动态切换的数据源比较多，项目初始化时候通过++BeanDefinitionBuilder++来根据数据库配置动态创建数据源，而报错的连接正是动态生成的的数据源。&lt;/p&gt;
+
+&lt;h3 id=&#34;问题定位&#34;&gt;问题定位&lt;/h3&gt;
+
+&lt;h4 id=&#34;为什么ut测试成功&#34;&gt;为什么UT测试成功&lt;/h4&gt;
+
+&lt;p&gt;原来是UT的时候，因为配置文件，测试其实走的是++AbstractRoutingDataSource++的默认的数据源，并没有走动态生成的数据源&lt;/p&gt;
+
+&lt;h4 id=&#34;怀疑是参数问题或者其他原因&#34;&gt;怀疑是参数问题或者其他原因&lt;/h4&gt;
+
+&lt;p&gt;只设置JDBC Url，依旧报错；换成dbcp，不报错。&lt;/p&gt;
+
+&lt;h4 id=&#34;abstractroutingdatasource的问题&#34;&gt;AbstractRoutingDataSource的问题？&lt;/h4&gt;
+
+&lt;p&gt;使用XML配置，没有问题&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;至此，基本确认是++DBCP2++和++BeanDefinitionBuilder++&lt;/strong&gt;的问题&lt;/p&gt;
+
+&lt;h3 id=&#34;查看源码和debug&#34;&gt;查看源码和Debug&lt;/h3&gt;
+
+&lt;h4 id=&#34;basicdatasource-dbcp1和2有什么区别&#34;&gt;BasicDataSource DBCP1和2有什么区别？&lt;/h4&gt;
+
+&lt;p&gt;DBCP2实现了更多的接口：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBeanRegistration, AutoCloseable 
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;查看dbcp2创建链接和销毁的地方&#34;&gt;查看DBCP2创建链接和销毁的地方&lt;/h4&gt;
+
+&lt;p&gt;是没有Create Connection还是什么时候被Close了？
+被Close了&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;
+		this.beanDefinitionMap.put(beanName, beanDefinition);
+
+		if (oldBeanDefinition != null || containsSingleton(beanName)) {
+			resetBeanDefinition(beanName);
+		}
+		
+		
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;protected void resetBeanDefinition(String beanName) {
+		// Remove the merged bean definition for the given bean, if already created.
+		clearMergedBeanDefinition(beanName);
+
+		// Remove corresponding bean from singleton cache, if any. Shouldn&#39;t usually
+		// be necessary, rather just meant for overriding a context&#39;s default beans
+		// (e.g. the default StaticMessageSource in a StaticApplicationContext).
+		destroySingleton(beanName);
+
+		// Reset all bean definitions that have the given bean as parent (recursively).
+		for (String bdName : this.beanDefinitionNames) {
+			if (!beanName.equals(bdName)) {
+				BeanDefinition bd = this.beanDefinitionMap.get(bdName);
+				if (beanName.equals(bd.getParentName())) {
+					resetBeanDefinition(bdName);
+				}
+			}
+		}
+	}
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;原来Spring创建Bean的时候会检查是否有oldBeanDefinition,如果有则销毁之。而DBCP2实现了AutoCloseable接口，在这里直接被Close了。&lt;/p&gt;
+
+&lt;h4 id=&#34;为什么有oldbeandefinition&#34;&gt;为什么有oldBeanDefinition？&lt;/h4&gt;
+
+&lt;p&gt;为了支持另一种类型的数据源，引入了一个Bug，会在Spring BeanFactory里面引入重复的定义，因为在AbstractRoutingDataSource中是正确的，所以一直没有发现这个问题。第二次会销毁上次的Bean。
+其实在DBCP1时候，也会销毁，但是因为在动态定义的时候没有定义destroy-method=&amp;ldquo;close&amp;rdquo;，其实会引起内存的泄露？&lt;/p&gt;
+
+&lt;p&gt;结论：很多看似运行完好的软件其实都危机四伏..&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>一种统一的API签名校验实现</title>
+      <link>https://lawulu.github.io/post/%E4%B8%80%E7%A7%8D%E7%BB%9F%E4%B8%80%E7%9A%84API%E7%AD%BE%E5%90%8D%E6%A0%A1%E9%AA%8C%E6%96%B9%E6%B3%95/</link>
+      <pubDate>Mon, 10 Aug 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://lawulu.github.io/post/%E4%B8%80%E7%A7%8D%E7%BB%9F%E4%B8%80%E7%9A%84API%E7%AD%BE%E5%90%8D%E6%A0%A1%E9%AA%8C%E6%96%B9%E6%B3%95/</guid>
+      <description>
+
+&lt;h3 id=&#34;签名方法&#34;&gt;签名方法:&lt;/h3&gt;
+
+&lt;h4 id=&#34;header&#34;&gt;Header:&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;
+@RequestHeader(value = &amp;quot;x-header-timestamp&amp;quot;) Long timestamp,
+@RequestHeader(value = &amp;quot;x-header-appid&amp;quot;) String appid,
+@RequestHeader(value = &amp;quot;x-header-sign&amp;quot;) String sign
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;源串-orignalstring&#34;&gt;源串 orignalString:&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;
+HttpMethod=URI&amp;amp;Param1=Value1&amp;amp;Param2=Value2RequestBodySeckeyTimestamp
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;注1:Method大写
+注2:为方便期间Param不排序,如果出问题再说
+注3:ResustBody可能为空
+注4:SecKey跟AppId是一一对应.&lt;/p&gt;
+
+&lt;h4 id=&#34;签名-sign&#34;&gt;签名 sign:&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;sign=Md5(orignalString).toUpperCase
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;暂时只支持MD5&lt;/p&gt;
+
+&lt;h3 id=&#34;实现&#34;&gt;实现:&lt;/h3&gt;
+
+&lt;p&gt;原则上,应该和业务逻辑代码分离,不影响业务逻辑代码的开发&lt;/p&gt;
+
+&lt;h4 id=&#34;1-根据注解mapping需要检查签名的方法&#34;&gt;1 根据注解Mapping需要检查签名的方法&lt;/h4&gt;
+
+&lt;p&gt;例如:Spring @ControllerAdvice(annotations = RestController.class)
+如需要,可自定义自己的注解&lt;/p&gt;
+
+&lt;h4 id=&#34;2-获取参数&#34;&gt;2 获取参数&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;
+@ModelAttribute
+	public void checkSign(HttpServletRequest request, HttpServletResponse response, @RequestBody(required=false) String requestbody,
+			@RequestHeader(value = &amp;quot;x-header-timestamp&amp;quot;) Long timestamp,
+			@RequestHeader(value = &amp;quot;x-header-appid&amp;quot;) String appid,
+			@RequestHeader(value = &amp;quot;x-header-sign&amp;quot;) String sign) 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;3-计算签名&#34;&gt;3 计算签名&lt;/h4&gt;
+
+&lt;p&gt;可能需要在GLobalExceptionHandler中增加&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;
+    @ExceptionHandler(ServletRequestBindingException.class) 
+    	@ResponseStatus(HttpStatus.BAD_REQUEST)	
+    	@ResponseBody 
+    	ErrorMessage handleServletRequestBindingException(ServletRequestBindingException ex) {	
+    		
+    		LOGGER.debug(&amp;quot;handleServletRequestBindingException&amp;quot;, ex);
+    		return new ErrorMessage(ErrorCode.INVALID_HEADER.getCode(), ex.getMessage());//TODO
+    	}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;注意-因为在controlleradvice消费了request的inputstream-所以需要在前面的filter中copy一份request出来&#34;&gt;注意：因为在ControllerAdvice消费了Request的InputStream，所以需要在前面的Filter中Copy一份Request出来&lt;/h3&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

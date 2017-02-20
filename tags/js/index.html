@@ -14,7 +14,7 @@
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/solarized_dark.min.css">
-    <title>Js - 个人博客</title>
+    <title>Js - 璐濒殉漂流记</title>
     
     <link href="https://lawulu.github.io/css/styles.css" rel="stylesheet">
   </head>
@@ -34,9 +34,25 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="https://lawulu.github.io/">个人博客</a>
+            <a class="navbar-brand" href="https://lawulu.github.io/">璐濒殉漂流记</a>
           </div>
 
+          
+          <div id="navbar" class="collapse navbar-collapse">
+            
+            <ul class="nav navbar-nav navbar-right">
+              
+              
+              <li><a href="/">首页</a></li>
+              
+              
+              
+              <li><a href="/about">关于</a></li>
+              
+              
+            </ul>
+            
+          </div>
           
 
         </div>
@@ -61,20 +77,17 @@
   <header>
     <ul class="p-facts">
       <li><i class="fa fa-calendar" aria-hidden="true"></i><time datetime="2015-12-19T00:00:00JST">Dec 19, 2015</time></li>
-      <li><i class="fa fa-bookmark" aria-hidden="true"></i><a href="https://lawulu.github.io/tech/">tech</a></li>
+      <li><i class="fa fa-bookmark" aria-hidden="true"></i><a href="https://lawulu.github.io/post/">post</a></li>
       
     </ul>
-    <h2 class="title"><a href="https://lawulu.github.io/tech/%E4%B8%80%E6%AC%A1Ajax%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E8%B0%83%E8%AF%95%E8%BF%87%E7%A8%8B/">一次Ajax上传文件的调试过程</a></h2>
+    <h2 class="title"><a href="https://lawulu.github.io/post/%E4%B8%80%E6%AC%A1Ajax%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E8%B0%83%E8%AF%95%E8%BF%87%E7%A8%8B/">一次Ajax上传文件的调试过程</a></h2>
   </header>
 
   
-  <div class="summary">基础代码 Js端，使用的FormData
-var formData = new FormData(); var actionUrl = &quot;/report/agentUpload&quot;; var form = new FormData(); form.append(&quot;file&quot;, $(&quot;#reportFile&quot; )[0]); var xhr = new XMLHttpRequest(); xhr.open(&quot;post&quot;, actionUrl, true); xhr.onload = function () { alert(&quot;上传完成!&quot;); };  Server端 public String upload(HttpServletRequest request, @RequestParam(value=&quot;file&quot;,required = true) MultipartFile file, ModelMap model)  但是就是取不到，报错：
-Required MultipartFile parameter 'file' is not present  Server端的问题？ 是否发到了Server？ 看Network：
-------WebKitFormBoundaryNLPhxKE21THaBaN1 Content-Disposition: form-data; name=&quot;file&quot; [object HTMLInputElement]  貌似是正确的，在Server端确认一下，将参数加上required=false 查看request:</div>
+  <div class="summary">Js端 使用的FormData var formData = new FormData(); var actionUrl = &quot;/report/agentUpload&quot;; var form = new FormData(); form.append(&quot;file&quot;, $(&quot;#reportFile&quot; )[0]); var xhr = new XMLHttpRequest(); xhr.open(&quot;post&quot;, actionUrl, true); xhr.onload = function () { alert(&quot;上传完成!&quot;); };</div>
 
   <footer>
-    <a href="https://lawulu.github.io/tech/%E4%B8%80%E6%AC%A1Ajax%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E8%B0%83%E8%AF%95%E8%BF%87%E7%A8%8B/" title="一次Ajax上传文件的调试过程">Read More…</a>
+    <a href="https://lawulu.github.io/post/%E4%B8%80%E6%AC%A1Ajax%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E8%B0%83%E8%AF%95%E8%BF%87%E7%A8%8B/" title="一次Ajax上传文件的调试过程">Read More…</a>
   </footer>
 </article>
 </li>
@@ -95,11 +108,13 @@ Required MultipartFile parameter 'file' is not present  Server端的问题？ �
     </div>
     <div class="list-group">
       
-      <a href="https://lawulu.github.io/tech/%E4%B8%80%E6%AC%A1Ajax%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E8%B0%83%E8%AF%95%E8%BF%87%E7%A8%8B/" class="list-group-item">一次Ajax上传文件的调试过程</a>
+      <a href="https://lawulu.github.io/post/%E4%B8%80%E6%AC%A1Ajax%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E8%B0%83%E8%AF%95%E8%BF%87%E7%A8%8B/" class="list-group-item">一次Ajax上传文件的调试过程</a>
       
-      <a href="https://lawulu.github.io/tech/%E4%B8%80%E4%B8%AA%E8%AF%A1%E5%BC%82%E7%9A%84Data%20source%20is%20closed%E9%97%AE%E9%A2%98/" class="list-group-item">一个诡异的Data source is closed问题</a>
+      <a href="https://lawulu.github.io/post/%E4%B8%80%E4%B8%AA%E8%AF%A1%E5%BC%82%E7%9A%84Data%20source%20is%20closed%E9%97%AE%E9%A2%98/" class="list-group-item">一个诡异的Data source is closed问题</a>
       
-      <a href="https://lawulu.github.io/tech/%E4%B8%80%E7%A7%8D%E7%BB%9F%E4%B8%80%E7%9A%84API%E7%AD%BE%E5%90%8D%E6%A0%A1%E9%AA%8C%E6%96%B9%E6%B3%95/" class="list-group-item">一种统一的API签名校验实现</a>
+      <a href="https://lawulu.github.io/post/%E4%B8%80%E7%A7%8D%E7%BB%9F%E4%B8%80%E7%9A%84API%E7%AD%BE%E5%90%8D%E6%A0%A1%E9%AA%8C%E6%96%B9%E6%B3%95/" class="list-group-item">一种统一的API签名校验实现</a>
+      
+      <a href="https://lawulu.github.io/about/" class="list-group-item"></a>
       
     </div>
   </section>
@@ -149,7 +164,7 @@ Required MultipartFile parameter 'file' is not present  Server端的问题？ �
 
     <footer class="l-footer">
       <div class="container">
-        <p><span class="h-logo">&copy; 个人博客</span></p>
+        <p><span class="h-logo">&copy; 璐濒殉漂流记</span></p>
         <aside>
           <p>Powered by <a href="https://gohugo.io/">Hugo</a>.</p>
           <p><a href="https://github.com/dim0627/hugo_theme_beg">Beg</a> designed by <a href="http://yet.unresolved.xyz/">Daisuke Tsuji</a>.</p>

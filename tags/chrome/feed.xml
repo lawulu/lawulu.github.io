@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>璐濒殉漂流记</title>
+    <link>https://lawulu.github.io/tags/chrome/feed/index.xml</link>
+    <description>Recent content on 璐濒殉漂流记</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <atom:link href="https://lawulu.github.io/tags/chrome/feed/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>一次Ajax上传文件的调试过程</title>
+      <link>https://lawulu.github.io/post/%E4%B8%80%E6%AC%A1Ajax%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E8%B0%83%E8%AF%95%E8%BF%87%E7%A8%8B/</link>
+      <pubDate>Sat, 19 Dec 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://lawulu.github.io/post/%E4%B8%80%E6%AC%A1Ajax%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E8%B0%83%E8%AF%95%E8%BF%87%E7%A8%8B/</guid>
+      <description>
+
+&lt;h3 id=&#34;js端&#34;&gt;Js端&lt;/h3&gt;
+
+&lt;p&gt;使用的FormData&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var formData = new FormData();
+    var actionUrl = &amp;quot;/report/agentUpload&amp;quot;;
+    var form = new FormData();
+    form.append(&amp;quot;file&amp;quot;, $(&amp;quot;#reportFile&amp;quot; )[0]);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open(&amp;quot;post&amp;quot;, actionUrl, true);
+    xhr.onload = function () {
+         alert(&amp;quot;上传完成!&amp;quot;);
+    };
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;server端&#34;&gt;Server端&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;public String upload(HttpServletRequest request, @RequestParam(value=&amp;quot;file&amp;quot;,required = true) MultipartFile file, ModelMap model)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;但是就是取不到，报错：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Required MultipartFile parameter &#39;file&#39; is not present
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;server端的问题&#34;&gt;Server端的问题？&lt;/h3&gt;
+
+&lt;h4 id=&#34;是否发到了server&#34;&gt;是否发到了Server？&lt;/h4&gt;
+
+&lt;p&gt;看Network：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;------WebKitFormBoundaryNLPhxKE21THaBaN1
+Content-Disposition: form-data; name=&amp;quot;file&amp;quot;
+
+[object HTMLInputElement]
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;貌似是正确的，在Server端确认一下，将参数加上required=false
+查看request:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;multipartParameters = {HashMap@8882}  size = 1
+multipartParameterContentTypes = {HashMap@8883}  size = 1
+multipartFiles = {LinkedMultiValueMap@8884}  size = 0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;即其实Request里面有东西，但是multipartFiles没有东西……
+其实这时候应该已经看出问题了，因为那个值是一个String，但是没注意，自己盲目以为只要带multipartParameters就是文件&lt;/p&gt;
+
+&lt;p&gt;debug到CommonsMultipartResolver的resolveMultipart方法，里面有这段判断&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;protected MultipartParsingResult parseFileItems(List&amp;lt;FileItem&amp;gt; fileItems, String encoding) {
+		MultiValueMap&amp;lt;String, MultipartFile&amp;gt; multipartFiles = new LinkedMultiValueMap&amp;lt;String, MultipartFile&amp;gt;();
+		Map&amp;lt;String, String[]&amp;gt; multipartParameters = new HashMap&amp;lt;String, String[]&amp;gt;();
+		Map&amp;lt;String, String&amp;gt; multipartParameterContentTypes = new HashMap&amp;lt;String, String&amp;gt;();
+
+		// Extract multipart files and multipart parameters.
+		for (FileItem fileItem : fileItems) {
+			if (fileItem.isFormField()) {
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;如果是false…就往MultipartFile里面填值。
+难道是Content-type的问题？&lt;/p&gt;
+
+&lt;h3 id=&#34;去js端&#34;&gt;去Js端&lt;/h3&gt;
+
+&lt;p&gt;先找到如何打印Formdata的：
+&lt;a href=&#34;http://stackoverflow.com/questions/17066875/how-to-inspect-formdata&#34;&gt;http://stackoverflow.com/questions/17066875/how-to-inspect-formdata&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;for (var pair of formData.entries()) {
+    console.log(pair[0]+ &#39;, &#39; + pair[1]); 
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;打印的东西是：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;file, [object HTMLInputElement]
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;决定采用原始的document.getElementById(&amp;ldquo;reportFile&amp;rdquo;).files[]&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;lastModifiedDate: Tue Dec 20 2015 10:39:39 GMT+0800 (CST)name: &amp;quot;工作簿1.xlsx&amp;quot;size: 23168type: &amp;quot;application/vnd.openxmlformats-officedocument.spreadsheetml.sheet&amp;quot;webkitRelativePath: &amp;quot;&amp;quot;__proto__: File
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;最终发现问题：
+应该用&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; $(&amp;quot;#reportFile&amp;quot; )[0].files[0]
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;结论&#34;&gt;结论&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;++&lt;strong&gt;盲目的去搜索其实非常浪费时间&lt;/strong&gt;++&lt;/li&gt;
+&lt;li&gt;要善用Chrome Console&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

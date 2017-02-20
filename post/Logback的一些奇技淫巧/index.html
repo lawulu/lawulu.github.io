@@ -5,10 +5,10 @@
   <title>Logback的一些奇技淫巧 - 璐濒殉漂流记</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
   
-  <meta name="description" content="Logback是一款非常优秀的日志框架。但是每个开发面对的需求也是多种多样的。 如果你有下面的需求，那你看了这篇文章就可以了： 1. 每次调用链都生">
+  <meta name="description" content="Logback是一款非常优秀的日志框架。但是每个开发面对的需求也是多种多样的。 如果你有下面的需求，那你看了这篇文章就可以了： 每次调用链都生成">
   <meta name="author" content="Lawulu">
   <meta itemprop="name" content="Logback的一些奇技淫巧 - 璐濒殉漂流记">
-  <meta itemprop="description" content="Logback是一款非常优秀的日志框架。但是每个开发面对的需求也是多种多样的。 如果你有下面的需求，那你看了这篇文章就可以了： 1. 每次调用链都生">
+  <meta itemprop="description" content="Logback是一款非常优秀的日志框架。但是每个开发面对的需求也是多种多样的。 如果你有下面的需求，那你看了这篇文章就可以了： 每次调用链都生成">
   <meta itemprop="image" content="https://lawulu.github.io/img/author.jpg">
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@inza9hi" />
@@ -80,17 +80,20 @@
     
 
 <p>Logback是一款非常优秀的日志框架。但是每个开发面对的需求也是多种多样的。
-如果你有下面的需求，那你看了这篇文章就可以了：
-1. 每次调用链都生成一个唯一的traceId
-2. 修改配置文件即时生效，例如，为了定位一个问题，临时将log级别修改为debug
-3. 不同环境使用不同的配置
-4. Logback的默认Rolling策略是：有新的Log产生，如果需要rolling，则rename原来的文件。这样会存在的一个问题就是，如果没有新的log产生，就不会重命名原来的文件。如果遇上需要同步日志（例如Rsync），就会出现问题。</p>
+如果你有下面的需求，那你看了这篇文章就可以了：</p>
+
+<ul>
+<li>每次调用链都生成一个唯一的traceId</li>
+<li>修改配置文件即时生效，例如，为了定位一个问题，临时将log级别修改为debug</li>
+<li>不同环境使用不同的配置</li>
+<li>Logback的默认Rolling策略是：有新的Log产生，如果需要rolling，则rename原来的文件。这样会存在的一个问题就是，如果没有新的log产生，就不会重命名原来的文件。如果遇上需要同步日志（例如Rsync），就会出现问题。</li>
+</ul>
 
 <h3 id="日志的traceid">日志的TraceId</h3>
 
-<ol>
+<ul>
 <li>在Filter里面增加一个，ThreadLocal based 变量：</li>
-</ol>
+</ul>
 
 <pre><code>
 public class CustomFilter extends OncePerRequestFilter {
@@ -118,9 +121,9 @@ public class CustomFilter extends OncePerRequestFilter {
 }
 </code></pre>
 
-<ol>
+<ul>
 <li>配置文件</li>
-</ol>
+</ul>
 
 <pre><code> &lt;encoder&gt;
 	        &lt;pattern&gt;%d{yyyy-MM-dd HH:mm:ss} %-4relative [%thread] %-5level %logger{35} [%X{x-jjk-rqid:-notFound}]- %msg%n&lt;/pattern&gt;

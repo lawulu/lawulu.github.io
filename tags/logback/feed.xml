@@ -26,87 +26,86 @@
 &lt;h3 id=&#34;日志的traceid&#34;&gt;日志的TraceId&lt;/h3&gt;
 
 &lt;ol&gt;
-&lt;li&gt;在Filter里面增加一个，ThreadLocal based 变量：
-```
-public class CustomFilter extends OncePerRequestFilter {
-	&lt;/li&gt;
+&lt;li&gt;在Filter里面增加一个，ThreadLocal based 变量：&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;p&gt;	/** The Constant random. */
-	private static final Random random = new Random(System.currentTimeMillis()); //TODO&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;
+public class CustomFilter extends OncePerRequestFilter {
+	
+	private static final Random random = new Random(System.currentTimeMillis()); //TODO
 
-&lt;p&gt;	@Override
+	@Override
 	protected void doFilterInternal(HttpServletRequest request,
 			HttpServletResponse response, FilterChain filterChain)
-			throws ServletException, IOException {&lt;/p&gt;
-
-&lt;p&gt;		request.setAttribute(ApiConstants.RQID, rnd);&lt;/p&gt;
-
-&lt;p&gt;		response.setHeader(ApiConstants.HEADER_RQID, rnd);
+			throws ServletException, IOException {
+		
+	
+		request.setAttribute(ApiConstants.RQID, rnd);
+		
+		response.setHeader(ApiConstants.HEADER_RQID, rnd);
 		MDC.put(ApiConstants.RQID, rnd);
 		try{
 			filterChain.doFilter(request, response);
 		}finally{
 			MDC.remove(ApiConstants.RQID);
-		}&lt;/p&gt;
+		}
 
-&lt;p&gt;	}&lt;/p&gt;
+	}
 
-&lt;p&gt;}&lt;/p&gt;
+}
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;pre&gt;&lt;code&gt;2. 配置文件
+&lt;ol&gt;
+&lt;li&gt;配置文件&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;pre&gt;&lt;code&gt; &amp;lt;encoder&amp;gt;
+	        &amp;lt;pattern&amp;gt;%d{yyyy-MM-dd HH:mm:ss} %-4relative [%thread] %-5level %logger{35} [%X{x-jjk-rqid:-notFound}]- %msg%n&amp;lt;/pattern&amp;gt;
+	    &amp;lt;/encoder&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;自动更新配置&#34;&gt;自动更新配置&lt;/h3&gt;
+
+&lt;p&gt;显然会影响效率&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;configuration debug=&amp;quot;true&amp;quot; scan=&amp;quot;true&amp;quot; scanPeriod=&amp;quot;1 minutes&amp;quot;&amp;gt;
 
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;&lt;encoder&gt;
-	        &lt;pattern&gt;%d{yyyy-MM-dd HH:mm:ss} %-4relative [%thread] %-5level %logger{35} [%X{x-jjk-rqid:-notFound}]- %msg%n&lt;/pattern&gt;
-	    &lt;/encoder&gt;&lt;/p&gt;
+&lt;h3 id=&#34;各个环境引入不同的profile&#34;&gt;各个环境引入不同的Profile&lt;/h3&gt;
 
-&lt;pre&gt;&lt;code&gt;### 自动更新配置
-显然会影响效率
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;configuration debug=&#34;true&#34; scan=&#34;true&#34; scanPeriod=&#34;1 minutes&#34;&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;### 各个环境引入不同的Profile
+&lt;pre&gt;&lt;code&gt;	&amp;lt;property resource=&amp;quot;config/config-${envTarget}.properties&amp;quot;/&amp;gt;
 
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;	&lt;property resource=&#34;config/config-${envTarget}.properties&#34;/&gt;&lt;/p&gt;
+&lt;h3 id=&#34;基于条件写不同的文件-siftingappender&#34;&gt;基于条件写不同的文件：SiftingAppender&lt;/h3&gt;
 
-&lt;pre&gt;&lt;code&gt;### 基于条件写不同的文件：SiftingAppender
-
-
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;appender name=&#34;stats&#34; class=&#34;ch.qos.logback.classic.sift.SiftingAppender&#34;&gt;
-        &lt;!-- in the absence of the class attribute, it is assumed that the
+&lt;pre&gt;&lt;code&gt; &amp;lt;appender name=&amp;quot;stats&amp;quot; class=&amp;quot;ch.qos.logback.classic.sift.SiftingAppender&amp;quot;&amp;gt;
+        &amp;lt;!-- in the absence of the class attribute, it is assumed that the
              desired discriminator type is
-             ch.qos.logback.classic.sift.MDCBasedDiscriminator --&gt;
-        &lt;discriminator&gt;
-            &lt;key&gt;date&lt;/key&gt;
-            &lt;defaultValue&gt;unknown&lt;/defaultValue&gt;
-        &lt;/discriminator&gt;
-        &lt;sift&gt;
-            &lt;appender name=&#34;FILE-${date}&#34; class=&#34;ch.qos.logback.core.FileAppender&#34;&gt;
-                &lt;file&gt;/mnt/media-${date}.log&lt;/file&gt;
-                &lt;!--&lt;append&gt;false&lt;/append&gt;--&gt;
-                &lt;encoder&gt;
-                    &lt;pattern&gt;%msg%n&lt;/pattern&gt;
-                    &lt;charset&gt;UTF-8&lt;/charset&gt;
-                &lt;/encoder&gt;
-            &lt;/appender&gt;
-        &lt;/sift&gt;
-    &lt;/appender&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;代码中需要写MDC变量：
-
+             ch.qos.logback.classic.sift.MDCBasedDiscriminator --&amp;gt;
+        &amp;lt;discriminator&amp;gt;
+            &amp;lt;key&amp;gt;date&amp;lt;/key&amp;gt;
+            &amp;lt;defaultValue&amp;gt;unknown&amp;lt;/defaultValue&amp;gt;
+        &amp;lt;/discriminator&amp;gt;
+        &amp;lt;sift&amp;gt;
+            &amp;lt;appender name=&amp;quot;FILE-${date}&amp;quot; class=&amp;quot;ch.qos.logback.core.FileAppender&amp;quot;&amp;gt;
+                &amp;lt;file&amp;gt;/mnt/media-${date}.log&amp;lt;/file&amp;gt;
+                &amp;lt;!--&amp;lt;append&amp;gt;false&amp;lt;/append&amp;gt;--&amp;gt;
+                &amp;lt;encoder&amp;gt;
+                    &amp;lt;pattern&amp;gt;%msg%n&amp;lt;/pattern&amp;gt;
+                    &amp;lt;charset&amp;gt;UTF-8&amp;lt;/charset&amp;gt;
+                &amp;lt;/encoder&amp;gt;
+            &amp;lt;/appender&amp;gt;
+        &amp;lt;/sift&amp;gt;
+    &amp;lt;/appender&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;pre&gt;&lt;code&gt;    MDC.put(&amp;quot;date&amp;quot;, dateString);
-&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;代码中需要写MDC变量：&lt;/p&gt;
 
-&lt;p&gt;```&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;        MDC.put(&amp;quot;date&amp;quot;, dateString);
+
+&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     

@@ -89,87 +89,86 @@
 <h3 id="日志的traceid">日志的TraceId</h3>
 
 <ol>
-<li>在Filter里面增加一个，ThreadLocal based 变量：
-```
-public class CustomFilter extends OncePerRequestFilter {
-	</li>
+<li>在Filter里面增加一个，ThreadLocal based 变量：</li>
 </ol>
 
-<p>	/** The Constant random. */
-	private static final Random random = new Random(System.currentTimeMillis()); //TODO</p>
+<pre><code>
+public class CustomFilter extends OncePerRequestFilter {
+	
+	private static final Random random = new Random(System.currentTimeMillis()); //TODO
 
-<p>	@Override
+	@Override
 	protected void doFilterInternal(HttpServletRequest request,
 			HttpServletResponse response, FilterChain filterChain)
-			throws ServletException, IOException {</p>
-
-<p>		request.setAttribute(ApiConstants.RQID, rnd);</p>
-
-<p>		response.setHeader(ApiConstants.HEADER_RQID, rnd);
+			throws ServletException, IOException {
+		
+	
+		request.setAttribute(ApiConstants.RQID, rnd);
+		
+		response.setHeader(ApiConstants.HEADER_RQID, rnd);
 		MDC.put(ApiConstants.RQID, rnd);
 		try{
 			filterChain.doFilter(request, response);
 		}finally{
 			MDC.remove(ApiConstants.RQID);
-		}</p>
+		}
 
-<p>	}</p>
+	}
 
-<p>}</p>
+}
+</code></pre>
 
-<pre><code>2. 配置文件
+<ol>
+<li>配置文件</li>
+</ol>
+
+<pre><code> &lt;encoder&gt;
+	        &lt;pattern&gt;%d{yyyy-MM-dd HH:mm:ss} %-4relative [%thread] %-5level %logger{35} [%X{x-jjk-rqid:-notFound}]- %msg%n&lt;/pattern&gt;
+	    &lt;/encoder&gt;
+</code></pre>
+
+<h3 id="自动更新配置">自动更新配置</h3>
+
+<p>显然会影响效率</p>
+
+<pre><code>&lt;configuration debug=&quot;true&quot; scan=&quot;true&quot; scanPeriod=&quot;1 minutes&quot;&gt;
 
 </code></pre>
 
-<p><encoder>
-	        <pattern>%d{yyyy-MM-dd HH:mm:ss} %-4relative [%thread] %-5level %logger{35} [%X{x-jjk-rqid:-notFound}]- %msg%n</pattern>
-	    </encoder></p>
+<h3 id="各个环境引入不同的profile">各个环境引入不同的Profile</h3>
 
-<pre><code>### 自动更新配置
-显然会影响效率
-</code></pre>
-
-<p><configuration debug="true" scan="true" scanPeriod="1 minutes"></p>
-
-<pre><code>### 各个环境引入不同的Profile
+<pre><code>	&lt;property resource=&quot;config/config-${envTarget}.properties&quot;/&gt;
 
 </code></pre>
 
-<p>	<property resource="config/config-${envTarget}.properties"/></p>
+<h3 id="基于条件写不同的文件-siftingappender">基于条件写不同的文件：SiftingAppender</h3>
 
-<pre><code>### 基于条件写不同的文件：SiftingAppender
-
-
-</code></pre>
-
-<p><appender name="stats" class="ch.qos.logback.classic.sift.SiftingAppender">
-        <!-- in the absence of the class attribute, it is assumed that the
+<pre><code> &lt;appender name=&quot;stats&quot; class=&quot;ch.qos.logback.classic.sift.SiftingAppender&quot;&gt;
+        &lt;!-- in the absence of the class attribute, it is assumed that the
              desired discriminator type is
-             ch.qos.logback.classic.sift.MDCBasedDiscriminator -->
-        <discriminator>
-            <key>date</key>
-            <defaultValue>unknown</defaultValue>
-        </discriminator>
-        <sift>
-            <appender name="FILE-${date}" class="ch.qos.logback.core.FileAppender">
-                <file>/mnt/media-${date}.log</file>
-                <!--<append>false</append>-->
-                <encoder>
-                    <pattern>%msg%n</pattern>
-                    <charset>UTF-8</charset>
-                </encoder>
-            </appender>
-        </sift>
-    </appender></p>
-
-<pre><code>代码中需要写MDC变量：
-
+             ch.qos.logback.classic.sift.MDCBasedDiscriminator --&gt;
+        &lt;discriminator&gt;
+            &lt;key&gt;date&lt;/key&gt;
+            &lt;defaultValue&gt;unknown&lt;/defaultValue&gt;
+        &lt;/discriminator&gt;
+        &lt;sift&gt;
+            &lt;appender name=&quot;FILE-${date}&quot; class=&quot;ch.qos.logback.core.FileAppender&quot;&gt;
+                &lt;file&gt;/mnt/media-${date}.log&lt;/file&gt;
+                &lt;!--&lt;append&gt;false&lt;/append&gt;--&gt;
+                &lt;encoder&gt;
+                    &lt;pattern&gt;%msg%n&lt;/pattern&gt;
+                    &lt;charset&gt;UTF-8&lt;/charset&gt;
+                &lt;/encoder&gt;
+            &lt;/appender&gt;
+        &lt;/sift&gt;
+    &lt;/appender&gt;
 </code></pre>
 
-<pre><code>    MDC.put(&quot;date&quot;, dateString);
-</code></pre>
+<p>代码中需要写MDC变量：</p>
 
-<p>```</p>
+<pre><code>        MDC.put(&quot;date&quot;, dateString);
+
+</code></pre>
 
 	</div>
   <footer class="article-footer clearfix">

@@ -2,20 +2,20 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>安全 - 璐濒殉漂流记</title>
+  <title>Logback的一些奇技淫巧 - 璐濒殉漂流记</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
   
-  <meta name="description" content="安全">
+  <meta name="description" content="Logback是一款非常优秀的日志框架。但是每个开发面对的需求也是多种多样的。 如果你有下面的需求，那你看了这篇文章就可以了： 1. 每次调用链都生">
   <meta name="author" content="Lawulu">
-  <meta itemprop="name" content="安全 - 璐濒殉漂流记">
-  <meta itemprop="description" content="安全">
+  <meta itemprop="name" content="Logback的一些奇技淫巧 - 璐濒殉漂流记">
+  <meta itemprop="description" content="Logback是一款非常优秀的日志框架。但是每个开发面对的需求也是多种多样的。 如果你有下面的需求，那你看了这篇文章就可以了： 1. 每次调用链都生">
   <meta itemprop="image" content="https://lawulu.github.io/img/author.jpg">
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@inza9hi" />
-  <meta name="twitter:title" content="安全 - 璐濒殉漂流记" />
+  <meta name="twitter:title" content="Logback的一些奇技淫巧 - 璐濒殉漂流记" />
   
   <meta name="twitter:description" content="">
-  <link rel="alternate" href="https://lawulu.github.io/feed.xml" title="璐濒殉漂流记" type="application/rss+xml"/>
+  
   <link rel="shortcut icon" href="https://lawulu.github.io/img/favicon.ico"/>
   <link rel="apple-touch-icon" href="https://lawulu.github.io/apple-touch-icon.png" />
   <link rel="apple-touch-icon-precomposed" href="https://lawulu.github.io/apple-touch-icon.png" />
@@ -59,21 +59,171 @@
 
   </header>
   <div id="container">
-    <div id="main">
-      
-      <h2 id="2015-08">2015-08</h2>
-      
-      <section class="post" itemscope itemprop="blogPost">
-    <a href="https://lawulu.github.io/post/%E4%B8%80%E7%A7%8D%E7%BB%9F%E4%B8%80%E7%9A%84API%E7%AD%BE%E5%90%8D%E6%A0%A1%E9%AA%8C%E6%96%B9%E6%B3%95/" title="一种统一的API签名校验实现" itemprop="url">
-    <h1 itemprop="name">一种统一的API签名校验实现</h1>
-    <p itemprop="description">签名方法: Header: @RequestHeader(value = &quot;x-header-timestamp&quot;) Long timestamp, @RequestHeader(value = &quot;x-header-appid&quot;) String appid, @RequestHeader(value = &quot;x-header-sign&quot;) String sign 源串 orignalString: HttpMethod=URI&amp;Param1=Value1&amp;Param2=Value2RequestBodySeckeyTimestamp 注1:Method大写 注2:为方便期间Param不排序,如果出问题再说 注3:ResustB</p>
-    <time datetime="2015-08-10 00:00:00 &#43;0000 UTC" itemprop="datePublished">2015年08月10日</time>
-  </a>
-</section>
+    <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody">
+    <header class="article-info clearfix">
+  <h1 itemprop="name">
+      <a href="https://lawulu.github.io/post/Logback%E7%9A%84%E4%B8%80%E4%BA%9B%E5%A5%87%E6%8A%80%E6%B7%AB%E5%B7%A7/" title="Logback的一些奇技淫巧" itemprop="url">Logback的一些奇技淫巧</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="" title="Lawulu">Lawulu</a>
+    
+  </p>
+  <p class="article-time">
+    <time datetime="2015-09-11 00:00:00 &#43;0000 UTC" itemprop="datePublished">2015年09月11日</time>
+  </p>
+</header>
 
-      
-      
+	<div class="article-content">
+    
+    
+
+<p>Logback是一款非常优秀的日志框架。但是每个开发面对的需求也是多种多样的。
+如果你有下面的需求，那你看了这篇文章就可以了：
+1. 每次调用链都生成一个唯一的traceId
+2. 修改配置文件即时生效，例如，为了定位一个问题，临时将log级别修改为debug
+3. 不同环境使用不同的配置
+4. Logback的默认Rolling策略是：有新的Log产生，如果需要rolling，则rename原来的文件。这样会存在的一个问题就是，如果没有新的log产生，就不会重命名原来的文件。如果遇上需要同步日志（例如Rsync），就会出现问题。</p>
+
+<h3 id="日志的traceid">日志的TraceId</h3>
+
+<ol>
+<li>在Filter里面增加一个，ThreadLocal based 变量：
+```
+public class CustomFilter extends OncePerRequestFilter {
+	</li>
+</ol>
+
+<p>	/** The Constant random. */
+	private static final Random random = new Random(System.currentTimeMillis()); //TODO</p>
+
+<p>	@Override
+	protected void doFilterInternal(HttpServletRequest request,
+			HttpServletResponse response, FilterChain filterChain)
+			throws ServletException, IOException {</p>
+
+<p>		request.setAttribute(ApiConstants.RQID, rnd);</p>
+
+<p>		response.setHeader(ApiConstants.HEADER_RQID, rnd);
+		MDC.put(ApiConstants.RQID, rnd);
+		try{
+			filterChain.doFilter(request, response);
+		}finally{
+			MDC.remove(ApiConstants.RQID);
+		}</p>
+
+<p>	}</p>
+
+<p>}</p>
+
+<pre><code>2. 配置文件
+
+</code></pre>
+
+<p><encoder>
+	        <pattern>%d{yyyy-MM-dd HH:mm:ss} %-4relative [%thread] %-5level %logger{35} [%X{x-jjk-rqid:-notFound}]- %msg%n</pattern>
+	    </encoder></p>
+
+<pre><code>### 自动更新配置
+显然会影响效率
+</code></pre>
+
+<p><configuration debug="true" scan="true" scanPeriod="1 minutes"></p>
+
+<pre><code>### 各个环境引入不同的Profile
+
+</code></pre>
+
+<p>	<property resource="config/config-${envTarget}.properties"/></p>
+
+<pre><code>### 基于条件写不同的文件：SiftingAppender
+
+
+</code></pre>
+
+<p><appender name="stats" class="ch.qos.logback.classic.sift.SiftingAppender">
+        <!-- in the absence of the class attribute, it is assumed that the
+             desired discriminator type is
+             ch.qos.logback.classic.sift.MDCBasedDiscriminator -->
+        <discriminator>
+            <key>date</key>
+            <defaultValue>unknown</defaultValue>
+        </discriminator>
+        <sift>
+            <appender name="FILE-${date}" class="ch.qos.logback.core.FileAppender">
+                <file>/mnt/media-${date}.log</file>
+                <!--<append>false</append>-->
+                <encoder>
+                    <pattern>%msg%n</pattern>
+                    <charset>UTF-8</charset>
+                </encoder>
+            </appender>
+        </sift>
+    </appender></p>
+
+<pre><code>代码中需要写MDC变量：
+
+</code></pre>
+
+<pre><code>    MDC.put(&quot;date&quot;, dateString);
+</code></pre>
+
+<p>```</p>
+
+	</div>
+  <footer class="article-footer clearfix">
+  
+
+<div class="article-tags">
+  <span></span>
+  
+  <a href="https://lawulu.github.io/tags/logback">logback</a>
+  
+</div>
+
+
+
+
+
+<div class="article-categories">
+  <span></span>
+  
+  <a class="article-category-link" href="https://lawulu.github.io/categories/tech">Tech</a>
+  
+</div>
+
+
+
+  <div class="article-share" id="share">
+    <div data-url="https://lawulu.github.io/post/Logback%E7%9A%84%E4%B8%80%E4%BA%9B%E5%A5%87%E6%8A%80%E6%B7%AB%E5%B7%A7/" data-title="Logback的一些奇技淫巧" data-tsina="" class="share clearfix">
     </div>
+  </div>
+</footer>
+
+	</article>
+  
+<section class="comment">
+  <div class="ds-thread" data-thread-key="https://lawulu.github.io/post/Logback%E7%9A%84%E4%B8%80%E4%BA%9B%E5%A5%87%E6%8A%80%E6%B7%AB%E5%B7%A7/"
+   data-title="Logback的一些奇技淫巧" data-url="https://lawulu.github.io/post/Logback%E7%9A%84%E4%B8%80%E4%BA%9B%E5%A5%87%E6%8A%80%E6%B7%AB%E5%B7%A7/"></div>
+</section>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"inza9hi"};
+(function() {
+  var ds = document.createElement('script');
+  ds.type = 'text/javascript';ds.async = true;
+  ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+  ds.charset = 'UTF-8';
+  (document.getElementsByTagName('head')[0]
+  || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+</script>
+
+
+
+
+</div>
+
     <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
 <div id="asidepart">
 <div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
@@ -172,10 +322,6 @@
 
 
   
-<div class="rsspart">
-  <a rel="nofollow" href="https://lawulu.github.io/feed.xml" type="application/rss+xml" target="_blank">RSS 订阅</a>
-</div>
-
 
 </aside>
 </div>
@@ -270,6 +416,38 @@ $(document).ready(function(){
 
 <script type="text/javascript">
 $(document).ready(function(){
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){
   var $this = $('.share'),
       url = $this.attr('data-url'),
       encodedUrl = encodeURIComponent(url),
@@ -296,6 +474,27 @@ $(document).ready(function(){
 });
 </script>
 
+
+<link rel="stylesheet" href="https://lawulu.github.io/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="https://lawulu.github.io/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+});
+</script>
 
 
 

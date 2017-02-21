@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>璐濒殉漂流记</title>
+    <link>https://lawulu.github.io/tags/python/feed/index.xml</link>
+    <description>Recent content on 璐濒殉漂流记</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <atom:link href="https://lawulu.github.io/tags/python/feed/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Scrapy</title>
+      <link>https://lawulu.github.io/post/Scrapy%E5%88%9D%E7%AA%A5/</link>
+      <pubDate>Wed, 15 Feb 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://lawulu.github.io/post/Scrapy%E5%88%9D%E7%AA%A5/</guid>
+      <description>
+
+&lt;h2 id=&#34;简介&#34;&gt;简介&lt;/h2&gt;
+
+&lt;p&gt;Scrapy其实是一个很轻量级或者简单的框架。几个概念：
+1. &lt;code&gt;Request&lt;/code&gt;,&lt;code&gt;Response&lt;/code&gt;，顾名思义，对应的就是网络的请求和响应。
+2. &lt;code&gt;Item&lt;/code&gt;对应的是爬取到的结果。
+3. &lt;code&gt;Pipeline&lt;/code&gt;对Item的处理。
+4. &lt;code&gt;Selector&lt;/code&gt;对应的是对HTML的处理
+5. &lt;code&gt;Middleware&lt;/code&gt;相当于Filter，分两种，一种是针对Spider，一种针对网络连接
+6. &lt;code&gt;Scheduler&lt;/code&gt;一个深度优先的队列
+7. &lt;code&gt;Feed&lt;/code&gt; 官方提供的json或者json line的输出
+8. &lt;code&gt;meta&lt;/code&gt; 可以在多个Spider之间传输数据&lt;/p&gt;
+
+&lt;p&gt;其实把文档看一遍，下一个demo，很快就可以跑起来。&lt;/p&gt;
+
+&lt;p&gt;看图其实很清楚：
+&lt;img src=&#34;https://lawulu.github.io/iimg/scrapy.png&#34; alt=&#34;Scrapy Arch&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;从StartRequest开始，不停的返回Item或者返回Request，如果返回Item，就发到Pipeline去处理，返回Request，归根结底还是要返回Item的。&lt;/p&gt;
+
+&lt;h2 id=&#34;简单示例&#34;&gt;简单示例&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;import scrapy
+class ZhihuSpider(scrapy.Spider):
+    name = &amp;quot;zhihu&amp;quot;
+    start_urls = [
+        &#39;https://www.zhihu.com/explore&#39;,
+    ]
+
+    def parse(self, response):
+        # self.logger.info(&amp;quot;------zzhon中国&amp;quot;)
+
+        for feed in response.css(&#39;.recommend-feed&#39;):
+            link = response.urljoin(feed.css(&#39;a::attr(href)&#39;).extract_first());
+            yield scrapy.Request(link,callback=self.parse_content)
+           
+
+##!!!  print response.css(&#39;#zh-question-detail &amp;gt; div&#39;).extract()[0].encode(&#39;utf-8&#39;)
+
+    def parse_content(self,response):
+        yield {
+            &#39;title&#39;:response.css(&#39;#zh-question-title &amp;gt; h2 &amp;gt; a::text&#39;).extract_first(),
+            &#39;content&#39;:response.css(&#39;#zh-question-detail &amp;gt; div::text&#39;).extract(),
+            &#39;link&#39;:response.url
+        }
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;当然这个示例跑起来之前，需要改一些配置文件和设置User-agent…&lt;/p&gt;
+
+&lt;h2 id=&#34;吐槽&#34;&gt;吐槽&lt;/h2&gt;
+
+&lt;h3 id=&#34;日志只打印unicode问题&#34;&gt;日志只打印Unicode问题&lt;/h3&gt;
+
+&lt;p&gt;Debug和监控起来非常不方便，我看官方把这个issue当做wont fix了，强烈推荐直接上Python3。scrapy shell简直没了存在的必要&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;2017-01-15 23:25:54 [scrapy] DEBUG: Scraped from &amp;lt;200 https://www.zhihu.com/question/29218955/answer/41797438&amp;gt; 
+{&#39;content&#39;: [u&#39;\u666e\u6d31\u5728\u8fc7\u53bb\u5e94\u8be5\u662f\u4e0d\u4e0a\u53f0\u9762\u7684\u5427\uff1f\u4e5f\u6ca1\u95ee\u662f\u4e0d\u662f\u5c31\u95ee\u4e3a\u4ec0\u4e48\u4e86\uff0c\u5982\u679c\u95ee\u9898\u6709\u9519\u8bef\uff0c\u8bf7\u6307\u6b63&#39;], &#39;link&#39;: &#39;https://www.zhihu.com/question/19258955/answer/42797438&#39;, &#39;title&#39;: u&#39;\u666e\u6d31\u7531\u539f\u6765\u4e0d\u4e0a\u53f0\u9762\u7684\u8fb9\u9500\u8336\u5230\u5982\u4eca\u53d7\u5230\u5e7f\u5927\u8336\u53cb\u559c\u7231\u7684\u8336\u7c7b\uff0c\u9664\u4e86\u7092\u4f5c\u5916\uff0c\u666e\u6d31\u7684\u5de5\u827a\u6216\u8005\u8d28\u91cf\u6709\u4e86\u5f88\u5927\u8fdb\u6b65\u5417\uff1f&#39;} 
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;scheduler太弱&#34;&gt;scheduler太弱&lt;/h3&gt;
+
+&lt;p&gt;自带的scheduler只能深度优先和广度优先，官方推荐是自家的scrapyd，稍微了解了下，应该是启动时候把任务分给多个进程，进程之间好像没法交互&lt;/p&gt;
+
+&lt;h3 id=&#34;spider-request之间很难协同&#34;&gt;Spider/Request之间很难协同&lt;/h3&gt;
+
+&lt;p&gt;很多时候我们需要某几个Request应该在一个组里面，可以共用Cookie，共用Ip。可以用meta来实现…由于Scrapy的Request是无脑yield出来的，实现出来肯定很丑陋。&lt;/p&gt;
+
+&lt;h3 id=&#34;callback-hell&#34;&gt;Callback hell&lt;/h3&gt;
+
+&lt;p&gt;通过Callback来绑定处理方法，入口和可测试性很差，怪不得要加入Contract机制&lt;/p&gt;
+
+&lt;h3 id=&#34;容错&#34;&gt;容错&lt;/h3&gt;
+
+&lt;p&gt;容错机制很少，总感觉只用Scrapy只能做出一个玩具来&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;结论&lt;/strong&gt;：其实直接上&lt;code&gt;requests&lt;/code&gt;和&lt;code&gt;beautifulsoup&lt;/code&gt;挺好的，Scrapy的优势是各种插件比较全，只专心做爬取逻辑。如果真正做一个工业化的产品，Scrapy远远不够，还要攒很多东西进来。&lt;/p&gt;
+
+&lt;h2 id=&#34;splash&#34;&gt;Splash&lt;/h2&gt;
+
+&lt;p&gt;Pyspider是用的&lt;code&gt;PhantomJS&lt;/code&gt;，Scrapy提供了一个基于Docker和Lua的Splash。
+这货的问题是Splash没有保持渲染状态的方法，对于复杂的JS交互，一般的做法是一个lua脚本执行很多次，最后返回所有的结果。这样爬取的颗粒比较大，如果中间出现异常，不好处理，而且调用&lt;code&gt;splash::wait()&lt;/code&gt;总感觉不靠谱，没有提供Dom加载之后的回调吗？&lt;/p&gt;
+
+&lt;h3 id=&#34;原理&#34;&gt;原理&lt;/h3&gt;
+
+&lt;p&gt;Splash可以执行Lua脚本，官方封装了Splash类，可以和JS交互。这样，就可可以找到Dom中的Button，直接调用click事件，然后返回某些DOM中的Html或者Json。&lt;/p&gt;
+
+&lt;h3 id=&#34;lua&#34;&gt;Lua&lt;/h3&gt;
+
+&lt;p&gt;Lua 很值得一学，Nginx，游戏引擎，Redis都在用……
+快速入门：&lt;a href=&#34;http://tylerneylon.com/a/learn-lua/&#34;&gt;http://tylerneylon.com/a/learn-lua/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Lua稍微复杂并且可以玩出花的就是Metatable了，可以重载对字典(对象)各种操作符。&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

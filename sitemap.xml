@@ -3,7 +3,12 @@
   
   <url>
     <loc>https://lawulu.github.io/</loc>
-    <lastmod>2015-12-19T00:00:00+00:00</lastmod>
+    <lastmod>2017-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://lawulu.github.io/about/</loc>
+    <lastmod>2017-02-21T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -24,10 +29,6 @@
   <url>
     <loc>https://lawulu.github.io/post/%E4%B8%80%E7%A7%8D%E7%BB%9F%E4%B8%80%E7%9A%84API%E7%AD%BE%E5%90%8D%E6%A0%A1%E9%AA%8C%E6%96%B9%E6%B3%95/</loc>
     <lastmod>2015-08-10T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://lawulu.github.io/about/</loc>
   </url>
   
 </urlset>

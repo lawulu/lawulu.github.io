@@ -77,11 +77,33 @@
 
 	<div class="article-content">
     
+		<div class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+      <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#签名方法">签名方法:</a></li>
+<li><a href="#header">Header:</a></li>
+<li><a href="#源串-orignalstring">源串 orignalString:</a></li>
+<li><a href="#签名-sign">签名 sign:</a></li>
+<li><a href="#实现">实现:</a>
+<ul>
+<li><a href="#1-根据注解mapping需要检查签名的方法">1 根据注解Mapping需要检查签名的方法</a></li>
+<li><a href="#2-获取参数">2 获取参数</a></li>
+<li><a href="#3-计算签名">3 计算签名</a></li>
+</ul></li>
+<li><a href="#增加filter">增加Filter</a></li>
+</ul></li>
+</ul>
+</nav>
+		</div>
+    
     
 
-<h3 id="签名方法">签名方法:</h3>
+<h2 id="签名方法">签名方法:</h2>
 
-<h4 id="header">Header:</h4>
+<h2 id="header">Header:</h2>
 
 <pre><code>
 @RequestHeader(value = &quot;x-header-timestamp&quot;) Long timestamp,
@@ -89,7 +111,7 @@
 @RequestHeader(value = &quot;x-header-sign&quot;) String sign
 </code></pre>
 
-<h4 id="源串-orignalstring">源串 orignalString:</h4>
+<h2 id="源串-orignalstring">源串 orignalString:</h2>
 
 <pre><code>
 HttpMethod=URI&amp;Param1=Value1&amp;Param2=Value2RequestBodySeckeyTimestamp
@@ -100,23 +122,23 @@ HttpMethod=URI&amp;Param1=Value1&amp;Param2=Value2RequestBodySeckeyTimestamp
 注3:ResustBody可能为空
 注4:SecKey跟AppId是一一对应.</p>
 
-<h4 id="签名-sign">签名 sign:</h4>
+<h2 id="签名-sign">签名 sign:</h2>
 
 <pre><code>sign=Md5(orignalString).toUpperCase
 </code></pre>
 
 <p>暂时只支持MD5</p>
 
-<h3 id="实现">实现:</h3>
+<h2 id="实现">实现:</h2>
 
 <p>原则上,应该和业务逻辑代码分离,不影响业务逻辑代码的开发</p>
 
-<h4 id="1-根据注解mapping需要检查签名的方法">1 根据注解Mapping需要检查签名的方法</h4>
+<h3 id="1-根据注解mapping需要检查签名的方法">1 根据注解Mapping需要检查签名的方法</h3>
 
 <p>例如:Spring @ControllerAdvice(annotations = RestController.class)
 如需要,可自定义自己的注解</p>
 
-<h4 id="2-获取参数">2 获取参数</h4>
+<h3 id="2-获取参数">2 获取参数</h3>
 
 <pre><code>
 @ModelAttribute
@@ -126,7 +148,7 @@ HttpMethod=URI&amp;Param1=Value1&amp;Param2=Value2RequestBodySeckeyTimestamp
 			@RequestHeader(value = &quot;x-header-sign&quot;) String sign) 
 </code></pre>
 
-<h4 id="3-计算签名">3 计算签名</h4>
+<h3 id="3-计算签名">3 计算签名</h3>
 
 <p>可能需要在GLobalExceptionHandler中增加</p>
 
@@ -141,7 +163,7 @@ HttpMethod=URI&amp;Param1=Value1&amp;Param2=Value2RequestBodySeckeyTimestamp
     	}
 </code></pre>
 
-<h3 id="增加filter">增加Filter</h3>
+<h2 id="增加filter">增加Filter</h2>
 
 <p>注意：因为在ControllerAdvice消费了Request的InputStream，所以需要在前面的Filter中Copy一份Request出来
 代码如下：</p>

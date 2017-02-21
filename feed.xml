@@ -210,7 +210,7 @@
 
 &lt;h3 id=&#34;server端的问题&#34;&gt;Server端的问题？&lt;/h3&gt;
 
-&lt;h4 id=&#34;是否发到了server&#34;&gt;是否发到了Server？&lt;/h4&gt;
+&lt;p&gt;是否发到了Server？&lt;/p&gt;
 
 &lt;p&gt;看Network：&lt;/p&gt;
 
@@ -500,9 +500,9 @@ public class CustomFilter extends OncePerRequestFilter {
       <guid>https://lawulu.github.io/post/%E4%B8%80%E7%A7%8D%E7%BB%9F%E4%B8%80%E7%9A%84API%E7%AD%BE%E5%90%8D%E6%A0%A1%E9%AA%8C%E6%96%B9%E6%B3%95/</guid>
       <description>
 
-&lt;h3 id=&#34;签名方法&#34;&gt;签名方法:&lt;/h3&gt;
+&lt;h2 id=&#34;签名方法&#34;&gt;签名方法:&lt;/h2&gt;
 
-&lt;h4 id=&#34;header&#34;&gt;Header:&lt;/h4&gt;
+&lt;h2 id=&#34;header&#34;&gt;Header:&lt;/h2&gt;
 
 &lt;pre&gt;&lt;code&gt;
 @RequestHeader(value = &amp;quot;x-header-timestamp&amp;quot;) Long timestamp,
@@ -510,7 +510,7 @@ public class CustomFilter extends OncePerRequestFilter {
 @RequestHeader(value = &amp;quot;x-header-sign&amp;quot;) String sign
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h4 id=&#34;源串-orignalstring&#34;&gt;源串 orignalString:&lt;/h4&gt;
+&lt;h2 id=&#34;源串-orignalstring&#34;&gt;源串 orignalString:&lt;/h2&gt;
 
 &lt;pre&gt;&lt;code&gt;
 HttpMethod=URI&amp;amp;Param1=Value1&amp;amp;Param2=Value2RequestBodySeckeyTimestamp
@@ -521,23 +521,23 @@ HttpMethod=URI&amp;amp;Param1=Value1&amp;amp;Param2=Value2RequestBodySeckeyTimes
 注3:ResustBody可能为空
 注4:SecKey跟AppId是一一对应.&lt;/p&gt;
 
-&lt;h4 id=&#34;签名-sign&#34;&gt;签名 sign:&lt;/h4&gt;
+&lt;h2 id=&#34;签名-sign&#34;&gt;签名 sign:&lt;/h2&gt;
 
 &lt;pre&gt;&lt;code&gt;sign=Md5(orignalString).toUpperCase
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;暂时只支持MD5&lt;/p&gt;
 
-&lt;h3 id=&#34;实现&#34;&gt;实现:&lt;/h3&gt;
+&lt;h2 id=&#34;实现&#34;&gt;实现:&lt;/h2&gt;
 
 &lt;p&gt;原则上,应该和业务逻辑代码分离,不影响业务逻辑代码的开发&lt;/p&gt;
 
-&lt;h4 id=&#34;1-根据注解mapping需要检查签名的方法&#34;&gt;1 根据注解Mapping需要检查签名的方法&lt;/h4&gt;
+&lt;h3 id=&#34;1-根据注解mapping需要检查签名的方法&#34;&gt;1 根据注解Mapping需要检查签名的方法&lt;/h3&gt;
 
 &lt;p&gt;例如:Spring @ControllerAdvice(annotations = RestController.class)
 如需要,可自定义自己的注解&lt;/p&gt;
 
-&lt;h4 id=&#34;2-获取参数&#34;&gt;2 获取参数&lt;/h4&gt;
+&lt;h3 id=&#34;2-获取参数&#34;&gt;2 获取参数&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code&gt;
 @ModelAttribute
@@ -547,7 +547,7 @@ HttpMethod=URI&amp;amp;Param1=Value1&amp;amp;Param2=Value2RequestBodySeckeyTimes
 			@RequestHeader(value = &amp;quot;x-header-sign&amp;quot;) String sign) 
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h4 id=&#34;3-计算签名&#34;&gt;3 计算签名&lt;/h4&gt;
+&lt;h3 id=&#34;3-计算签名&#34;&gt;3 计算签名&lt;/h3&gt;
 
 &lt;p&gt;可能需要在GLobalExceptionHandler中增加&lt;/p&gt;
 
@@ -562,7 +562,7 @@ HttpMethod=URI&amp;amp;Param1=Value1&amp;amp;Param2=Value2RequestBodySeckeyTimes
     	}
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;增加filter&#34;&gt;增加Filter&lt;/h3&gt;
+&lt;h2 id=&#34;增加filter&#34;&gt;增加Filter&lt;/h2&gt;
 
 &lt;p&gt;注意：因为在ControllerAdvice消费了Request的InputStream，所以需要在前面的Filter中Copy一份Request出来
 代码如下：&lt;/p&gt;

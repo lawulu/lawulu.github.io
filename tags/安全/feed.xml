@@ -80,7 +80,7 @@ HttpMethod=URI&amp;amp;Param1=Value1&amp;amp;Param2=Value2RequestBodySeckeyTimes
 
 &lt;h2 id=&#34;增加filter&#34;&gt;增加Filter&lt;/h2&gt;
 
-&lt;p&gt;注意：因为在ControllerAdvice消费了Request的InputStream，所以需要在前面的Filter中Copy一份Request出来
+&lt;p&gt;注意：因为在ControllerAdvice消费了Request的InputStream,所以需要在前面的Filter中Copy一份Request出来
 代码如下：&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;/**

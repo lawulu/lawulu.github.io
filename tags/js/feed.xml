@@ -9,6 +9,85 @@
     <atom:link href="https://lawulu.github.io/tags/js/feed/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
+      <title>AngularJS初窥</title>
+      <link>https://lawulu.github.io/post/AngularJS%E5%88%9D%E7%AA%A5/</link>
+      <pubDate>Sun, 20 Nov 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://lawulu.github.io/post/AngularJS%E5%88%9D%E7%AA%A5/</guid>
+      <description>
+
+&lt;p&gt;无数人吐槽过前端框架的层出不穷,眼看前端开发要脱离浏览器兼容性的苦海,又要落入框架碎片化,从语言本身到编译到打包到开发框架,是终端用户需求太多还是前端大牛们野心太大? 不管怎样,报G家大腿选择Angular似乎没什么问题,另一个大腿的Reactive本身不是一个完备的框架.&lt;/p&gt;
+
+&lt;h2 id=&#34;angular简介&#34;&gt;Angular简介&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;在Web开发中需要JS做什么？&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;与服务器交互&lt;/li&gt;
+&lt;li&gt;操作DOM&lt;/li&gt;
+&lt;li&gt;简单的逻辑控制&lt;/li&gt;
+&lt;li&gt;输入验证&lt;/li&gt;
+&lt;li&gt;路由&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Angular做了什么改变？&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;引入了指令,ng开头,来扩展HTML&lt;/li&gt;
+&lt;li&gt;数据绑定,通过对HTML元素增加指令ng-model&lt;/li&gt;
+&lt;li&gt;使用directive来自定义指令&lt;/li&gt;
+&lt;li&gt;Scope,提供了HTML视图和JS控制器之间的纽带&lt;/li&gt;
+&lt;li&gt;Controller,可以视为一个$Scope的构造函数&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;数据绑定 即将Dom的变化绑定到数据的变化上面去,因为用的1,所以这个绑定是双向的,有时候想只改变页面,会影响到数据&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;使用一周的感受&#34;&gt;使用一周的感受&lt;/h2&gt;
+
+&lt;h3 id=&#34;一些坑&#34;&gt;一些坑:&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;http是异步,要在.function中处理,或者统一在配置里面设置&lt;code&gt;async : true&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;怎么Lazy初始化？没有找到办法&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;controller之间的交互&#34;&gt;Controller之间的交互&lt;/h3&gt;
+
+&lt;p&gt;两种办法&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://stackoverflow.com/questions/29467339/how-to-call-a-function-from-another-controller-in-angularjs&#34;&gt;http://stackoverflow.com/questions/29467339/how-to-call-a-function-from-another-controller-in-angularjs&lt;/a&gt;
+本质是绑定到RootScope里面,通过事件来响应&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.csdn.net/findsafety/article/details/50403242&#34;&gt;http://blog.csdn.net/findsafety/article/details/50403242&lt;/a&gt;
+原生dom与js的处理办法,可能会版本之间不兼容,本质是通过dom找到Ng-controller的方法.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;    var appElement = document.querySelector(&#39;[ng-controller=&amp;quot;EndCardEditCtrl as ctrl&amp;quot;]&#39;);
+    var editCtrl = angular.element(appElement);
+    
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;与jquery-js之间的交互&#34;&gt;与Jquery/JS之间的交互&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;有时候Jquery绑定Function时候,Dom并没有生成,所以需要替换成Angular的&lt;code&gt;ng-click&lt;/code&gt;事件.&lt;/li&gt;
+&lt;li&gt;JS中可以通过元素来找的其绑定的scope
+&lt;code&gt;
+window.angular.element(&amp;quot;#divId&amp;quot;).scope().doSth()
+&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;angular的分支循环&#34;&gt;Angular的分支循环&lt;/h3&gt;
+
+&lt;p&gt;Angular提供了Ng-show等逻辑判断,来控制页面的变化.
+提供了Switch和For来做分支和循环.
+简单来说,基本可以对Html的显示进行编程.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>一次Ajax上传文件的调试过程</title>
       <link>https://lawulu.github.io/post/%E4%B8%80%E6%AC%A1Ajax%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E8%B0%83%E8%AF%95%E8%BF%87%E7%A8%8B/</link>
       <pubDate>Sat, 19 Dec 2015 00:00:00 +0000</pubDate>
@@ -16,7 +95,7 @@
       <guid>https://lawulu.github.io/post/%E4%B8%80%E6%AC%A1Ajax%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E8%B0%83%E8%AF%95%E8%BF%87%E7%A8%8B/</guid>
       <description>
 
-&lt;p&gt;很久不做Web了，帮一小弟解决的一个问题。据他说无脑搜了很久…&lt;/p&gt;
+&lt;p&gt;很久不做Web了,帮一小弟解决的一个问题.据他说无脑搜了很久…&lt;/p&gt;
 
 &lt;h2 id=&#34;现象和代码&#34;&gt;现象和代码&lt;/h2&gt;
 
@@ -42,7 +121,7 @@
 &lt;pre&gt;&lt;code&gt;public String upload(HttpServletRequest request, @RequestParam(value=&amp;quot;file&amp;quot;,required = true) MultipartFile file, ModelMap model)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;但是就是取不到，报错：&lt;/p&gt;
+&lt;p&gt;但是就是取不到,报错：&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;Required MultipartFile parameter &#39;file&#39; is not present
 &lt;/code&gt;&lt;/pre&gt;
@@ -60,7 +139,7 @@ Content-Disposition: form-data; name=&amp;quot;file&amp;quot;
 
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;貌似是正确的，在Server端确认一下，将参数加上required=false
+&lt;p&gt;貌似是正确的,在Server端确认一下,将参数加上required=false
 查看request:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;multipartParameters = {HashMap@8882}  size = 1
@@ -68,11 +147,11 @@ multipartParameterContentTypes = {HashMap@8883}  size = 1
 multipartFiles = {LinkedMultiValueMap@8884}  size = 0
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Request里面有东西，但是multipartFiles没有东西……&lt;/p&gt;
+&lt;p&gt;Request里面有东西,但是multipartFiles没有东西……&lt;/p&gt;
 
-&lt;p&gt;&lt;em&gt;其实这时候应该已经看出问题了，因为那个值是一个String，但是没注意，自己盲目以为只要带multipartParameters就是文件&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;其实这时候应该已经看出问题了,因为那个值是一个String,但是没注意,自己盲目以为只要带multipartParameters就是文件&lt;/em&gt;&lt;/p&gt;
 
-&lt;p&gt;debug到CommonsMultipartResolver的resolveMultipart方法，里面有这段判断&lt;/p&gt;
+&lt;p&gt;debug到CommonsMultipartResolver的resolveMultipart方法,里面有这段判断&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;protected MultipartParsingResult parseFileItems(List&amp;lt;FileItem&amp;gt; fileItems, String encoding) {
 		MultiValueMap&amp;lt;String, MultipartFile&amp;gt; multipartFiles = new LinkedMultiValueMap&amp;lt;String, MultipartFile&amp;gt;();
@@ -84,7 +163,7 @@ multipartFiles = {LinkedMultiValueMap@8884}  size = 0
 			if (fileItem.isFormField()) {
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;如果是false…就往MultipartFile里面填值。
+&lt;p&gt;如果是false…就往MultipartFile里面填值.
 难道是Content-type的问题？&lt;/p&gt;
 
 &lt;h3 id=&#34;去js端&#34;&gt;去Js端&lt;/h3&gt;

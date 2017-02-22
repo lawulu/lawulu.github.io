@@ -78,7 +78,7 @@ multipartFiles = {LinkedMultiValueMap@8884}  size = 0
 			if (fileItem.isFormField()) {
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;如果是false…就往MultipartFile里面填值。
+&lt;p&gt;如果是false…就往MultipartFile里面填值.
 难道是Content-type的问题？&lt;/p&gt;
 
 &lt;h3 id=&#34;去js端&#34;&gt;去Js端&lt;/h3&gt;

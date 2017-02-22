@@ -78,7 +78,7 @@ multipartFiles = {LinkedMultiValueMap@8884}  size = 0
 			if (fileItem.isFormField()) {
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;如果是false…就往MultipartFile里面填值。
+&lt;p&gt;如果是false…就往MultipartFile里面填值.
 难道是Content-type的问题？&lt;/p&gt;
 
 &lt;h3 id=&#34;去js端&#34;&gt;去Js端&lt;/h3&gt;
@@ -129,7 +129,7 @@ multipartFiles = {LinkedMultiValueMap@8884}  size = 0
 
 &lt;h3 id=&#34;问题由起&#34;&gt;问题由起&lt;/h3&gt;
 
-&lt;p&gt;因为某些问题（这个问题稍后再提），将线上的DBCP版本从1.4升级到2.1，大概扫了一下官方文档，没有迁移指南，只是几个属性名称变了，感觉问题不大，直接升级。升级之后，UT一下，通过。但是上线之后一直报下面错误：
+&lt;p&gt;因为某些问题（这个问题稍后再提)，将线上的DBCP版本从1.4升级到2.1，大概扫了一下官方文档，没有迁移指南，只是几个属性名称变了，感觉问题不大，直接升级.升级之后，UT一下，通过.但是上线之后一直报下面错误：
 &amp;gt;Cause: org.springframework.jdbc.CannotGetJdbcConnectionException: Could not get JDBC Connection; nested exception is java.sql.SQLException: Data source is closed
     at org.apache.ibatis.exceptions.ExceptionFactory.wrapException(ExceptionFactory.java:23)
     at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:107)
@@ -145,7 +145,7 @@ multipartFiles = {LinkedMultiValueMap@8884}  size = 0
 &lt;ul&gt;
 &lt;li&gt;项目因为需要动态切换数据源，使用的是++AbstractRoutingDataSource++&lt;/li&gt;
 
-&lt;li&gt;&lt;p&gt;需要动态切换的数据源比较多，项目初始化时候通过++BeanDefinitionBuilder++来根据数据库配置动态创建数据源，而报错的连接正是动态生成的的数据源。&lt;/p&gt;
+&lt;li&gt;&lt;p&gt;需要动态切换的数据源比较多，项目初始化时候通过++BeanDefinitionBuilder++来根据数据库配置动态创建数据源，而报错的连接正是动态生成的的数据源.&lt;/p&gt;
 
 &lt;h3 id=&#34;问题定位&#34;&gt;问题定位&lt;/h3&gt;
 
@@ -155,7 +155,7 @@ multipartFiles = {LinkedMultiValueMap@8884}  size = 0
 
 &lt;h4 id=&#34;怀疑是参数问题或者其他原因&#34;&gt;怀疑是参数问题或者其他原因&lt;/h4&gt;
 
-&lt;p&gt;只设置JDBC Url，依旧报错；换成dbcp，不报错。&lt;/p&gt;
+&lt;p&gt;只设置JDBC Url，依旧报错；换成dbcp，不报错.&lt;/p&gt;
 
 &lt;h4 id=&#34;abstractroutingdatasource的问题&#34;&gt;AbstractRoutingDataSource的问题？&lt;/h4&gt;
 
@@ -211,11 +211,11 @@ multipartFiles = {LinkedMultiValueMap@8884}  size = 0
 
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;原来Spring创建Bean的时候会检查是否有oldBeanDefinition,如果有则销毁之。而DBCP2实现了AutoCloseable接口，在这里直接被Close了。&lt;/p&gt;
+&lt;p&gt;原来Spring创建Bean的时候会检查是否有oldBeanDefinition,如果有则销毁之.而DBCP2实现了AutoCloseable接口，在这里直接被Close了.&lt;/p&gt;
 
 &lt;h4 id=&#34;为什么有oldbeandefinition&#34;&gt;为什么有oldBeanDefinition？&lt;/h4&gt;
 
-&lt;p&gt;为了支持另一种类型的数据源，引入了一个Bug，会在Spring BeanFactory里面引入重复的定义，因为在AbstractRoutingDataSource中是正确的，所以一直没有发现这个问题。第二次会销毁上次的Bean。
+&lt;p&gt;为了支持另一种类型的数据源，引入了一个Bug，会在Spring BeanFactory里面引入重复的定义，因为在AbstractRoutingDataSource中是正确的，所以一直没有发现这个问题.第二次会销毁上次的Bean.
 其实在DBCP1时候，也会销毁，但是因为在动态定义的时候没有定义destroy-method=&amp;ldquo;close&amp;rdquo;，其实会引起内存的泄露？&lt;/p&gt;
 
 &lt;p&gt;结论：很多看似运行完好的软件其实都危机四伏..&lt;/p&gt;

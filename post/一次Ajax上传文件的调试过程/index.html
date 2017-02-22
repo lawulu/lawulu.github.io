@@ -5,10 +5,10 @@
   <title>一次Ajax上传文件的调试过程 - 璐濒殉漂流记</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
   
-  <meta name="description" content="很久不做Web了，帮一小弟解决的一个问题。据他说无脑搜了很久… 现象和代码 Js端 使用的FormData var formData = new FormData(); var actionUrl = &quot;/report/agentUpload&quot;; var form = new FormData(); form.append(&quot;file&quot;, $(&quot;#reportFile&quot; )[0]); var xhr =">
+  <meta name="description" content="很久不做Web了,帮一小弟解决的一个问题.据他说无脑搜了很久… 现象和代码 Js端 使用的FormData var formData = new FormData(); var actionUrl = &quot;/report/agentUpload&quot;; var form = new FormData(); form.append(&quot;file&quot;, $(&quot;#reportFile&quot; )[0]); var xhr =">
   <meta name="author" content="Lawulu">
   <meta itemprop="name" content="一次Ajax上传文件的调试过程 - 璐濒殉漂流记">
-  <meta itemprop="description" content="很久不做Web了，帮一小弟解决的一个问题。据他说无脑搜了很久… 现象和代码 Js端 使用的FormData var formData = new FormData(); var actionUrl = &quot;/report/agentUpload&quot;; var form = new FormData(); form.append(&quot;file&quot;, $(&quot;#reportFile&quot; )[0]); var xhr =">
+  <meta itemprop="description" content="很久不做Web了,帮一小弟解决的一个问题.据他说无脑搜了很久… 现象和代码 Js端 使用的FormData var formData = new FormData(); var actionUrl = &quot;/report/agentUpload&quot;; var form = new FormData(); form.append(&quot;file&quot;, $(&quot;#reportFile&quot; )[0]); var xhr =">
   <meta itemprop="image" content="https://lawulu.github.io/img/author.jpg">
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@inza9hi" />
@@ -100,7 +100,7 @@
     
     
 
-<p>很久不做Web了，帮一小弟解决的一个问题。据他说无脑搜了很久…</p>
+<p>很久不做Web了,帮一小弟解决的一个问题.据他说无脑搜了很久…</p>
 
 <h2 id="现象和代码">现象和代码</h2>
 
@@ -126,7 +126,7 @@
 <pre><code>public String upload(HttpServletRequest request, @RequestParam(value=&quot;file&quot;,required = true) MultipartFile file, ModelMap model)
 </code></pre>
 
-<p>但是就是取不到，报错：</p>
+<p>但是就是取不到,报错：</p>
 
 <pre><code>Required MultipartFile parameter 'file' is not present
 </code></pre>
@@ -144,7 +144,7 @@ Content-Disposition: form-data; name=&quot;file&quot;
 
 </code></pre>
 
-<p>貌似是正确的，在Server端确认一下，将参数加上required=false
+<p>貌似是正确的,在Server端确认一下,将参数加上required=false
 查看request:</p>
 
 <pre><code>multipartParameters = {HashMap@8882}  size = 1
@@ -152,11 +152,11 @@ multipartParameterContentTypes = {HashMap@8883}  size = 1
 multipartFiles = {LinkedMultiValueMap@8884}  size = 0
 </code></pre>
 
-<p>Request里面有东西，但是multipartFiles没有东西……</p>
+<p>Request里面有东西,但是multipartFiles没有东西……</p>
 
-<p><em>其实这时候应该已经看出问题了，因为那个值是一个String，但是没注意，自己盲目以为只要带multipartParameters就是文件</em></p>
+<p><em>其实这时候应该已经看出问题了,因为那个值是一个String,但是没注意,自己盲目以为只要带multipartParameters就是文件</em></p>
 
-<p>debug到CommonsMultipartResolver的resolveMultipart方法，里面有这段判断</p>
+<p>debug到CommonsMultipartResolver的resolveMultipart方法,里面有这段判断</p>
 
 <pre><code>protected MultipartParsingResult parseFileItems(List&lt;FileItem&gt; fileItems, String encoding) {
 		MultiValueMap&lt;String, MultipartFile&gt; multipartFiles = new LinkedMultiValueMap&lt;String, MultipartFile&gt;();
@@ -168,7 +168,7 @@ multipartFiles = {LinkedMultiValueMap@8884}  size = 0
 			if (fileItem.isFormField()) {
 </code></pre>
 
-<p>如果是false…就往MultipartFile里面填值。
+<p>如果是false…就往MultipartFile里面填值.
 难道是Content-type的问题？</p>
 
 <h3 id="去js端">去Js端</h3>
@@ -214,9 +214,9 @@ multipartFiles = {LinkedMultiValueMap@8884}  size = 0
 <div class="article-tags">
   <span></span>
   
-  <a href="https://lawulu.github.io/tags/js">JS</a>
+  <a href="https://lawulu.github.io/tags/js">js</a>
   
-  <a href="https://lawulu.github.io/tags/chrome">Chrome</a>
+  <a href="https://lawulu.github.io/tags/chrome">chrome</a>
   
 </div>
 
@@ -274,7 +274,7 @@ var duoshuoQuery = {short_name:"inza9hi"};
     
     <li><a href="https://lawulu.github.io/categories/aij%e4%b8%80%e6%80%9d%e8%80%83" title="aij一思考">aij一思考<sup>1</sup></a></li>
     
-    <li><a href="https://lawulu.github.io/categories/%e7%88%86%e6%a0%88%e5%9f%ba%e7%ba%bf%e5%99%a8" title="爆栈基线器">爆栈基线器<sup>5</sup></a></li>
+    <li><a href="https://lawulu.github.io/categories/%e7%88%86%e6%a0%88%e5%9f%ba%e7%ba%bf%e5%99%a8" title="爆栈基线器">爆栈基线器<sup>6</sup></a></li>
     
   </ul>
 </div>
@@ -287,13 +287,15 @@ var duoshuoQuery = {short_name:"inza9hi"};
 	<p class="asidetitle">标签</p>
 		<ul class="clearfix">
       
+			<li><a href="https://lawulu.github.io/tags/angular" title="angular">angular<sup>1</sup></a></li>
+      
 			<li><a href="https://lawulu.github.io/tags/chrome" title="chrome">chrome<sup>1</sup></a></li>
       
 			<li><a href="https://lawulu.github.io/tags/dbcp" title="dbcp">dbcp<sup>1</sup></a></li>
       
 			<li><a href="https://lawulu.github.io/tags/java" title="java">java<sup>2</sup></a></li>
       
-			<li><a href="https://lawulu.github.io/tags/js" title="js">js<sup>1</sup></a></li>
+			<li><a href="https://lawulu.github.io/tags/js" title="js">js<sup>2</sup></a></li>
       
 			<li><a href="https://lawulu.github.io/tags/logback" title="logback">logback<sup>1</sup></a></li>
       
@@ -316,6 +318,11 @@ var duoshuoQuery = {short_name:"inza9hi"};
   <div class="archiveslist">
     <p class="asidetitle">归档</p>
     <ul class="archive-list">
+      
+      
+      <li class="archive-list-item">
+        <a class="archive-list-link" href="https://lawulu.github.io/post/#2016-11">2016年11月</a><span class="archive-list-count">1</span>
+      </li>
       
       
       <li class="archive-list-item">
@@ -352,6 +359,8 @@ var duoshuoQuery = {short_name:"inza9hi"};
 <div class="tagcloudlist">
   <p class="asidetitle">标签云</p>
   <div class="tagcloudlist clearfix">
+    
+    <a href="https://lawulu.github.io/tags/angular" style="font-size: 12px;">angular</a>
     
     <a href="https://lawulu.github.io/tags/chrome" style="font-size: 12px;">chrome</a>
     

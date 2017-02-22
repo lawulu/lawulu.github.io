@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>璐濒殉漂流记</title>
+    <link>https://lawulu.github.io/tags/angular/feed/index.xml</link>
+    <description>Recent content on 璐濒殉漂流记</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <atom:link href="https://lawulu.github.io/tags/angular/feed/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>AngularJS初窥</title>
+      <link>https://lawulu.github.io/post/AngularJS%E5%88%9D%E7%AA%A5/</link>
+      <pubDate>Sun, 20 Nov 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://lawulu.github.io/post/AngularJS%E5%88%9D%E7%AA%A5/</guid>
+      <description>
+
+&lt;p&gt;无数人吐槽过前端框架的层出不穷,眼看前端开发要脱离浏览器兼容性的苦海,又要落入框架碎片化,从语言本身到编译到打包到开发框架,是终端用户需求太多还是前端大牛们野心太大? 不管怎样,报G家大腿选择Angular似乎没什么问题,另一个大腿的Reactive本身不是一个完备的框架.&lt;/p&gt;
+
+&lt;h2 id=&#34;angular简介&#34;&gt;Angular简介&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;在Web开发中需要JS做什么？&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;与服务器交互&lt;/li&gt;
+&lt;li&gt;操作DOM&lt;/li&gt;
+&lt;li&gt;简单的逻辑控制&lt;/li&gt;
+&lt;li&gt;输入验证&lt;/li&gt;
+&lt;li&gt;路由&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Angular做了什么改变？&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;引入了指令,ng开头,来扩展HTML&lt;/li&gt;
+&lt;li&gt;数据绑定,通过对HTML元素增加指令ng-model&lt;/li&gt;
+&lt;li&gt;使用directive来自定义指令&lt;/li&gt;
+&lt;li&gt;Scope,提供了HTML视图和JS控制器之间的纽带&lt;/li&gt;
+&lt;li&gt;Controller,可以视为一个$Scope的构造函数&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;数据绑定 即将Dom的变化绑定到数据的变化上面去,因为用的1,所以这个绑定是双向的,有时候想只改变页面,会影响到数据&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;使用一周的感受&#34;&gt;使用一周的感受&lt;/h2&gt;
+
+&lt;h3 id=&#34;一些坑&#34;&gt;一些坑:&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;http是异步,要在.function中处理,或者统一在配置里面设置&lt;code&gt;async : true&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;怎么Lazy初始化？没有找到办法&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;controller之间的交互&#34;&gt;Controller之间的交互&lt;/h3&gt;
+
+&lt;p&gt;两种办法&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://stackoverflow.com/questions/29467339/how-to-call-a-function-from-another-controller-in-angularjs&#34;&gt;http://stackoverflow.com/questions/29467339/how-to-call-a-function-from-another-controller-in-angularjs&lt;/a&gt;
+本质是绑定到RootScope里面,通过事件来响应&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.csdn.net/findsafety/article/details/50403242&#34;&gt;http://blog.csdn.net/findsafety/article/details/50403242&lt;/a&gt;
+原生dom与js的处理办法,可能会版本之间不兼容,本质是通过dom找到Ng-controller的方法.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;    var appElement = document.querySelector(&#39;[ng-controller=&amp;quot;EndCardEditCtrl as ctrl&amp;quot;]&#39;);
+    var editCtrl = angular.element(appElement);
+    
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;与jquery-js之间的交互&#34;&gt;与Jquery/JS之间的交互&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;有时候Jquery绑定Function时候,Dom并没有生成,所以需要替换成Angular的&lt;code&gt;ng-click&lt;/code&gt;事件.&lt;/li&gt;
+&lt;li&gt;JS中可以通过元素来找的其绑定的scope
+&lt;code&gt;
+window.angular.element(&amp;quot;#divId&amp;quot;).scope().doSth()
+&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;angular的分支循环&#34;&gt;Angular的分支循环&lt;/h3&gt;
+
+&lt;p&gt;Angular提供了Ng-show等逻辑判断,来控制页面的变化.
+提供了Switch和For来做分支和循环.
+简单来说,基本可以对Html的显示进行编程.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

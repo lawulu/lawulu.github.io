@@ -5,10 +5,10 @@
   <title>Scrapy - 璐濒殉漂流记</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
   
-  <meta name="description" content="简介 Scrapy其实是一个很轻量级或者简单的框架。几个概念： 1. Request,Response，顾名思义，对应的就是网络的请求和响应。 2. It">
+  <meta name="description" content="先说结论，爬虫分为两种，一种是贪婪爬虫，最常用的就是搜索引擎，看见Url就爬。另外一种是专业爬虫，类似于网络小数定期更新，价格比对。Scra">
   <meta name="author" content="Lawulu">
   <meta itemprop="name" content="Scrapy - 璐濒殉漂流记">
-  <meta itemprop="description" content="简介 Scrapy其实是一个很轻量级或者简单的框架。几个概念： 1. Request,Response，顾名思义，对应的就是网络的请求和响应。 2. It">
+  <meta itemprop="description" content="先说结论，爬虫分为两种，一种是贪婪爬虫，最常用的就是搜索引擎，看见Url就爬。另外一种是专业爬虫，类似于网络小数定期更新，价格比对。Scra">
   <meta itemprop="image" content="https://lawulu.github.io/img/author.jpg">
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@inza9hi" />
@@ -71,7 +71,7 @@
     
   </p>
   <p class="article-time">
-    <time datetime="2017-02-15 00:00:00 &#43;0000 UTC" itemprop="datePublished">2017年02月15日</time>
+    <time datetime="2016-10-15 00:00:00 &#43;0000 UTC" itemprop="datePublished">2016年10月15日</time>
   </p>
 </header>
 
@@ -88,7 +88,7 @@
 <li><a href="#吐槽">吐槽</a>
 <ul>
 <li><a href="#日志只打印unicode问题">日志只打印Unicode问题</a></li>
-<li><a href="#scheduler太弱">scheduler太弱</a></li>
+<li><a href="#scheduler太弱">Scheduler太弱</a></li>
 <li><a href="#spider-request之间很难协同">Spider/Request之间很难协同</a></li>
 <li><a href="#callback-hell">Callback hell</a></li>
 <li><a href="#容错">容错</a></li>
@@ -104,6 +104,8 @@
 		</div>
     
     
+
+<p>先说结论，爬虫分为两种，一种是贪婪爬虫，最常用的就是搜索引擎，看见Url就爬。另外一种是专业爬虫，类似于网络小数定期更新，价格比对。Scrapy适合做第二种。Scrapy专心做爬取逻辑，其优势是框架比较成熟，各种插件比较全。如果真正做一个工业化的产品，Scrapy远远不够，还要攒很多东西进来。其实如果对<code>requests</code>和<code>beautifulsoup</code>熟悉，直接上这俩就挺好的。</p>
 
 <h2 id="简介">简介</h2>
 
@@ -122,7 +124,7 @@
 <p>看图其实很清楚：
 <img src="/iimg/scrapy.png" alt="Scrapy Arch" /></p>
 
-<p>从StartRequest开始，不停的返回Item或者返回Request，如果返回Item，就发到Pipeline去处理，返回Request，经过Callback处理之后，归根结底还是要返回Item的。</p>
+<p>从StartRequest开始，不停的返回Item或者返回Request，如果返回Item，就发到Pipeline去处理，返回Request，经过Callback处理之后，直到所有的Request都变成Item。正所谓，世界是属于Request，归根结底还是属于Item的。</p>
 
 <h2 id="简单示例">简单示例</h2>
 
@@ -165,13 +167,13 @@ class ZhihuSpider(scrapy.Spider):
 
 </code></pre>
 
-<h3 id="scheduler太弱">scheduler太弱</h3>
+<h3 id="scheduler太弱">Scheduler太弱</h3>
 
-<p>自带的scheduler只能深度优先和广度优先，官方推荐是自家的scrapyd，稍微了解了下，应该是启动时候把任务分给多个进程，进程之间好像没法交互</p>
+<p>自带的scheduler只能深度优先和广度优先，官方推荐是自家的scrapyd，稍微了解了下，应该是启动时候把任务分给多个进程，进程之间好像没法交互。</p>
 
 <h3 id="spider-request之间很难协同">Spider/Request之间很难协同</h3>
 
-<p>很多时候我们需要某几个Request应该在一个组里面，可以共用Cookie，共用Ip。可以用meta来实现…由于Scrapy的Request是无脑yield出来的，实现出来肯定很丑陋。</p>
+<p>很多时候我们需要某几个Request应该在一个组里面，同一个组的Request可以共用Cookie，共用代理。这类的需求可以通过meta机制来实现…由于Scrapy的Request是无脑yield出来的，实现出来肯定很丑陋。</p>
 
 <h3 id="callback-hell">Callback hell</h3>
 
@@ -179,9 +181,7 @@ class ZhihuSpider(scrapy.Spider):
 
 <h3 id="容错">容错</h3>
 
-<p>容错机制很少，总感觉只用Scrapy只能做出一个玩具来</p>
-
-<p><strong>结论</strong>：其实直接上<code>requests</code>和<code>beautifulsoup</code>挺好的，Scrapy的优势是各种插件比较全，只专心做爬取逻辑。如果真正做一个工业化的产品，Scrapy远远不够，还要攒很多东西进来。</p>
+<p>容错机制很少，需要把Task持久化，官方提供的持久化到disk的方案感觉很初级很粗糙。</p>
 
 <h2 id="splash">Splash</h2>
 
@@ -197,7 +197,7 @@ class ZhihuSpider(scrapy.Spider):
 <p>Lua 很值得一学，Nginx，游戏引擎，Redis都在用……
 快速入门：<a href="http://tylerneylon.com/a/learn-lua/">http://tylerneylon.com/a/learn-lua/</a></p>
 
-<p>Lua稍微复杂并且可以玩出花的就是Metatable了，可以重载对字典(对象)各种操作符。</p>
+<p>Lua稍微复杂并且可以玩出花的内置机制就是Metatable了，可以重载对字典(对象)各种操作符。</p>
 
 	</div>
   <footer class="article-footer clearfix">
@@ -313,7 +313,7 @@ var duoshuoQuery = {short_name:"inza9hi"};
       
       
       <li class="archive-list-item">
-        <a class="archive-list-link" href="https://lawulu.github.io/post/#2017-02">2017年02月</a><span class="archive-list-count">1</span>
+        <a class="archive-list-link" href="https://lawulu.github.io/post/#2016-10">2016年10月</a><span class="archive-list-count">1</span>
       </li>
       
       

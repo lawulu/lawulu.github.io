@@ -5,10 +5,10 @@
   <title>一次Ajax上传文件的调试过程 - 璐濒殉漂流记</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
   
-  <meta name="description" content="Js端 使用的FormData var formData = new FormData(); var actionUrl = &quot;/report/agentUpload&quot;; var form = new FormData(); form.append(&quot;file&quot;, $(&quot;#reportFile&quot; )[0]); var xhr = new XMLHttpRequest(); xhr.open(&quot;post&quot;, actionUrl, true); xhr.onload = function () { alert(&quot;上传完成!&quot;); };">
+  <meta name="description" content="很久不做Web了，帮一小弟解决的一个问题。据他说无脑搜了很久… 现象和代码 Js端 使用的FormData var formData = new FormData(); var actionUrl = &quot;/report/agentUpload&quot;; var form = new FormData(); form.append(&quot;file&quot;, $(&quot;#reportFile&quot; )[0]); var xhr =">
   <meta name="author" content="Lawulu">
   <meta itemprop="name" content="一次Ajax上传文件的调试过程 - 璐濒殉漂流记">
-  <meta itemprop="description" content="Js端 使用的FormData var formData = new FormData(); var actionUrl = &quot;/report/agentUpload&quot;; var form = new FormData(); form.append(&quot;file&quot;, $(&quot;#reportFile&quot; )[0]); var xhr = new XMLHttpRequest(); xhr.open(&quot;post&quot;, actionUrl, true); xhr.onload = function () { alert(&quot;上传完成!&quot;); };">
+  <meta itemprop="description" content="很久不做Web了，帮一小弟解决的一个问题。据他说无脑搜了很久… 现象和代码 Js端 使用的FormData var formData = new FormData(); var actionUrl = &quot;/report/agentUpload&quot;; var form = new FormData(); form.append(&quot;file&quot;, $(&quot;#reportFile&quot; )[0]); var xhr =">
   <meta itemprop="image" content="https://lawulu.github.io/img/author.jpg">
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@inza9hi" />
@@ -83,11 +83,13 @@
 <ul>
 <li>
 <ul>
-<li>
+<li><a href="#现象和代码">现象和代码</a>
 <ul>
 <li><a href="#js端">Js端</a></li>
 <li><a href="#server端">Server端</a></li>
-<li><a href="#server端的问题">Server端的问题？</a></li>
+</ul></li>
+<li><a href="#server端的问题">Server端的问题？</a>
+<ul>
 <li><a href="#去js端">去Js端</a></li>
 <li><a href="#结论">结论</a></li>
 </ul></li>
@@ -97,6 +99,10 @@
 		</div>
     
     
+
+<p>很久不做Web了，帮一小弟解决的一个问题。据他说无脑搜了很久…</p>
+
+<h2 id="现象和代码">现象和代码</h2>
 
 <h3 id="js端">Js端</h3>
 
@@ -125,11 +131,11 @@
 <pre><code>Required MultipartFile parameter 'file' is not present
 </code></pre>
 
-<h3 id="server端的问题">Server端的问题？</h3>
+<h2 id="server端的问题">Server端的问题？</h2>
 
 <p>是否发到了Server？</p>
 
-<p>看Network：</p>
+<p>看Chrome Network面板里面这次请求的Request：</p>
 
 <pre><code>------WebKitFormBoundaryNLPhxKE21THaBaN1
 Content-Disposition: form-data; name=&quot;file&quot;
@@ -146,8 +152,9 @@ multipartParameterContentTypes = {HashMap@8883}  size = 1
 multipartFiles = {LinkedMultiValueMap@8884}  size = 0
 </code></pre>
 
-<p>即其实Request里面有东西，但是multipartFiles没有东西……
-其实这时候应该已经看出问题了，因为那个值是一个String，但是没注意，自己盲目以为只要带multipartParameters就是文件</p>
+<p>Request里面有东西，但是multipartFiles没有东西……</p>
+
+<p><em>其实这时候应该已经看出问题了，因为那个值是一个String，但是没注意，自己盲目以为只要带multipartParameters就是文件</em></p>
 
 <p>debug到CommonsMultipartResolver的resolveMultipart方法，里面有这段判断</p>
 
@@ -196,7 +203,7 @@ multipartFiles = {LinkedMultiValueMap@8884}  size = 0
 <h3 id="结论">结论</h3>
 
 <ul>
-<li>++<strong>盲目的去搜索其实非常浪费时间</strong>++</li>
+<li><strong>盲目的去搜索其实非常浪费时间</strong></li>
 <li>要善用Chrome Console</li>
 </ul>
 
@@ -312,7 +319,7 @@ var duoshuoQuery = {short_name:"inza9hi"};
       
       
       <li class="archive-list-item">
-        <a class="archive-list-link" href="https://lawulu.github.io/post/#2017-02">2017年02月</a><span class="archive-list-count">1</span>
+        <a class="archive-list-link" href="https://lawulu.github.io/post/#2016-10">2016年10月</a><span class="archive-list-count">1</span>
       </li>
       
       

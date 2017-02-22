@@ -59,10 +59,12 @@
     <item>
       <title>Scrapy</title>
       <link>https://lawulu.github.io/post/Scrapy%E5%88%9D%E7%AA%A5/</link>
-      <pubDate>Wed, 15 Feb 2017 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 15 Oct 2016 00:00:00 +0000</pubDate>
       
       <guid>https://lawulu.github.io/post/Scrapy%E5%88%9D%E7%AA%A5/</guid>
       <description>
+
+&lt;p&gt;先说结论，爬虫分为两种，一种是贪婪爬虫，最常用的就是搜索引擎，看见Url就爬。另外一种是专业爬虫，类似于网络小数定期更新，价格比对。Scrapy适合做第二种。Scrapy专心做爬取逻辑，其优势是框架比较成熟，各种插件比较全。如果真正做一个工业化的产品，Scrapy远远不够，还要攒很多东西进来。其实如果对&lt;code&gt;requests&lt;/code&gt;和&lt;code&gt;beautifulsoup&lt;/code&gt;熟悉，直接上这俩就挺好的。&lt;/p&gt;
 
 &lt;h2 id=&#34;简介&#34;&gt;简介&lt;/h2&gt;
 
@@ -81,7 +83,7 @@
 &lt;p&gt;看图其实很清楚：
 &lt;img src=&#34;https://lawulu.github.io/iimg/scrapy.png&#34; alt=&#34;Scrapy Arch&#34; /&gt;&lt;/p&gt;
 
-&lt;p&gt;从StartRequest开始，不停的返回Item或者返回Request，如果返回Item，就发到Pipeline去处理，返回Request，经过Callback处理之后，归根结底还是要返回Item的。&lt;/p&gt;
+&lt;p&gt;从StartRequest开始，不停的返回Item或者返回Request，如果返回Item，就发到Pipeline去处理，返回Request，经过Callback处理之后，直到所有的Request都变成Item。正所谓，世界是属于Request，归根结底还是属于Item的。&lt;/p&gt;
 
 &lt;h2 id=&#34;简单示例&#34;&gt;简单示例&lt;/h2&gt;
 
@@ -124,13 +126,13 @@ class ZhihuSpider(scrapy.Spider):
 
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;scheduler太弱&#34;&gt;scheduler太弱&lt;/h3&gt;
+&lt;h3 id=&#34;scheduler太弱&#34;&gt;Scheduler太弱&lt;/h3&gt;
 
-&lt;p&gt;自带的scheduler只能深度优先和广度优先，官方推荐是自家的scrapyd，稍微了解了下，应该是启动时候把任务分给多个进程，进程之间好像没法交互&lt;/p&gt;
+&lt;p&gt;自带的scheduler只能深度优先和广度优先，官方推荐是自家的scrapyd，稍微了解了下，应该是启动时候把任务分给多个进程，进程之间好像没法交互。&lt;/p&gt;
 
 &lt;h3 id=&#34;spider-request之间很难协同&#34;&gt;Spider/Request之间很难协同&lt;/h3&gt;
 
-&lt;p&gt;很多时候我们需要某几个Request应该在一个组里面，可以共用Cookie，共用Ip。可以用meta来实现…由于Scrapy的Request是无脑yield出来的，实现出来肯定很丑陋。&lt;/p&gt;
+&lt;p&gt;很多时候我们需要某几个Request应该在一个组里面，同一个组的Request可以共用Cookie，共用代理。这类的需求可以通过meta机制来实现…由于Scrapy的Request是无脑yield出来的，实现出来肯定很丑陋。&lt;/p&gt;
 
 &lt;h3 id=&#34;callback-hell&#34;&gt;Callback hell&lt;/h3&gt;
 
@@ -138,9 +140,7 @@ class ZhihuSpider(scrapy.Spider):
 
 &lt;h3 id=&#34;容错&#34;&gt;容错&lt;/h3&gt;
 
-&lt;p&gt;容错机制很少，总感觉只用Scrapy只能做出一个玩具来&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;结论&lt;/strong&gt;：其实直接上&lt;code&gt;requests&lt;/code&gt;和&lt;code&gt;beautifulsoup&lt;/code&gt;挺好的，Scrapy的优势是各种插件比较全，只专心做爬取逻辑。如果真正做一个工业化的产品，Scrapy远远不够，还要攒很多东西进来。&lt;/p&gt;
+&lt;p&gt;容错机制很少，需要把Task持久化，官方提供的持久化到disk的方案感觉很初级很粗糙。&lt;/p&gt;
 
 &lt;h2 id=&#34;splash&#34;&gt;Splash&lt;/h2&gt;
 
@@ -156,7 +156,7 @@ class ZhihuSpider(scrapy.Spider):
 &lt;p&gt;Lua 很值得一学，Nginx，游戏引擎，Redis都在用……
 快速入门：&lt;a href=&#34;http://tylerneylon.com/a/learn-lua/&#34;&gt;http://tylerneylon.com/a/learn-lua/&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;Lua稍微复杂并且可以玩出花的就是Metatable了，可以重载对字典(对象)各种操作符。&lt;/p&gt;
+&lt;p&gt;Lua稍微复杂并且可以玩出花的内置机制就是Metatable了，可以重载对字典(对象)各种操作符。&lt;/p&gt;
 </description>
     </item>
     
@@ -285,6 +285,10 @@ class ZhihuSpider(scrapy.Spider):
       <guid>https://lawulu.github.io/post/%E4%B8%80%E6%AC%A1Ajax%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E8%B0%83%E8%AF%95%E8%BF%87%E7%A8%8B/</guid>
       <description>
 
+&lt;p&gt;很久不做Web了，帮一小弟解决的一个问题。据他说无脑搜了很久…&lt;/p&gt;
+
+&lt;h2 id=&#34;现象和代码&#34;&gt;现象和代码&lt;/h2&gt;
+
 &lt;h3 id=&#34;js端&#34;&gt;Js端&lt;/h3&gt;
 
 &lt;p&gt;使用的FormData&lt;/p&gt;
@@ -312,11 +316,11 @@ class ZhihuSpider(scrapy.Spider):
 &lt;pre&gt;&lt;code&gt;Required MultipartFile parameter &#39;file&#39; is not present
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;server端的问题&#34;&gt;Server端的问题？&lt;/h3&gt;
+&lt;h2 id=&#34;server端的问题&#34;&gt;Server端的问题？&lt;/h2&gt;
 
 &lt;p&gt;是否发到了Server？&lt;/p&gt;
 
-&lt;p&gt;看Network：&lt;/p&gt;
+&lt;p&gt;看Chrome Network面板里面这次请求的Request：&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;------WebKitFormBoundaryNLPhxKE21THaBaN1
 Content-Disposition: form-data; name=&amp;quot;file&amp;quot;
@@ -333,8 +337,9 @@ multipartParameterContentTypes = {HashMap@8883}  size = 1
 multipartFiles = {LinkedMultiValueMap@8884}  size = 0
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;即其实Request里面有东西，但是multipartFiles没有东西……
-其实这时候应该已经看出问题了，因为那个值是一个String，但是没注意，自己盲目以为只要带multipartParameters就是文件&lt;/p&gt;
+&lt;p&gt;Request里面有东西，但是multipartFiles没有东西……&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;其实这时候应该已经看出问题了，因为那个值是一个String，但是没注意，自己盲目以为只要带multipartParameters就是文件&lt;/em&gt;&lt;/p&gt;
 
 &lt;p&gt;debug到CommonsMultipartResolver的resolveMultipart方法，里面有这段判断&lt;/p&gt;
 
@@ -383,7 +388,7 @@ multipartFiles = {LinkedMultiValueMap@8884}  size = 0
 &lt;h3 id=&#34;结论&#34;&gt;结论&lt;/h3&gt;
 
 &lt;ul&gt;
-&lt;li&gt;++&lt;strong&gt;盲目的去搜索其实非常浪费时间&lt;/strong&gt;++&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;盲目的去搜索其实非常浪费时间&lt;/strong&gt;&lt;/li&gt;
 &lt;li&gt;要善用Chrome Console&lt;/li&gt;
 &lt;/ul&gt;
 </description>

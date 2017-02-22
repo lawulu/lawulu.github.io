@@ -16,6 +16,10 @@
       <guid>https://lawulu.github.io/post/%E4%B8%80%E6%AC%A1Ajax%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E8%B0%83%E8%AF%95%E8%BF%87%E7%A8%8B/</guid>
       <description>
 
+&lt;p&gt;很久不做Web了，帮一小弟解决的一个问题。据他说无脑搜了很久…&lt;/p&gt;
+
+&lt;h2 id=&#34;现象和代码&#34;&gt;现象和代码&lt;/h2&gt;
+
 &lt;h3 id=&#34;js端&#34;&gt;Js端&lt;/h3&gt;
 
 &lt;p&gt;使用的FormData&lt;/p&gt;
@@ -43,11 +47,11 @@
 &lt;pre&gt;&lt;code&gt;Required MultipartFile parameter &#39;file&#39; is not present
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;server端的问题&#34;&gt;Server端的问题？&lt;/h3&gt;
+&lt;h2 id=&#34;server端的问题&#34;&gt;Server端的问题？&lt;/h2&gt;
 
 &lt;p&gt;是否发到了Server？&lt;/p&gt;
 
-&lt;p&gt;看Network：&lt;/p&gt;
+&lt;p&gt;看Chrome Network面板里面这次请求的Request：&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;------WebKitFormBoundaryNLPhxKE21THaBaN1
 Content-Disposition: form-data; name=&amp;quot;file&amp;quot;
@@ -64,8 +68,9 @@ multipartParameterContentTypes = {HashMap@8883}  size = 1
 multipartFiles = {LinkedMultiValueMap@8884}  size = 0
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;即其实Request里面有东西，但是multipartFiles没有东西……
-其实这时候应该已经看出问题了，因为那个值是一个String，但是没注意，自己盲目以为只要带multipartParameters就是文件&lt;/p&gt;
+&lt;p&gt;Request里面有东西，但是multipartFiles没有东西……&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;其实这时候应该已经看出问题了，因为那个值是一个String，但是没注意，自己盲目以为只要带multipartParameters就是文件&lt;/em&gt;&lt;/p&gt;
 
 &lt;p&gt;debug到CommonsMultipartResolver的resolveMultipart方法，里面有这段判断&lt;/p&gt;
 
@@ -114,7 +119,7 @@ multipartFiles = {LinkedMultiValueMap@8884}  size = 0
 &lt;h3 id=&#34;结论&#34;&gt;结论&lt;/h3&gt;
 
 &lt;ul&gt;
-&lt;li&gt;++&lt;strong&gt;盲目的去搜索其实非常浪费时间&lt;/strong&gt;++&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;盲目的去搜索其实非常浪费时间&lt;/strong&gt;&lt;/li&gt;
 &lt;li&gt;要善用Chrome Console&lt;/li&gt;
 &lt;/ul&gt;
 </description>

@@ -17,7 +17,7 @@
       <guid>https://lawulu.github.io/post/AngularJS%E5%88%9D%E7%AA%A5/</guid>
       <description>
 
-&lt;p&gt;无数人吐槽过前端框架的层出不穷,眼看前端开发要脱离浏览器兼容性的苦海,又要落入框架碎片化,从语言本身到编译到打包到开发框架,是终端用户需求太多还是前端大牛们野心太大? 不管怎样,报G家大腿选择Angular似乎没什么问题,另一个大腿的Reactive本身不是一个完备的框架.&lt;/p&gt;
+&lt;p&gt;无数人吐槽过前端框架的层出不穷,眼看前端开发要脱离浏览器兼容性的苦海,又要落入框架碎片的深坑.从语言本身到编译到打包到开发框架各种框架层出不穷&amp;hellip;是终端用户需求太多还是前端大牛们野心太大? 不管怎样,报G家大腿选择Angular似乎没什么问题,另一个大腿的Reactive本身不是一个完备的框架.&lt;/p&gt;
 
 &lt;h2 id=&#34;angular简介&#34;&gt;Angular简介&lt;/h2&gt;
 
@@ -103,6 +103,14 @@ jQuery.ajax() =&amp;gt; $http
 &lt;h3 id=&#34;resource&#34;&gt;$Resource&lt;/h3&gt;
 
 &lt;p&gt;一个对HttpRest的封装,简单的CRUD确实很方便,但是遇到复杂的需求就要抓瞎,很多时候需要调整后端..所以有很多人说,Angular适合做简单的CRUD应用.&lt;/p&gt;
+
+&lt;h3 id=&#34;ng-change&#34;&gt;Ng-change&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;Error: [$compile:ctreq] http://errors.angularjs.org/1.4.5/$compile/ctreq?p0=ngModel&amp;amp;p1=ngChange
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;ng-change requires ng-model, without it will not work&lt;/p&gt;
 </description>
     </item>
     

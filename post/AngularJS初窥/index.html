@@ -190,11 +190,15 @@ jQuery.ajax() =&gt; $http
 
 <h3 id="ng-change">Ng-change</h3>
 
+<p>ng-change requires ng-model, without it will not work</p>
+
 <pre><code>Error: [$compile:ctreq] http://errors.angularjs.org/1.4.5/$compile/ctreq?p0=ngModel&amp;p1=ngChange
 
 </code></pre>
 
-<p>ng-change requires ng-model, without it will not work</p>
+<p>另外 ng-change对File不生效</p>
+
+<p><a href="https://github.com/angular/angular.js/issues/1375">https://github.com/angular/angular.js/issues/1375</a></p>
 
 	</div>
   <footer class="article-footer clearfix">

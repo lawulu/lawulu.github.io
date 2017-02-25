@@ -5,10 +5,10 @@
   <title>一次Ajax上传文件的调试过程 - 璐濒殉漂流记</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
   
-  <meta name="description" content="很久不做Web了,帮一小弟解决的一个问题.据他说无脑搜了很久… 现象和代码 Js端 使用的FormData var formData = new FormData(); var actionUrl = &quot;/report/agentUpload&quot;; var form = new FormData(); form.append(&quot;file&quot;, $(&quot;#reportFile&quot; )[0]); var xhr =">
+  <meta name="description" content="很久不做Web了,帮一小弟解决的一个问题.发现新人解决问题都是在Search and Try,据他说无脑搜了很久,但是不会利用Chrome,也不会分">
   <meta name="author" content="Lawulu">
   <meta itemprop="name" content="一次Ajax上传文件的调试过程 - 璐濒殉漂流记">
-  <meta itemprop="description" content="很久不做Web了,帮一小弟解决的一个问题.据他说无脑搜了很久… 现象和代码 Js端 使用的FormData var formData = new FormData(); var actionUrl = &quot;/report/agentUpload&quot;; var form = new FormData(); form.append(&quot;file&quot;, $(&quot;#reportFile&quot; )[0]); var xhr =">
+  <meta itemprop="description" content="很久不做Web了,帮一小弟解决的一个问题.发现新人解决问题都是在Search and Try,据他说无脑搜了很久,但是不会利用Chrome,也不会分">
   <meta itemprop="image" content="https://lawulu.github.io/img/author.jpg">
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@inza9hi" />
@@ -93,6 +93,12 @@
 <li><a href="#去js端">去Js端</a></li>
 <li><a href="#结论">结论</a></li>
 </ul></li>
+<li><a href="#chrome的一些调试技巧">Chrome的一些调试技巧</a>
+<ul>
+<li><a href="#如何找到对应的元素触发的function">如何找到对应的元素触发的function？</a></li>
+<li><a href="#缓存相关">缓存相关</a></li>
+<li><a href="#console">console</a></li>
+</ul></li>
 </ul></li>
 </ul>
 </nav>
@@ -100,7 +106,7 @@
     
     
 
-<p>很久不做Web了,帮一小弟解决的一个问题.据他说无脑搜了很久…</p>
+<p>很久不做Web了,帮一小弟解决的一个问题.发现新人解决问题都是在Search and Try,据他说无脑搜了很久,但是不会利用Chrome,也不会分析问题.</p>
 
 <h2 id="现象和代码">现象和代码</h2>
 
@@ -206,6 +212,29 @@ multipartFiles = {LinkedMultiValueMap@8884}  size = 0
 <li><strong>盲目的去搜索其实非常浪费时间</strong></li>
 <li>要善用Chrome Console</li>
 </ul>
+
+<h2 id="chrome的一些调试技巧">Chrome的一些调试技巧</h2>
+
+<h3 id="如何找到对应的元素触发的function">如何找到对应的元素触发的function？</h3>
+
+<p>可以在EventListerner里面把Click当做断点，也可以点击某个元素，找到对应监听的EventListener,或者对某一个片dom点击<code>Break on subtree modification</code></p>
+
+<h3 id="缓存相关">缓存相关</h3>
+
+<ol>
+<li>强制刷新 cmd+shift+r</li>
+
+<li><p>可以在设置中禁止缓存</p>
+
+<h3 id="console">console</h3>
+
+<p>在某个页面，可以在console页面随时调试,甚至可以执行函数：</p></li>
+</ol>
+
+<pre><code>$('.choose_endcard').click()
+</code></pre>
+
+<p>But,为什么Xpath选择的不能调用Click…</p>
 
 	</div>
   <footer class="article-footer clearfix">
@@ -326,11 +355,6 @@ var duoshuoQuery = {short_name:"inza9hi"};
       
       
       <li class="archive-list-item">
-        <a class="archive-list-link" href="https://lawulu.github.io/post/#2016-10">2016年10月</a><span class="archive-list-count">1</span>
-      </li>
-      
-      
-      <li class="archive-list-item">
         <a class="archive-list-link" href="https://lawulu.github.io/post/#2016-01">2016年01月</a><span class="archive-list-count">1</span>
       </li>
       
@@ -341,7 +365,7 @@ var duoshuoQuery = {short_name:"inza9hi"};
       
       
       <li class="archive-list-item">
-        <a class="archive-list-link" href="https://lawulu.github.io/post/#2015-10">2015年10月</a><span class="archive-list-count">1</span>
+        <a class="archive-list-link" href="https://lawulu.github.io/post/#2015-10">2015年10月</a><span class="archive-list-count">2</span>
       </li>
       
       

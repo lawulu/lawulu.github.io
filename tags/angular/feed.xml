@@ -114,6 +114,10 @@ jQuery.ajax() =&amp;gt; $http
 &lt;p&gt;另外 ng-change对File不生效&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&#34;https://github.com/angular/angular.js/issues/1375&#34;&gt;https://github.com/angular/angular.js/issues/1375&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;单元测试&#34;&gt;单元测试&lt;/h3&gt;
+
+&lt;p&gt;Angular轮了一套Service,Factory之流,自然也少不了单元测试..不知道有多少人会为页面写这玩意.&lt;/p&gt;
 </description>
     </item>
     

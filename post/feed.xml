@@ -175,10 +175,13 @@ save
 
 &lt;h2 id=&#34;使用auth&#34;&gt;使用Auth&lt;/h2&gt;
 
-&lt;p&gt;虽然并不能真正解决安全问题..最简单有效的方法就是使用Auth.使用Auth的的几点说明:
-1. 密码要尽可能的复杂,以防被brute force
-2. Auth的消耗非常少,只是在连接建立时候做一次鉴权,只有连接在,就不用再做鉴权
-3. 未来可能会有ACL机制,比如某些用户并没有&lt;code&gt;config set dir&lt;/code&gt;的权限&lt;/p&gt;
+&lt;p&gt;虽然并不能真正解决安全问题..最简单有效的方法就是使用Auth.使用Auth的的几点说明:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;密码要尽可能的复杂,以防被brute force&lt;/li&gt;
+&lt;li&gt;Auth的消耗非常少,只是在连接建立时候做一次鉴权,只有连接在,就不用再做鉴权&lt;/li&gt;
+&lt;li&gt;未来可能会有ACL机制,比如某些用户并没有&lt;code&gt;config set dir&lt;/code&gt;的权限&lt;/li&gt;
+&lt;/ol&gt;
 </description>
     </item>
     

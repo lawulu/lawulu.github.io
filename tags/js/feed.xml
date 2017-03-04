@@ -258,6 +258,8 @@ multipartFiles = {LinkedMultiValueMap@8884}  size = 0
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;But,为什么Xpath选择的不能调用Click…&lt;/p&gt;
+
+&lt;h3 id=&#34;setting里面可以对console-log加上timestamp&#34;&gt;Setting里面可以对console.log加上Timestamp&lt;/h3&gt;
 </description>
     </item>
     

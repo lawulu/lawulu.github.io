@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>璐濒殉漂流记</title>
+    <link>https://lawulu.github.io/tags/mysql/feed/index.xml</link>
+    <description>Recent content on 璐濒殉漂流记</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <atom:link href="https://lawulu.github.io/tags/mysql/feed/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>都是DNS惹的祸</title>
+      <link>https://lawulu.github.io/post/%E9%83%BD%E6%98%AFDNS%E6%83%B9%E7%9A%84%E8%B4%A7/</link>
+      <pubDate>Sat, 01 Aug 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://lawulu.github.io/post/%E9%83%BD%E6%98%AFDNS%E6%83%B9%E7%9A%84%E8%B4%A7/</guid>
+      <description>
+
+&lt;p&gt;最近因为工位调整,内部用的测试机换了个地方,结果发现上面部署的应用变得都反应奇慢,每次SSH上去也要卡顿很久.&lt;/p&gt;
+
+&lt;h2 id=&#34;是不是网络问题&#34;&gt;是不是网络问题?&lt;/h2&gt;
+
+&lt;h3 id=&#34;ping比较正常&#34;&gt;Ping比较正常&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;PING 192.168.214.227 (192.168.214.227): 56 data bytes
+64 bytes from 192.168.214.227: icmp_seq=0 ttl=64 time=0.073 ms
+64 bytes from 192.168.214.227: icmp_seq=1 ttl=64 time=0.100 ms
+64 bytes from 192.168.214.227: icmp_seq=2 ttl=64 time=0.092 ms
+64 bytes from 192.168.214.227: icmp_seq=3 ttl=64 time=0.074 ms
+64 bytes from 192.168.214.227: icmp_seq=4 ttl=64 time=0.057 ms
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;没有丢包,traceroute貌似也没有问题&lt;/p&gt;
+
+&lt;h3 id=&#34;测速&#34;&gt;测速&lt;/h3&gt;
+
+&lt;p&gt;生成一个大文件:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#*-*coding:utf-8 *-*
+&#39;&#39;&#39;&#39;&#39;
+Created on 2012-6-14
+
+&#39;&#39;&#39;
+def gen_file(path,size):
+    #首先以路径path新建一个文件，并设置模式为写
+    file = open(path,&#39;w&#39;)
+    #根据文件大小，偏移文件读取位置
+    file.seek(1024*1024*1024*size)#姑且以GB为单位吧
+    #然后在当前位置写入任何内容，必须要写入，不然文件不会那么大哦
+    file.write(&#39;\x00&#39;)
+    file.close()
+
+gen_file(&#39;./test.dat&#39;,1)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;scp上去,速度在兆级别..&lt;/p&gt;
+
+&lt;h2 id=&#34;ssh&#34;&gt;SSH&lt;/h2&gt;
+
+&lt;p&gt;用&lt;code&gt;ssh -v&lt;/code&gt; 找到Hang的地方,搜一下相关信息,很快就能找到需要改哪里.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;vim /etc/ssh/sshd_config
+UseDNS=no
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;重启&lt;code&gt;sudo service ssh restart&lt;/code&gt;解决问题&lt;/p&gt;
+
+&lt;h2 id=&#34;mysql&#34;&gt;Mysql&lt;/h2&gt;
+
+&lt;p&gt;mysql 客户端也有&lt;code&gt;--verbose&lt;/code&gt;的选项,但是设置了貌似没什么结果.搜了一下,很多说也是DNS的原因&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;show variables
+| skip_name_resolve                                 | OFF                                                                                                                     |
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;修改 &lt;code&gt;vim /etc/mysql/my.cnf&lt;/code&gt;
+增加一行 &lt;code&gt;skip-name-resolve&lt;/code&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

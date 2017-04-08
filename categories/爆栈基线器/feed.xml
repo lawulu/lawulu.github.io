@@ -9,6 +9,52 @@
     <atom:link href="https://lawulu.github.io/categories/%E7%88%86%E6%A0%88%E5%9F%BA%E7%BA%BF%E5%99%A8/feed/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
+      <title>Tracking以及FuseClick的一些胡言乱语</title>
+      <link>https://lawulu.github.io/post/Tracking%E4%BB%A5%E5%8F%8AFuseClick%E7%9A%84%E4%B8%80%E4%BA%9B%E8%83%A1%E8%A8%80%E4%B9%B1%E8%AF%AD/</link>
+      <pubDate>Thu, 01 Dec 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://lawulu.github.io/post/Tracking%E4%BB%A5%E5%8F%8AFuseClick%E7%9A%84%E4%B8%80%E4%BA%9B%E8%83%A1%E8%A8%80%E4%B9%B1%E8%AF%AD/</guid>
+      <description>
+
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;广告新人的一些感慨&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;fuseclick要解决的痛点&#34;&gt;FuseClick要解决的痛点&lt;/h2&gt;
+
+&lt;p&gt;在移动互联网烧钱大潮中，（传统来说）有流量变现能力只有广告了。当每一次点击都与钱相关时候，机会和随机会而来的混乱就出现了。对于移动强CPA广告来说，最大的痛点就是转化的核算和归因。各种第三方平台（友盟，TalkingData，热云……），各种不同的规范……，FuseClick就是对标Affiliate，成立的一家Tracking平台，帮助AdNetwork来统一追踪。更有野心的是，他家还要帮忙做优化。类似想统一混乱的公司还有Appcoach,mediation。。回头写一下。&lt;/p&gt;
+
+&lt;h2 id=&#34;tracking流程&#34;&gt;Tracking流程&lt;/h2&gt;
+
+&lt;h3 id=&#34;传统tracking&#34;&gt;传统Tracking&lt;/h3&gt;
+
+&lt;p&gt;对AdNetwork来说，由于无法知道是否安装完成，所以要通过第三方的平台来完成计费。所以，Tracking一般分为Click上报和Install的Postback。即当用户要下载一个App时候，AdNetwork马上告诉广告主（或者代表广告主的检测平台），快看，我这有个用户点击了，他要安装了！！然后就开始默默的等待..广告主收到一个安装，就会根据安装时候的信息反过来去找是谁上报的，一般会根据设备的信息（混乱之源之一)来匹配。所以上报时候一定要把设备信息给带上。上报分302让客户端上报和S2S对接两种，按下不表。&lt;/p&gt;
+
+&lt;h3 id=&#34;宏替换&#34;&gt;宏替换&lt;/h3&gt;
+
+&lt;p&gt;由于AdNetwork要对接的第三方平台太多，而各家Tracking时候需要的参数是不一样的。（为什么没有一个广告协会之类规范一下？！），所以就会有宏替换这么一个奇特而又奇妙的东西。举一个例子：&lt;/p&gt;
+
+&lt;p&gt;假如，大家需要一个参数DeviceId，A家需要的上报是&lt;a href=&#34;http://a.com/tracking?did=XX,而B家需要的上报是http://b.com/tracking?device=XX，这时候客户需要让AdNetwork知道应该怎么上报，AdNetwork提供一批可供替换的变量，让客户自己填。例如DeviceId的变量是shebeihao，那么上面两家分别填写：http://a.com/tracking?did={shebeihao}，和http://a.com/tracking?device={shebeihao}，等上报时候，将这些信息都替换正确。&#34;&gt;http://a.com/tracking?did=XX,而B家需要的上报是http://b.com/tracking?device=XX，这时候客户需要让AdNetwork知道应该怎么上报，AdNetwork提供一批可供替换的变量，让客户自己填。例如DeviceId的变量是shebeihao，那么上面两家分别填写：http://a.com/tracking?did={shebeihao}，和http://a.com/tracking?device={shebeihao}，等上报时候，将这些信息都替换正确。&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;渠道包&#34;&gt;渠道包&lt;/h3&gt;
+
+&lt;p&gt;因为（国内）Android并没有一个强势如AppStore的（混乱之源之一）应用商店，所以就会有渠道包这种东西。&lt;/p&gt;
+
+&lt;h2 id=&#34;fuseclick的做法&#34;&gt;Fuseclick的做法&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;为每一个AdNetwork建立一个Tracking Link，在Dashboard中配置对应的宏和Postback Url。&lt;/li&gt;
+&lt;li&gt;提供报表做到小时级别的统一，方便了不同时区的用户。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;是不是可以这样&#34;&gt;是不是可以这样？&lt;/h2&gt;
+
+&lt;p&gt;（以下大部分都是猜测）
+不提供设备信息，只关心一个ClickId，然后把ClickId发给广告主，广告主使用渠道包来判断是否是来自于本渠道的激活，有的话就直接回调AdNetwork，当然这个要建立在三方互相信任的阶段。&lt;/p&gt;
+
+&lt;p&gt;FC公众号上面的这篇对广告行业的介绍写的挺好的。&lt;a href=&#34;http://www.wtoutiao.com/p/N56UUz.html&#34;&gt;http://www.wtoutiao.com/p/N56UUz.html&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>AngularJS初窥</title>
       <link>https://lawulu.github.io/post/AngularJS%E5%88%9D%E7%AA%A5/</link>
       <pubDate>Sun, 20 Nov 2016 00:00:00 +0000</pubDate>
@@ -49,8 +95,10 @@
 &lt;h3 id=&#34;一些坑&#34;&gt;一些坑:&lt;/h3&gt;
 
 &lt;ul&gt;
-&lt;li&gt;http是异步,要在.function中处理,或者统一在配置里面设置&lt;code&gt;async : true&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;怎么Lazy初始化？没有找到办法&lt;/li&gt;
+&lt;li&gt;架构很恢弘，学习曲线很陡峭&lt;/li&gt;
+&lt;li&gt;http是异步,要在.function中处理,为避免因为异步未完成引起的页面问题，课可以统一在配置里面设置&lt;code&gt;async : true&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;怎么Lazy初始化？没有找到办法，可能需要自定义Directive&lt;/li&gt;
+&lt;li&gt;一些自定义Directive封装的不彻底，各种问题。&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h3 id=&#34;controller之间的交互&#34;&gt;Controller之间的交互&lt;/h3&gt;
@@ -72,7 +120,7 @@
 &lt;h3 id=&#34;与jquery-js之间的交互&#34;&gt;与Jquery/JS之间的交互&lt;/h3&gt;
 
 &lt;ul&gt;
-&lt;li&gt;有时候Jquery绑定Function时候,Dom并没有生成,所以需要替换成Angular的&lt;code&gt;ng-click&lt;/code&gt;事件.&lt;/li&gt;
+&lt;li&gt;有时候Jquery绑定Function时候,Dom并没有生成,所以需要替换成Angular的&lt;code&gt;ng-click&lt;/code&gt;事件,或者需要绑定到顶级上面,冒泡绑定.&lt;/li&gt;
 &lt;li&gt;JS中可以通过元素来找的其绑定的scope
 &lt;code&gt;
 window.angular.element(&amp;quot;#divId&amp;quot;).scope().doSth()
@@ -118,6 +166,102 @@ jQuery.ajax() =&amp;gt; $http
 &lt;h3 id=&#34;单元测试&#34;&gt;单元测试&lt;/h3&gt;
 
 &lt;p&gt;Angular轮了一套Service,Factory之流,自然也少不了单元测试..不知道有多少人会为页面写这玩意.&lt;/p&gt;
+
+&lt;h2 id=&#34;angular自定义directive和ng-repeat的问题&#34;&gt;Angular自定义Directive和Ng-repeat的问题&lt;/h2&gt;
+
+&lt;h3 id=&#34;现象&#34;&gt;现象&lt;/h3&gt;
+
+&lt;p&gt;同事自定义了一个&lt;code&gt;directive&lt;/code&gt;，模仿&lt;a href=&#34;http://www.cnblogs.com/e50000/p/5663806.html&#34;&gt;这里&lt;/a&gt;做的一个日期控件。这个&lt;code&gt;directive&lt;/code&gt;需要input域里面含有一个id。另外一个同事想在 &lt;code&gt;np-repeat&lt;/code&gt;里面使用这个控件，为了保证id唯一性，写成了这样，&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; &amp;lt;input type=&amp;quot;text&amp;quot; ng-model=&amp;quot;statDatas[$index].endDate&amp;quot; class=&amp;quot;overviews_date&amp;quot; placeholder=&amp;quot;结束时间&amp;quot; &amp;quot;id=&amp;quot;{{&#39;startDateInput&#39;+$index}}&amp;quot;  ng-change=&amp;quot;statDateChanged($index)&amp;quot; readonly  def-laydate&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;结果一直报错&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;TypeError: Cannot read property &#39;tagName&#39; of undefined
+    at Object.Dates.run (http://localhost:8081/resources/js/laydate.js:171:42)
+    at win.laydate (http://localhost:8081/resources/js/laydate.js:34:11)
+    at link (http://localhost:8081/resources/platformJs/ad_angular.js:592:20)
+    at http://localhost:8081/resources/angular/angular.min.js:72:493
+    at $ (http://localhost:8081/resources/angular/angular.min.js:73:46)
+    at L (http://localhost:8081/resources/angular/angular.min.js:61:495)
+    at g (http://localhost:8081/resources/angular/angular.min.js:54:326)
+    at g (http://localhost:8081/resources/angular/angular.min.js:54:349)
+    at g (http://localhost:8081/resources/angular/angular.min.js:54:349)
+    at g (http://localhost:8081/resources/angular/angular.min.js:54:349) &amp;lt;input type=&amp;quot;text&amp;quot; ng-model=&amp;quot;statDatas[$index].startDate&amp;quot; class=&amp;quot;overviews_date ng-pristine ng-untouched ng-valid ng-isolate-scope&amp;quot; placeholder=&amp;quot;开始时间&amp;quot; id=&amp;quot;{{&#39;startDateInput&#39;+$index}}&amp;quot; ng-change=&amp;quot;statDateChanged($index,ad.id)&amp;quot; readonly=&amp;quot;&amp;quot; def-laydate=&amp;quot;&amp;quot;&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;分析&#34;&gt;分析&lt;/h3&gt;
+
+&lt;p&gt;一开始就怀疑，是因为执行这个&lt;code&gt;directive&lt;/code&gt;时候&lt;code&gt;np-repeat&lt;/code&gt;还没有执行完，即这个dom还没有渲染完毕。那怎么解决呢？
+1. 监听&lt;code&gt;np-repeat&lt;/code&gt;,等结束之后，再去动态的执行自定义&lt;code&gt;directive&lt;/code&gt;。例如这篇文章里面：&lt;a href=&#34;http://www.tuicool.com/articles/Fb2um2e&#34;&gt;利用angular指令监听ng-repeat渲染完成后执行脚本&lt;/a&gt;
+2. 貌似有个Priority的属性，然而，搜了一下&lt;code&gt;np-repeat&lt;/code&gt;的Priority非常大，为1000，而自定义的priority为0.
+3. 仔细看报错日志，感觉像是laydate里面拿到的document是angular渲染之前的，所以找不到对应的Input域。这时候搜索已经没有意义了，应该仔细弄清楚&lt;code&gt;directive&lt;/code&gt;各行代码的意义。
+4. scope的问题？&lt;/p&gt;
+
+&lt;h3 id=&#34;解决办法&#34;&gt;解决办法&lt;/h3&gt;
+
+&lt;p&gt;用原始的值传递和&lt;code&gt;$scope.$apply&lt;/code&gt;来交互数据，弃掉自定义控件&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Phantomjs和Casperjs初窥</title>
+      <link>https://lawulu.github.io/post/Phantomjs%E5%92%8CCasperjs%E5%88%9D%E7%AA%A5/</link>
+      <pubDate>Sun, 23 Oct 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://lawulu.github.io/post/Phantomjs%E5%92%8CCasperjs%E5%88%9D%E7%AA%A5/</guid>
+      <description>
+
+&lt;p&gt;在这个浏览器最大的时代，JS越来越重的时代，做爬虫其实最好的办法是找一个Headless浏览器，必须要支持执行JS，这样做爬虫就不用去分析HTTP和JS了。我大Java有HtmlUnit，最近尝试的是传说中的PhantomJs。话说为什么没有基于Chrome dev tools的爬虫框架呢，或许可以尝试下油猴子。&lt;/p&gt;
+
+&lt;h2 id=&#34;简介&#34;&gt;简介&lt;/h2&gt;
+
+&lt;p&gt;PhantomJs提供了最原始的API，Casperjs是对PhantomJs的包装，最方便的是不用不停的写if/else（成功了执行下一步），而是用then/wait等方法增加代码的可读性和可写性。不过，Casperjs官方文档直接给出，遇到问题，应该使用PhantomJs的方式先去调用，有问题也要去PhantomJs那里去提…所以，看文档还是直接上PhantomJs吧。&lt;/p&gt;
+
+&lt;h2 id=&#34;示例&#34;&gt;示例&lt;/h2&gt;
+
+&lt;p&gt;casperjs提供了&lt;code&gt;echo&lt;/code&gt;、&lt;code&gt;waitfor&lt;/code&gt;、&lt;code&gt;click&lt;/code&gt;等原语，所以代码大概是这样：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;casper.thenClick(&#39;li.pg_next&#39;);
+
+casper.then(function () {
+    this.waitForSelector(&#39;li.pg_next&#39;,function () {
+         this.echo(this.getHTML(&#39;.post-list&#39;));
+    });
+})
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;比较苦逼的是，只有通过文件和console来跟外界交互…casperjs提供了一个server示例，直接标注说有内存溢出风险，phantomjs直接把webserver标注为不可在生产上用。&lt;/p&gt;
+
+&lt;h2 id=&#34;debug&#34;&gt;Debug&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;casperjs --ignore-ssl-errors=yes --ssl-protocol=any  sample.js  --remote-debugger-port=9000 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这时候，可以在Safari里面打开，在Scripts里面设置断点，就可以Debug了。看似简单，但是很多坑在里面。&lt;/p&gt;
+
+&lt;p&gt;首先，要在console里面执行__run()，但是如果&lt;code&gt;sample.js&lt;/code&gt;如果太复杂的话，会直接把PhantomJs搞Crash。所以可以在代码里面加上&lt;code&gt;Debugger&lt;/code&gt;，这样直接能跳过Crash的地方。
+另外，PhantomJs是基于Webkit的，Chrome虽然有Webkit血统，但是只使用了起渲染HTML和CSS这一层，自己搞了一套V8去执行JS，所以，最新版本的Chrome是无法Debug PhantomJs的，最好使用血缘更近的Safari。另外再吐槽一下，PhantomJs的Bug真多，动不动就Crash。&lt;/p&gt;
+
+&lt;p&gt;而且Console实在是不方便，所以，我觉得，最好的Debug还是用capture截图和多用log输出，例如监听资源。&lt;/p&gt;
+
+&lt;h2 id=&#34;监听资源&#34;&gt;监听资源&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt; var utils = require(&#39;utils&#39;);
+
+casper.options.onResourceReceived = function(casperObject, res) {
+     var contentType = res.contentType;
+     if(contentType.indexOf(&amp;quot;json&amp;quot;)!=-1){
+        console.log(utils.dump(res));
+
+     }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这里可以打印出所有header为&lt;code&gt;application/json&lt;/code&gt;的请求，然而没什么卵用，因为一般来说，body都被Gzip了，这里比较适合的是打印出url。&lt;/p&gt;
+
+&lt;p&gt;另外一个坑是，PhantomJs退出时候，可能有很多Ajax请求还没有完成，所以这里要手动Wait……,不然很多请求抓不到，再所以，PhantomJs抓起来就比较慢，适合一些临时的小任务。&lt;/p&gt;
 </description>
     </item>
     
@@ -772,6 +916,115 @@ UseDNS=no
 
 &lt;p&gt;修改 &lt;code&gt;vim /etc/mysql/my.cnf&lt;/code&gt;
 增加一行 &lt;code&gt;skip-name-resolve&lt;/code&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Freemarker下为静态资源增加Version</title>
+      <link>https://lawulu.github.io/post/Freemarker%E4%B8%8B%E4%B8%BA%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E5%A2%9E%E5%8A%A0Version/</link>
+      <pubDate>Wed, 04 Jun 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://lawulu.github.io/post/Freemarker%E4%B8%8B%E4%B8%BA%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E5%A2%9E%E5%8A%A0Version/</guid>
+      <description>
+
+&lt;h2 id=&#34;源起&#34;&gt;源起&lt;/h2&gt;
+
+&lt;p&gt;因为客户端浏览器缓存问题，每次发布时候之后，经常遇到新修改的JS/CSS不生效，需要手动清理老版本的缓存。其实业界已经有成熟的解决方案，无非加上Version或者禁止客户端缓存，未免遗忘，在这里记录一下。&lt;/p&gt;
+
+&lt;h2 id=&#34;具体方案&#34;&gt;具体方案&lt;/h2&gt;
+
+&lt;h3 id=&#34;自定义一个freemarkervariables&#34;&gt;自定义一个FreemarkerVariables&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;public class FreemarkerVariables extends HashMap{
+    public FreemarkerVariables(){
+        super();
+        this.put(&amp;quot;resourceVersion&amp;quot;,&amp;quot;&amp;quot;+System.currentTimeMillis());
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;freemarker配置&#34;&gt;Freemarker配置&lt;/h3&gt;
+
+&lt;p&gt;使用了FreemarkerVariables&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;bean id=&amp;quot;freemarkerVariables&amp;quot; class=&amp;quot;xxx.FreemarkerVariables&amp;quot;/&amp;gt;
+	&amp;lt;bean id=&amp;quot;freemarkerConfig&amp;quot; class=&amp;quot;org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer&amp;quot;&amp;gt;
+		&amp;lt;property name=&amp;quot;templateLoaderPath&amp;quot; value=&amp;quot;/WEB-INF/views/&amp;quot;/&amp;gt;
+		&amp;lt;property name=&amp;quot;freemarkerSettings&amp;quot;&amp;gt;
+			&amp;lt;props&amp;gt;
+				&amp;lt;prop key=&amp;quot;defaultEncoding&amp;quot;&amp;gt;UTF-8&amp;lt;/prop&amp;gt;
+			&amp;lt;/props&amp;gt;
+		&amp;lt;/property&amp;gt;
+		&amp;lt;property name=&amp;quot;freemarkerVariables&amp;quot; ref=&amp;quot;freemarkerVariables&amp;quot;/&amp;gt;
+	&amp;lt;/bean&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;批量替换&#34;&gt;批量替换&lt;/h3&gt;
+
+&lt;p&gt;做之前搜索了下，N多人都是写一个小工具。感谢现代IDE，直接替换就可以了。把所有的 &lt;code&gt;js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;&lt;/code&gt; 替换成&lt;code&gt;js?v=${resourceVersion}&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;&lt;/code&gt;即可，注意不要使用正则。&lt;/p&gt;
+
+&lt;h2 id=&#34;验证&#34;&gt;验证&lt;/h2&gt;
+
+&lt;p&gt;开发者的Chrome一般都是&lt;code&gt;Disable Cache&lt;/code&gt;的，这时候Header里面会有&lt;code&gt;no-cache&lt;/code&gt;，否则，应该可以看到&lt;code&gt;Status Code:304 Not Modified (from memory cache)&lt;/code&gt;之类的东西。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Idea在Ubuntu下面的使用</title>
+      <link>https://lawulu.github.io/post/Idea%E5%9C%A8Ubuntu%E4%B8%8B%E9%9D%A2%E7%9A%84%E4%BD%BF%E7%94%A8/</link>
+      <pubDate>Wed, 07 May 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://lawulu.github.io/post/Idea%E5%9C%A8Ubuntu%E4%B8%8B%E9%9D%A2%E7%9A%84%E4%BD%BF%E7%94%A8/</guid>
+      <description>
+
+&lt;h2 id=&#34;快捷键&#34;&gt;快捷键&lt;/h2&gt;
+
+&lt;h3 id=&#34;快捷键设定&#34;&gt;快捷键设定&lt;/h3&gt;
+
+&lt;p&gt;之前试图采用过Eclipse的快捷键,但是赶紧两种IDE的哲学相差还是比较大的,决定直接采用Idea默认的快捷键,然后再按习惯修改,例如Debug时候的F5F6之类.
+一开始用Gnome方案,因为Unbutu下系统快捷键跟Idea冲突比较多,但是按键实在是别扭,例如Eclipse里面的Alt+Left/Right
+在Default方案是Ctrl+Alt+Left/Right.这个和Unbuntu的切换Workspace冲突,Gnome方案是Shift+Alt+Left/Right,按起来好别扭..
+最后打算还是使用Default方案,直接在Keyboard里面把这几个快捷键给禁用了.
+还有一些输入法快捷键,我感觉其实只留Shift和ctrl+,就够了.Ctrl+Space,Ctrl+Alt+B(小语种软键盘)都要统统干掉.
+更换的快捷键:
+Alt+Left/Right和Ctrol+Alt+Left/Right互换. 一般打开Tab页比较多
+Ctrl+W 关闭 比Ctrl+F4好按一些
+Ctrl+D Duplication复制的机会比较少&lt;/p&gt;
+
+&lt;h3 id=&#34;一些常用快捷键&#34;&gt;一些常用快捷键&lt;/h3&gt;
+
+&lt;p&gt;Ctrl+alt+v
+单词跳 ctrl+left/right&lt;/p&gt;
+
+&lt;p&gt;ctrl+F12 outline
+Alt+insert 生成getter,setter
+修改了快捷键,Ctrl+shift+i
+列模式: alt+shift+insert&lt;/p&gt;
+
+&lt;h3 id=&#34;几个trick&#34;&gt;几个trick&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;不输入参数,移动光标到行尾.ctrl+shift+enter&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;用惯了Eclipse快捷键的人可能会不习惯，sysout、foreach等快捷方式找不到了，main方法也无法自动补全了，其实这个在IntelliJ中有一个异常强大的模块Live Template来实现。
+例如，在class中尝试psvm+tab，则会发现main方法产生了；输入iter+tab，则生成了foreach语句。 live template还有一个surround的用法，选中某个变量，键入ctl+alt+j两次，则会出现自动补全的菜单。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;建类的时候输入包名
+service.NewClass&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Mybatis:
+Could not autowire. No beans of &amp;lsquo;ApplicationMapper&amp;rsquo; type found. less&amp;hellip; (Ctrl+F1) Checks autowiring problems in a bean class.
+要装Mybatis插件或者将这个功能禁用掉
+&lt;a href=&#34;http://stackoverflow.com/questions/25379348/idea-inspects-batis-mapper-bean-wrong&#34;&gt;http://stackoverflow.com/questions/25379348/idea-inspects-batis-mapper-bean-wrong&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;idea的缺陷&#34;&gt;Idea的缺陷：&lt;/h2&gt;
+
+&lt;p&gt;1 多线程Debug起来太渣，经常会断点不起作用&lt;/p&gt;
+
+&lt;p&gt;2 provided的不在classPath，例如，想在Idea下运行Hadoop，因为子项目比较多，N多Provided其他子项目的依赖&lt;/p&gt;
+
+&lt;p&gt;3 Test和Main不分&lt;/p&gt;
 </description>
     </item>
     

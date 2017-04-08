@@ -17,22 +17,20 @@
       <guid>https://lawulu.github.io/about/</guid>
       <description>
 
-&lt;h3 id=&#34;关于本站&#34;&gt;关于本站&lt;/h3&gt;
-
-&lt;ol&gt;
-&lt;li&gt;把一个技术搞懂再讲清楚,是很花费精力和体现能力的事.
-貌似,我都比较欠缺,所以本站技术类文章都是只言片语的泛泛而谈,现做到只为记录,不为分享吧.&lt;/li&gt;
-&lt;li&gt;之前很多历史文章都是用的英文标点,在现在模板下,显示效果很差,有时间调整一下.&lt;/li&gt;
-&lt;li&gt;陆续迁移历史文章中&amp;hellip;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h3 id=&#34;本站分类&#34;&gt;本站分类&lt;/h3&gt;
+&lt;h3 id=&#34;分类说明&#34;&gt;分类说明&lt;/h3&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;爆栈&amp;amp;基线器&lt;/code&gt; 具体技术相关的随笔,取自StackOverflow和Github,因为有种说法编程就是从上面两个网站Copy&amp;amp;Paste,这个分类更像一个带文字说明的个人的gist.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;Aij一思考&lt;/code&gt; 工作生活中的一些感悟,取自“人类一思考上帝就发笑”和黑客帝国里面的Matrix&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;以德服人&lt;/code&gt; 关于公司管理和职业生涯的一些思考和经验,取自功夫皇帝方世玉中雷老虎的口头禅“以德服人”和三国杀刘备的台词.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;AkiRoss&lt;/code&gt; 技术架构或者业界新闻相关,比&lt;code&gt;爆栈&amp;amp;基线期&lt;/code&gt;要宏观,取自当年最终幻想电影版的女主角&lt;a href=&#34;http://finalfantasy.wikia.com/wiki/Aki_Ross&#34;&gt;Aki Ross&lt;/a&gt;的名字,&lt;code&gt;AkiRoss&lt;/code&gt;和&lt;code&gt;architect&lt;/code&gt;前面读音一样.Aki Ross是我刚接触计算机时候认为最完美的女性形象.&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;code&gt;促进大数据发展行动纲要&lt;/code&gt; 关于大数据,数据科学的一些学习笔记,工程实践.取自国务院的通知名字.&lt;/p&gt;
+
+&lt;h3 id=&#34;关于本站&#34;&gt;关于本站&lt;/h3&gt;
+
+&lt;p&gt;把一个技术搞懂再讲清楚,是很花费精力和体现能力的事,
+貌似,我都比较欠缺,所以本站技术类文章都是只言片语的泛泛而谈,先做到&lt;code&gt;只为记录,不为分享&lt;/code&gt;吧.&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h3 id=&#34;本站历史&#34;&gt;本站历史&lt;/h3&gt;
@@ -54,11 +52,13 @@
 &lt;h3 id=&#34;todo&#34;&gt;TODO&lt;/h3&gt;
 
 &lt;ul class=&#34;task-list&#34;&gt;
+&lt;li&gt;&lt;input type=&#34;checkbox&#34; disabled class=&#34;task-list-item&#34;&gt; 陆续迁移历史文章中&lt;/li&gt;
 &lt;li&gt;&lt;input type=&#34;checkbox&#34; disabled class=&#34;task-list-item&#34;&gt; 静态网站缺点是对帖子Metadata的管理不方便,需要想办法处理一下.话说对文本文件设置metadata怎么没有流行起来？现在S3和OSS都是有metadata的&lt;/li&gt;
 &lt;li&gt;&lt;input type=&#34;checkbox&#34; disabled class=&#34;task-list-item&#34;&gt; 编辑器（我用有道)和Hexo对Markdown的语法支持不一致,插入图片也不方便.Go还是比较年轻,貌似可供选择的Markdown渲染也不多,回头研究一下&lt;/li&gt;
 &lt;li&gt;&lt;input type=&#34;checkbox&#34; disabled class=&#34;task-list-item&#34;&gt; 想办法把百度的文章以及放到微博微信知乎上的东西写程序导过来&lt;/li&gt;
 &lt;li&gt;&lt;input type=&#34;checkbox&#34; checked disabled class=&#34;task-list-item&#34;&gt; &lt;del&gt;Table Content支持&lt;/del&gt;&lt;/li&gt;
 &lt;li&gt;&lt;input type=&#34;checkbox&#34; disabled class=&#34;task-list-item&#34;&gt; Git submodule研究……貌似突然不行了,现在只能在Idea里面提交&lt;/li&gt;
+&lt;li&gt;&lt;input type=&#34;checkbox&#34; disabled class=&#34;task-list-item&#34;&gt; 之前很多历史文章都是用的英文标点,在现在模板下,显示效果很差,需要调整&lt;/li&gt;
 &lt;li&gt;&lt;input type=&#34;checkbox&#34; checked disabled class=&#34;task-list-item&#34;&gt; &lt;del&gt;百度统计&lt;/del&gt;&lt;/li&gt;
 &lt;li&gt;&lt;input type=&#34;checkbox&#34; checked disabled class=&#34;task-list-item&#34;&gt; &lt;del&gt;图片插入,TodoList语法&lt;/del&gt;&lt;/li&gt;
 &lt;/ul&gt;

@@ -49,8 +49,10 @@
 &lt;h3 id=&#34;一些坑&#34;&gt;一些坑:&lt;/h3&gt;
 
 &lt;ul&gt;
-&lt;li&gt;http是异步,要在.function中处理,或者统一在配置里面设置&lt;code&gt;async : true&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;怎么Lazy初始化？没有找到办法&lt;/li&gt;
+&lt;li&gt;架构很恢弘，学习曲线很陡峭&lt;/li&gt;
+&lt;li&gt;http是异步,要在.function中处理,为避免因为异步未完成引起的页面问题，课可以统一在配置里面设置&lt;code&gt;async : true&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;怎么Lazy初始化？没有找到办法，可能需要自定义Directive&lt;/li&gt;
+&lt;li&gt;一些自定义Directive封装的不彻底，各种问题。&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h3 id=&#34;controller之间的交互&#34;&gt;Controller之间的交互&lt;/h3&gt;
@@ -72,7 +74,7 @@
 &lt;h3 id=&#34;与jquery-js之间的交互&#34;&gt;与Jquery/JS之间的交互&lt;/h3&gt;
 
 &lt;ul&gt;
-&lt;li&gt;有时候Jquery绑定Function时候,Dom并没有生成,所以需要替换成Angular的&lt;code&gt;ng-click&lt;/code&gt;事件.&lt;/li&gt;
+&lt;li&gt;有时候Jquery绑定Function时候,Dom并没有生成,所以需要替换成Angular的&lt;code&gt;ng-click&lt;/code&gt;事件,或者需要绑定到顶级上面,冒泡绑定.&lt;/li&gt;
 &lt;li&gt;JS中可以通过元素来找的其绑定的scope
 &lt;code&gt;
 window.angular.element(&amp;quot;#divId&amp;quot;).scope().doSth()
@@ -118,6 +120,42 @@ jQuery.ajax() =&amp;gt; $http
 &lt;h3 id=&#34;单元测试&#34;&gt;单元测试&lt;/h3&gt;
 
 &lt;p&gt;Angular轮了一套Service,Factory之流,自然也少不了单元测试..不知道有多少人会为页面写这玩意.&lt;/p&gt;
+
+&lt;h2 id=&#34;angular自定义directive和ng-repeat的问题&#34;&gt;Angular自定义Directive和Ng-repeat的问题&lt;/h2&gt;
+
+&lt;h3 id=&#34;现象&#34;&gt;现象&lt;/h3&gt;
+
+&lt;p&gt;同事自定义了一个&lt;code&gt;directive&lt;/code&gt;，模仿&lt;a href=&#34;http://www.cnblogs.com/e50000/p/5663806.html&#34;&gt;这里&lt;/a&gt;做的一个日期控件。这个&lt;code&gt;directive&lt;/code&gt;需要input域里面含有一个id。另外一个同事想在 &lt;code&gt;np-repeat&lt;/code&gt;里面使用这个控件，为了保证id唯一性，写成了这样，&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; &amp;lt;input type=&amp;quot;text&amp;quot; ng-model=&amp;quot;statDatas[$index].endDate&amp;quot; class=&amp;quot;overviews_date&amp;quot; placeholder=&amp;quot;结束时间&amp;quot; &amp;quot;id=&amp;quot;{{&#39;startDateInput&#39;+$index}}&amp;quot;  ng-change=&amp;quot;statDateChanged($index)&amp;quot; readonly  def-laydate&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;结果一直报错&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;TypeError: Cannot read property &#39;tagName&#39; of undefined
+    at Object.Dates.run (http://localhost:8081/resources/js/laydate.js:171:42)
+    at win.laydate (http://localhost:8081/resources/js/laydate.js:34:11)
+    at link (http://localhost:8081/resources/platformJs/ad_angular.js:592:20)
+    at http://localhost:8081/resources/angular/angular.min.js:72:493
+    at $ (http://localhost:8081/resources/angular/angular.min.js:73:46)
+    at L (http://localhost:8081/resources/angular/angular.min.js:61:495)
+    at g (http://localhost:8081/resources/angular/angular.min.js:54:326)
+    at g (http://localhost:8081/resources/angular/angular.min.js:54:349)
+    at g (http://localhost:8081/resources/angular/angular.min.js:54:349)
+    at g (http://localhost:8081/resources/angular/angular.min.js:54:349) &amp;lt;input type=&amp;quot;text&amp;quot; ng-model=&amp;quot;statDatas[$index].startDate&amp;quot; class=&amp;quot;overviews_date ng-pristine ng-untouched ng-valid ng-isolate-scope&amp;quot; placeholder=&amp;quot;开始时间&amp;quot; id=&amp;quot;{{&#39;startDateInput&#39;+$index}}&amp;quot; ng-change=&amp;quot;statDateChanged($index,ad.id)&amp;quot; readonly=&amp;quot;&amp;quot; def-laydate=&amp;quot;&amp;quot;&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;分析&#34;&gt;分析&lt;/h3&gt;
+
+&lt;p&gt;一开始就怀疑，是因为执行这个&lt;code&gt;directive&lt;/code&gt;时候&lt;code&gt;np-repeat&lt;/code&gt;还没有执行完，即这个dom还没有渲染完毕。那怎么解决呢？
+1. 监听&lt;code&gt;np-repeat&lt;/code&gt;,等结束之后，再去动态的执行自定义&lt;code&gt;directive&lt;/code&gt;。例如这篇文章里面：&lt;a href=&#34;http://www.tuicool.com/articles/Fb2um2e&#34;&gt;利用angular指令监听ng-repeat渲染完成后执行脚本&lt;/a&gt;
+2. 貌似有个Priority的属性，然而，搜了一下&lt;code&gt;np-repeat&lt;/code&gt;的Priority非常大，为1000，而自定义的priority为0.
+3. 仔细看报错日志，感觉像是laydate里面拿到的document是angular渲染之前的，所以找不到对应的Input域。这时候搜索已经没有意义了，应该仔细弄清楚&lt;code&gt;directive&lt;/code&gt;各行代码的意义。
+4. scope的问题？&lt;/p&gt;
+
+&lt;h3 id=&#34;解决办法&#34;&gt;解决办法&lt;/h3&gt;
+
+&lt;p&gt;用原始的值传递和&lt;code&gt;$scope.$apply&lt;/code&gt;来交互数据，弃掉自定义控件&lt;/p&gt;
 </description>
     </item>
     

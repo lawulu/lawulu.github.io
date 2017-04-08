@@ -95,6 +95,12 @@
 <li><a href="#ng-change">Ng-change</a></li>
 <li><a href="#单元测试">单元测试</a></li>
 </ul></li>
+<li><a href="#angular自定义directive和ng-repeat的问题">Angular自定义Directive和Ng-repeat的问题</a>
+<ul>
+<li><a href="#现象">现象</a></li>
+<li><a href="#分析">分析</a></li>
+<li><a href="#解决办法">解决办法</a></li>
+</ul></li>
 </ul></li>
 </ul>
 </nav>
@@ -135,8 +141,10 @@
 <h3 id="一些坑">一些坑:</h3>
 
 <ul>
-<li>http是异步,要在.function中处理,或者统一在配置里面设置<code>async : true</code></li>
-<li>怎么Lazy初始化？没有找到办法</li>
+<li>架构很恢弘，学习曲线很陡峭</li>
+<li>http是异步,要在.function中处理,为避免因为异步未完成引起的页面问题，课可以统一在配置里面设置<code>async : true</code></li>
+<li>怎么Lazy初始化？没有找到办法，可能需要自定义Directive</li>
+<li>一些自定义Directive封装的不彻底，各种问题。</li>
 </ul>
 
 <h3 id="controller之间的交互">Controller之间的交互</h3>
@@ -158,7 +166,7 @@
 <h3 id="与jquery-js之间的交互">与Jquery/JS之间的交互</h3>
 
 <ul>
-<li>有时候Jquery绑定Function时候,Dom并没有生成,所以需要替换成Angular的<code>ng-click</code>事件.</li>
+<li>有时候Jquery绑定Function时候,Dom并没有生成,所以需要替换成Angular的<code>ng-click</code>事件,或者需要绑定到顶级上面,冒泡绑定.</li>
 <li>JS中可以通过元素来找的其绑定的scope
 <code>
 window.angular.element(&quot;#divId&quot;).scope().doSth()
@@ -204,6 +212,42 @@ jQuery.ajax() =&gt; $http
 <h3 id="单元测试">单元测试</h3>
 
 <p>Angular轮了一套Service,Factory之流,自然也少不了单元测试..不知道有多少人会为页面写这玩意.</p>
+
+<h2 id="angular自定义directive和ng-repeat的问题">Angular自定义Directive和Ng-repeat的问题</h2>
+
+<h3 id="现象">现象</h3>
+
+<p>同事自定义了一个<code>directive</code>，模仿<a href="http://www.cnblogs.com/e50000/p/5663806.html">这里</a>做的一个日期控件。这个<code>directive</code>需要input域里面含有一个id。另外一个同事想在 <code>np-repeat</code>里面使用这个控件，为了保证id唯一性，写成了这样，</p>
+
+<pre><code> &lt;input type=&quot;text&quot; ng-model=&quot;statDatas[$index].endDate&quot; class=&quot;overviews_date&quot; placeholder=&quot;结束时间&quot; &quot;id=&quot;{{'startDateInput'+$index}}&quot;  ng-change=&quot;statDateChanged($index)&quot; readonly  def-laydate&gt;
+</code></pre>
+
+<p>结果一直报错</p>
+
+<pre><code>TypeError: Cannot read property 'tagName' of undefined
+    at Object.Dates.run (http://localhost:8081/resources/js/laydate.js:171:42)
+    at win.laydate (http://localhost:8081/resources/js/laydate.js:34:11)
+    at link (http://localhost:8081/resources/platformJs/ad_angular.js:592:20)
+    at http://localhost:8081/resources/angular/angular.min.js:72:493
+    at $ (http://localhost:8081/resources/angular/angular.min.js:73:46)
+    at L (http://localhost:8081/resources/angular/angular.min.js:61:495)
+    at g (http://localhost:8081/resources/angular/angular.min.js:54:326)
+    at g (http://localhost:8081/resources/angular/angular.min.js:54:349)
+    at g (http://localhost:8081/resources/angular/angular.min.js:54:349)
+    at g (http://localhost:8081/resources/angular/angular.min.js:54:349) &lt;input type=&quot;text&quot; ng-model=&quot;statDatas[$index].startDate&quot; class=&quot;overviews_date ng-pristine ng-untouched ng-valid ng-isolate-scope&quot; placeholder=&quot;开始时间&quot; id=&quot;{{'startDateInput'+$index}}&quot; ng-change=&quot;statDateChanged($index,ad.id)&quot; readonly=&quot;&quot; def-laydate=&quot;&quot;&gt;
+</code></pre>
+
+<h3 id="分析">分析</h3>
+
+<p>一开始就怀疑，是因为执行这个<code>directive</code>时候<code>np-repeat</code>还没有执行完，即这个dom还没有渲染完毕。那怎么解决呢？
+1. 监听<code>np-repeat</code>,等结束之后，再去动态的执行自定义<code>directive</code>。例如这篇文章里面：<a href="http://www.tuicool.com/articles/Fb2um2e">利用angular指令监听ng-repeat渲染完成后执行脚本</a>
+2. 貌似有个Priority的属性，然而，搜了一下<code>np-repeat</code>的Priority非常大，为1000，而自定义的priority为0.
+3. 仔细看报错日志，感觉像是laydate里面拿到的document是angular渲染之前的，所以找不到对应的Input域。这时候搜索已经没有意义了，应该仔细弄清楚<code>directive</code>各行代码的意义。
+4. scope的问题？</p>
+
+<h3 id="解决办法">解决办法</h3>
+
+<p>用原始的值传递和<code>$scope.$apply</code>来交互数据，弃掉自定义控件</p>
 
 	</div>
   <footer class="article-footer clearfix">
@@ -274,7 +318,9 @@ var duoshuoQuery = {short_name:"inza9hi"};
     
     <li><a href="https://lawulu.github.io/categories/akiross" title="akiross">akiross<sup>1</sup></a></li>
     
-    <li><a href="https://lawulu.github.io/categories/%e7%88%86%e6%a0%88%e5%9f%ba%e7%ba%bf%e5%99%a8" title="爆栈基线器">爆栈基线器<sup>7</sup></a></li>
+    <li><a href="https://lawulu.github.io/categories/%e4%bf%83%e8%bf%9b%e5%a4%a7%e6%95%b0%e6%8d%ae%e5%8f%91%e5%b1%95%e8%a1%8c%e5%8a%a8%e7%ba%b2%e8%a6%81" title="促进大数据发展行动纲要">促进大数据发展行动纲要<sup>1</sup></a></li>
+    
+    <li><a href="https://lawulu.github.io/categories/%e7%88%86%e6%a0%88%e5%9f%ba%e7%ba%bf%e5%99%a8" title="爆栈基线器">爆栈基线器<sup>11</sup></a></li>
     
   </ul>
 </div>
@@ -287,7 +333,11 @@ var duoshuoQuery = {short_name:"inza9hi"};
 	<p class="asidetitle">标签</p>
 		<ul class="clearfix">
       
+			<li><a href="https://lawulu.github.io/tags/ad" title="ad">ad<sup>1</sup></a></li>
+      
 			<li><a href="https://lawulu.github.io/tags/angular" title="angular">angular<sup>1</sup></a></li>
+      
+			<li><a href="https://lawulu.github.io/tags/casperjs" title="casperjs">casperjs<sup>1</sup></a></li>
       
 			<li><a href="https://lawulu.github.io/tags/chrome" title="chrome">chrome<sup>1</sup></a></li>
       
@@ -295,15 +345,25 @@ var duoshuoQuery = {short_name:"inza9hi"};
       
 			<li><a href="https://lawulu.github.io/tags/dns" title="dns">dns<sup>1</sup></a></li>
       
+			<li><a href="https://lawulu.github.io/tags/freemarker" title="freemarker">freemarker<sup>1</sup></a></li>
+      
+			<li><a href="https://lawulu.github.io/tags/fuseclick" title="fuseclick">fuseclick<sup>1</sup></a></li>
+      
+			<li><a href="https://lawulu.github.io/tags/hive" title="hive">hive<sup>1</sup></a></li>
+      
+			<li><a href="https://lawulu.github.io/tags/idea" title="idea">idea<sup>2</sup></a></li>
+      
 			<li><a href="https://lawulu.github.io/tags/java" title="java">java<sup>2</sup></a></li>
       
-			<li><a href="https://lawulu.github.io/tags/js" title="js">js<sup>2</sup></a></li>
+			<li><a href="https://lawulu.github.io/tags/js" title="js">js<sup>3</sup></a></li>
       
-			<li><a href="https://lawulu.github.io/tags/linux" title="linux">linux<sup>1</sup></a></li>
+			<li><a href="https://lawulu.github.io/tags/linux" title="linux">linux<sup>2</sup></a></li>
       
 			<li><a href="https://lawulu.github.io/tags/logback" title="logback">logback<sup>1</sup></a></li>
       
 			<li><a href="https://lawulu.github.io/tags/mysql" title="mysql">mysql<sup>1</sup></a></li>
+      
+			<li><a href="https://lawulu.github.io/tags/phantomjs" title="phantomjs">phantomjs<sup>1</sup></a></li>
       
 			<li><a href="https://lawulu.github.io/tags/python" title="python">python<sup>1</sup></a></li>
       
@@ -311,13 +371,15 @@ var duoshuoQuery = {short_name:"inza9hi"};
       
 			<li><a href="https://lawulu.github.io/tags/scrapy" title="scrapy">scrapy<sup>1</sup></a></li>
       
+			<li><a href="https://lawulu.github.io/tags/solr" title="solr">solr<sup>1</sup></a></li>
+      
 			<li><a href="https://lawulu.github.io/tags/spring" title="spring">spring<sup>1</sup></a></li>
       
 			<li><a href="https://lawulu.github.io/tags/ssh" title="ssh">ssh<sup>1</sup></a></li>
       
 			<li><a href="https://lawulu.github.io/tags/%e5%ae%89%e5%85%a8" title="安全">安全<sup>2</sup></a></li>
       
-			<li><a href="https://lawulu.github.io/tags/%e7%88%ac%e8%99%ab" title="爬虫">爬虫<sup>1</sup></a></li>
+			<li><a href="https://lawulu.github.io/tags/%e7%88%ac%e8%99%ab" title="爬虫">爬虫<sup>2</sup></a></li>
       
 		</ul>
 </div>
@@ -331,7 +393,17 @@ var duoshuoQuery = {short_name:"inza9hi"};
       
       
       <li class="archive-list-item">
+        <a class="archive-list-link" href="https://lawulu.github.io/post/#2016-12">2016年12月</a><span class="archive-list-count">1</span>
+      </li>
+      
+      
+      <li class="archive-list-item">
         <a class="archive-list-link" href="https://lawulu.github.io/post/#2016-11">2016年11月</a><span class="archive-list-count">1</span>
+      </li>
+      
+      
+      <li class="archive-list-item">
+        <a class="archive-list-link" href="https://lawulu.github.io/post/#2016-10">2016年10月</a><span class="archive-list-count">1</span>
       </li>
       
       
@@ -359,6 +431,21 @@ var duoshuoQuery = {short_name:"inza9hi"};
         <a class="archive-list-link" href="https://lawulu.github.io/post/#2015-08">2015年08月</a><span class="archive-list-count">3</span>
       </li>
       
+      
+      <li class="archive-list-item">
+        <a class="archive-list-link" href="https://lawulu.github.io/post/#2014-06">2014年06月</a><span class="archive-list-count">1</span>
+      </li>
+      
+      
+      <li class="archive-list-item">
+        <a class="archive-list-link" href="https://lawulu.github.io/post/#2014-05">2014年05月</a><span class="archive-list-count">1</span>
+      </li>
+      
+      
+      <li class="archive-list-item">
+        <a class="archive-list-link" href="https://lawulu.github.io/post/#2014-03">2014年03月</a><span class="archive-list-count">1</span>
+      </li>
+      
     </ul>
 
   </div>
@@ -370,13 +457,25 @@ var duoshuoQuery = {short_name:"inza9hi"};
   <p class="asidetitle">标签云</p>
   <div class="tagcloudlist clearfix">
     
+    <a href="https://lawulu.github.io/tags/ad" style="font-size: 12px;">ad</a>
+    
     <a href="https://lawulu.github.io/tags/angular" style="font-size: 12px;">angular</a>
+    
+    <a href="https://lawulu.github.io/tags/casperjs" style="font-size: 12px;">casperjs</a>
     
     <a href="https://lawulu.github.io/tags/chrome" style="font-size: 12px;">chrome</a>
     
     <a href="https://lawulu.github.io/tags/dbcp" style="font-size: 12px;">dbcp</a>
     
     <a href="https://lawulu.github.io/tags/dns" style="font-size: 12px;">dns</a>
+    
+    <a href="https://lawulu.github.io/tags/freemarker" style="font-size: 12px;">freemarker</a>
+    
+    <a href="https://lawulu.github.io/tags/fuseclick" style="font-size: 12px;">fuseclick</a>
+    
+    <a href="https://lawulu.github.io/tags/hive" style="font-size: 12px;">hive</a>
+    
+    <a href="https://lawulu.github.io/tags/idea" style="font-size: 12px;">idea</a>
     
     <a href="https://lawulu.github.io/tags/java" style="font-size: 12px;">java</a>
     
@@ -388,11 +487,15 @@ var duoshuoQuery = {short_name:"inza9hi"};
     
     <a href="https://lawulu.github.io/tags/mysql" style="font-size: 12px;">mysql</a>
     
+    <a href="https://lawulu.github.io/tags/phantomjs" style="font-size: 12px;">phantomjs</a>
+    
     <a href="https://lawulu.github.io/tags/python" style="font-size: 12px;">python</a>
     
     <a href="https://lawulu.github.io/tags/redis" style="font-size: 12px;">redis</a>
     
     <a href="https://lawulu.github.io/tags/scrapy" style="font-size: 12px;">scrapy</a>
+    
+    <a href="https://lawulu.github.io/tags/solr" style="font-size: 12px;">solr</a>
     
     <a href="https://lawulu.github.io/tags/spring" style="font-size: 12px;">spring</a>
     

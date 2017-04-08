@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>璐濒殉漂流记</title>
+    <link>https://lawulu.github.io/tags/idea/feed/index.xml</link>
+    <description>Recent content on 璐濒殉漂流记</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <atom:link href="https://lawulu.github.io/tags/idea/feed/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Freemarker下为静态资源增加Version</title>
+      <link>https://lawulu.github.io/post/Freemarker%E4%B8%8B%E4%B8%BA%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E5%A2%9E%E5%8A%A0Version/</link>
+      <pubDate>Wed, 04 Jun 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://lawulu.github.io/post/Freemarker%E4%B8%8B%E4%B8%BA%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E5%A2%9E%E5%8A%A0Version/</guid>
+      <description>
+
+&lt;h2 id=&#34;源起&#34;&gt;源起&lt;/h2&gt;
+
+&lt;p&gt;因为客户端浏览器缓存问题，每次发布时候之后，经常遇到新修改的JS/CSS不生效，需要手动清理老版本的缓存。其实业界已经有成熟的解决方案，无非加上Version或者禁止客户端缓存，未免遗忘，在这里记录一下。&lt;/p&gt;
+
+&lt;h2 id=&#34;具体方案&#34;&gt;具体方案&lt;/h2&gt;
+
+&lt;h3 id=&#34;自定义一个freemarkervariables&#34;&gt;自定义一个FreemarkerVariables&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;public class FreemarkerVariables extends HashMap{
+    public FreemarkerVariables(){
+        super();
+        this.put(&amp;quot;resourceVersion&amp;quot;,&amp;quot;&amp;quot;+System.currentTimeMillis());
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;freemarker配置&#34;&gt;Freemarker配置&lt;/h3&gt;
+
+&lt;p&gt;使用了FreemarkerVariables&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;bean id=&amp;quot;freemarkerVariables&amp;quot; class=&amp;quot;xxx.FreemarkerVariables&amp;quot;/&amp;gt;
+	&amp;lt;bean id=&amp;quot;freemarkerConfig&amp;quot; class=&amp;quot;org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer&amp;quot;&amp;gt;
+		&amp;lt;property name=&amp;quot;templateLoaderPath&amp;quot; value=&amp;quot;/WEB-INF/views/&amp;quot;/&amp;gt;
+		&amp;lt;property name=&amp;quot;freemarkerSettings&amp;quot;&amp;gt;
+			&amp;lt;props&amp;gt;
+				&amp;lt;prop key=&amp;quot;defaultEncoding&amp;quot;&amp;gt;UTF-8&amp;lt;/prop&amp;gt;
+			&amp;lt;/props&amp;gt;
+		&amp;lt;/property&amp;gt;
+		&amp;lt;property name=&amp;quot;freemarkerVariables&amp;quot; ref=&amp;quot;freemarkerVariables&amp;quot;/&amp;gt;
+	&amp;lt;/bean&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;批量替换&#34;&gt;批量替换&lt;/h3&gt;
+
+&lt;p&gt;做之前搜索了下，N多人都是写一个小工具。感谢现代IDE，直接替换就可以了。把所有的 &lt;code&gt;js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;&lt;/code&gt; 替换成&lt;code&gt;js?v=${resourceVersion}&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;&lt;/code&gt;即可，注意不要使用正则。&lt;/p&gt;
+
+&lt;h2 id=&#34;验证&#34;&gt;验证&lt;/h2&gt;
+
+&lt;p&gt;开发者的Chrome一般都是&lt;code&gt;Disable Cache&lt;/code&gt;的，这时候Header里面会有&lt;code&gt;no-cache&lt;/code&gt;，否则，应该可以看到&lt;code&gt;Status Code:304 Not Modified (from memory cache)&lt;/code&gt;之类的东西。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Idea在Ubuntu下面的使用</title>
+      <link>https://lawulu.github.io/post/Idea%E5%9C%A8Ubuntu%E4%B8%8B%E9%9D%A2%E7%9A%84%E4%BD%BF%E7%94%A8/</link>
+      <pubDate>Wed, 07 May 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://lawulu.github.io/post/Idea%E5%9C%A8Ubuntu%E4%B8%8B%E9%9D%A2%E7%9A%84%E4%BD%BF%E7%94%A8/</guid>
+      <description>
+
+&lt;h2 id=&#34;快捷键&#34;&gt;快捷键&lt;/h2&gt;
+
+&lt;h3 id=&#34;快捷键设定&#34;&gt;快捷键设定&lt;/h3&gt;
+
+&lt;p&gt;之前试图采用过Eclipse的快捷键,但是赶紧两种IDE的哲学相差还是比较大的,决定直接采用Idea默认的快捷键,然后再按习惯修改,例如Debug时候的F5F6之类.
+一开始用Gnome方案,因为Unbutu下系统快捷键跟Idea冲突比较多,但是按键实在是别扭,例如Eclipse里面的Alt+Left/Right
+在Default方案是Ctrl+Alt+Left/Right.这个和Unbuntu的切换Workspace冲突,Gnome方案是Shift+Alt+Left/Right,按起来好别扭..
+最后打算还是使用Default方案,直接在Keyboard里面把这几个快捷键给禁用了.
+还有一些输入法快捷键,我感觉其实只留Shift和ctrl+,就够了.Ctrl+Space,Ctrl+Alt+B(小语种软键盘)都要统统干掉.
+更换的快捷键:
+Alt+Left/Right和Ctrol+Alt+Left/Right互换. 一般打开Tab页比较多
+Ctrl+W 关闭 比Ctrl+F4好按一些
+Ctrl+D Duplication复制的机会比较少&lt;/p&gt;
+
+&lt;h3 id=&#34;一些常用快捷键&#34;&gt;一些常用快捷键&lt;/h3&gt;
+
+&lt;p&gt;Ctrl+alt+v
+单词跳 ctrl+left/right&lt;/p&gt;
+
+&lt;p&gt;ctrl+F12 outline
+Alt+insert 生成getter,setter
+修改了快捷键,Ctrl+shift+i
+列模式: alt+shift+insert&lt;/p&gt;
+
+&lt;h3 id=&#34;几个trick&#34;&gt;几个trick&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;不输入参数,移动光标到行尾.ctrl+shift+enter&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;用惯了Eclipse快捷键的人可能会不习惯，sysout、foreach等快捷方式找不到了，main方法也无法自动补全了，其实这个在IntelliJ中有一个异常强大的模块Live Template来实现。
+例如，在class中尝试psvm+tab，则会发现main方法产生了；输入iter+tab，则生成了foreach语句。 live template还有一个surround的用法，选中某个变量，键入ctl+alt+j两次，则会出现自动补全的菜单。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;建类的时候输入包名
+service.NewClass&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Mybatis:
+Could not autowire. No beans of &amp;lsquo;ApplicationMapper&amp;rsquo; type found. less&amp;hellip; (Ctrl+F1) Checks autowiring problems in a bean class.
+要装Mybatis插件或者将这个功能禁用掉
+&lt;a href=&#34;http://stackoverflow.com/questions/25379348/idea-inspects-batis-mapper-bean-wrong&#34;&gt;http://stackoverflow.com/questions/25379348/idea-inspects-batis-mapper-bean-wrong&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;idea的缺陷&#34;&gt;Idea的缺陷：&lt;/h2&gt;
+
+&lt;p&gt;1 多线程Debug起来太渣，经常会断点不起作用&lt;/p&gt;
+
+&lt;p&gt;2 provided的不在classPath，例如，想在Idea下运行Hadoop，因为子项目比较多，N多Provided其他子项目的依赖&lt;/p&gt;
+
+&lt;p&gt;3 Test和Main不分&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

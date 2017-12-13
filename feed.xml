@@ -67,7 +67,7 @@
       <guid>https://lawulu.github.io/post/Imply%E5%92%8CConfluent%E7%A0%B4%E8%A7%A3/</guid>
       <description>
 
-&lt;p&gt;其实这两个软件还是比较容易破解的，首先开发者并没有把精力放到反破解上面，相关功能做的很简单。第二没有服务器交互的反破解还是很难的，即时是有服务器交互(例如Idea)，也有人搞出各种License Server出来&lt;/p&gt;
+&lt;p&gt;其实这两个软件还是比较容易破解的，首先开发者并没有把精力放到反破解上面，相关功能做的很简单;第二没有服务器交互的反破解还是很难的，尤其是对于Java这种容易反编译的软件来说。话说过来，即时是有服务器交互，例如Idea，也有人搞出各种License Server出来。&lt;/p&gt;
 
 &lt;h2 id=&#34;imply-pivot&#34;&gt;Imply Pivot&lt;/h2&gt;
 
@@ -636,6 +636,124 @@ casper.options.onResourceReceived = function(casperObject, res) {
     </item>
     
     <item>
+      <title>ML-决策树和回归</title>
+      <link>https://lawulu.github.io/post/ML-%E5%9B%9E%E5%BD%92%E5%92%8C%E5%86%B3%E7%AD%96%E6%A0%91/</link>
+      <pubDate>Fri, 20 May 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://lawulu.github.io/post/ML-%E5%9B%9E%E5%BD%92%E5%92%8C%E5%86%B3%E7%AD%96%E6%A0%91/</guid>
+      <description>
+
+&lt;h2 id=&#34;决策树&#34;&gt;决策树&lt;/h2&gt;
+
+&lt;h3 id=&#34;理论基础&#34;&gt;理论基础&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;信息熵：-p(x)*lnp(x)的和,如果信息熵高的话，说明不稳定，不确定性大。例如一个0.5vs0.5的硬币和一个0.99vs0.01的硬币。&lt;/li&gt;
+&lt;li&gt;条件熵：H(Y|X)=&lt;/li&gt;
+&lt;li&gt;信息增益：互信息&lt;/li&gt;
+&lt;li&gt;信息增益率&lt;/li&gt;
+&lt;li&gt;基尼系数（两个定义）
+ID3,C4.5,CART&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;建立决策树，核心的问题是如何选择特征值作为根节点？
+找到不确定性降低最快的，即构建一个信息熵下降最快的树&lt;/p&gt;
+
+&lt;p&gt;决策树的评价：&lt;/p&gt;
+
+&lt;p&gt;随机森林，对M个样本，是随机选出N个样本，并且放回，构造L颗树，然后投票选出分类，这是一种集中的思想，每一个树不完美，然后一起就很完美。（分类器不一定用决策树，也可能用SVM、LR之类，但是效果不好，因为是强分类器，对噪声比较敏感）
+事实上，回归也可以使用集中这种精神。&lt;/p&gt;
+
+&lt;p&gt;也有可能是在特征上加入了随机性，只取某些特征。降低了某些特征的影响。&lt;/p&gt;
+
+&lt;p&gt;怎么确定树的个数？
+这个是一个超参数，和lambda也一样，拍脑袋，然后验证。
+很多实践中，N=M,因为有1-1/e的概率会重复，会去掉捣乱分子，然后防止过拟合。各个大学的特征脸，加完除以n之后就会把不太好的特征给抹掉&lt;/p&gt;
+
+&lt;p&gt;平方根大法，每次平方根个样本&lt;/p&gt;
+
+&lt;h3 id=&#34;决策树也可以用来拟合&#34;&gt;决策树也可以用来拟合&lt;/h3&gt;
+
+&lt;p&gt;即每一段当做一个连续值&lt;/p&gt;
+
+&lt;p&gt;投票机制，可以加权。
+例如，电影加权评分调节冷门和热门比赛。
+拉普拉斯平滑，例如中韩比赛前四次都输了，计算最新比赛的胜率，本来应该是0/4，但是为了平滑，按照1/4+1来算。&lt;/p&gt;
+
+&lt;h2 id=&#34;回归&#34;&gt;回归&lt;/h2&gt;
+
+&lt;h3 id=&#34;数学理论&#34;&gt;数学理论&lt;/h3&gt;
+
+&lt;h4 id=&#34;中心极限定理&#34;&gt;中心极限定理&lt;/h4&gt;
+
+&lt;h4 id=&#34;e的含义&#34;&gt;e的含义&lt;/h4&gt;
+
+&lt;p&gt;a的x次方，只有a=e时候的导数是一致的，对应现实是利息，利息将时间考虑了进来。&lt;/p&gt;
+
+&lt;h3 id=&#34;回归分析&#34;&gt;回归分析&lt;/h3&gt;
+
+&lt;h4 id=&#34;目标函数&#34;&gt;目标函数&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;假设误差是IID高斯分布，对真个样本空间来说，观察到所有样本的联合分布是所有的误差分布乘起来，对之求对数然后求导，得到均方误差公式，某种意义上来说，样本的因变量Y也是符合高斯分布的。&lt;/li&gt;
+&lt;li&gt;更一般意义的，均方误差公式其实对应的是欧氏距离。&lt;/li&gt;
+&lt;li&gt;均方误差公式可以写成矩阵相乘的形式，θX-Y&lt;/li&gt;
+&lt;li&gt;扰动，就类似于θ的值非常大的话，函数在样本空间之外的空间就可能出现过拟合，所以要防止θ过大，增加一个lamdaI矩阵，这个lamda叫做超常数，可以是指定的，例如=0.0001,根据训练数据&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>ML-数学准备</title>
+      <link>https://lawulu.github.io/post/ML-%E6%95%B0%E5%AD%A6%E5%87%86%E5%A4%87/</link>
+      <pubDate>Mon, 18 Apr 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://lawulu.github.io/post/ML-%E6%95%B0%E5%AD%A6%E5%87%86%E5%A4%87/</guid>
+      <description>
+
+&lt;h2 id=&#34;概率-描述性统计量&#34;&gt;概率：描述性统计量&lt;/h2&gt;
+
+&lt;p&gt;本部分内容来自&lt;code&gt;《程序员的统计学》&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;均值和方差&#34;&gt;均值和方差&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;对于苹果来说，均值是有意义的，但是对于南瓜来说，均值是没有意义的。&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;均值是描述集中趋势，方差是描述分散的情况。考虑到单位的情况，可以用标准差。&lt;/p&gt;
+
+&lt;h3 id=&#34;分布和函数&#34;&gt;分布和函数&lt;/h3&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;PMF 离散 概率质量函数&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;PDF 连续 概率密度函数&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;CDF 连续型，是PDF的积分，离散型，单调递增函数&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;PS：数轴上有无穷多个点，取值取到任意一个指定的点的概率都是0，所以要引入PDF&lt;/p&gt;
+
+&lt;p&gt;在数据比较多的时候，每个值的概率就会降低，随机的噪声影响比较大，PMF就不适合了，更适合使用CDF&lt;/p&gt;
+
+&lt;h3 id=&#34;常见连续分布&#34;&gt;常见连续分布&lt;/h3&gt;
+
+&lt;p&gt;高数忘光了..&lt;/p&gt;
+
+&lt;h4 id=&#34;指数分布和泊松分布&#34;&gt;指数分布和泊松分布&lt;/h4&gt;
+
+&lt;p&gt;数学期望是1/lambda&lt;/p&gt;
+
+&lt;h4 id=&#34;正态分布&#34;&gt;正态分布&lt;/h4&gt;
+
+&lt;h2 id=&#34;高数-导数&#34;&gt;高数：导数&lt;/h2&gt;
+
+&lt;h3 id=&#34;极值-梯度下降&#34;&gt;极值，梯度下降&lt;/h3&gt;
+
+&lt;p&gt;//TODO&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>闲言碎语·网络作家的水平如何</title>
       <link>https://lawulu.github.io/post/%E7%BD%91%E7%BB%9C%E4%BD%9C%E5%AE%B6/</link>
       <pubDate>Sat, 16 Apr 2016 00:00:00 +0000</pubDate>
@@ -661,11 +779,13 @@ casper.options.onResourceReceived = function(casperObject, res) {
     
     <item>
       <title>招人很难</title>
-      <link>https://lawulu.github.io/post/%E6%9C%80%E8%BF%91%E6%8B%9B%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%9A%84%E5%87%A0%E4%B8%AA%E6%83%B3%E6%B3%95/</link>
+      <link>https://lawulu.github.io/post/%E6%8B%9B%E4%BA%BA%E5%BE%88%E9%9A%BE/</link>
       <pubDate>Fri, 18 Mar 2016 00:00:00 +0000</pubDate>
       
-      <guid>https://lawulu.github.io/post/%E6%9C%80%E8%BF%91%E6%8B%9B%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%9A%84%E5%87%A0%E4%B8%AA%E6%83%B3%E6%B3%95/</guid>
-      <description>&lt;p&gt;其实要求很简单：&lt;/p&gt;
+      <guid>https://lawulu.github.io/post/%E6%8B%9B%E4%BA%BA%E5%BE%88%E9%9A%BE/</guid>
+      <description>
+
+&lt;h2 id=&#34;其实要求很简单&#34;&gt;其实要求很简单：&lt;/h2&gt;
 
 &lt;ol&gt;
 &lt;li&gt;会Hive,能用Hive完成基本需求。真正的接触过一个线上项目。&lt;/li&gt;
@@ -674,32 +794,54 @@ casper.options.onResourceReceived = function(casperObject, res) {
 &lt;li&gt;加分项:日志收集/Spark/机器学习。&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;p&gt;招人很难，
-1. 跟着培训班或者看视频学了一些皮毛，或者在数据部门打杂，问起各种原理工具，也答得可以，但是一让解决问题，连思路都没有。
-2. 真正做过的要价很高，所以我觉得还不如从Java培养，毕竟我们这有相当一部分工作是用Java做Batch&lt;/p&gt;
+&lt;h2 id=&#34;招人很难&#34;&gt;招人很难：&lt;/h2&gt;
 
-&lt;p&gt;我总结的一些发问点：
-- Hadoop常用的组件，相关软件，namenode原理，为什么要有Yarn？
-- Hadoop相关组件，Zookeeper，Sqoop，Hbase等
-- 用过哪些dfs命令？Hadoop常用端口？文件block？如何计算集群所需的硬盘大小？
-- Hive Sql原理  &lt;a href=&#34;http://tech.meituan.com/hive-sql-to-mapreduce.html&#34;&gt;http://tech.meituan.com/hive-sql-to-mapreduce.html&lt;/a&gt;
-- Hive UDF UDAF区别，Hive 行转列怎么实现？ concat_ws collection
-- HiveClient和Beeline区别
-- 数据倾斜问题&lt;a href=&#34;http://www.cnblogs.com/ggjucheng/archive/2013/01/03/2842860.html&#34;&gt;http://www.cnblogs.com/ggjucheng/archive/2013/01/03/2842860.html&lt;/a&gt;
-- Hive Metadata作用，Hive 分区表，新增一个字段，老的日志不认，显示为空，如何处理？&lt;a href=&#34;http://blog.csdn.net/lxpbs8851/article/details/17118841&#34;&gt;http://blog.csdn.net/lxpbs8851/article/details/17118841&lt;/a&gt;
-- Spark的优势？
-- 流计算Storm Trident API，如何保证有且只有一次
-   &lt;a href=&#34;http://www.flyne.org/article/222&#34;&gt;http://www.flyne.org/article/222&lt;/a&gt;
-- 任务调度：
+&lt;ol&gt;
+&lt;li&gt;跟着培训班或者看视频学了一些皮毛，或者在数据部门打杂，问起各种原理工具，也答得可以，但是一让解决问题，连思路都没有。&lt;/li&gt;
+&lt;li&gt;真正做过的要价很高，所以我觉得还不如从Java培养，毕竟我们这有相当一部分工作是用Java做Batch&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;我总结的一些发问点&#34;&gt;我总结的一些发问点：&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Hadoop常用的组件，相关软件，namenode原理，为什么要有Yarn？&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Hadoop相关组件，Zookeeper，Sqoop，Hbase等&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;用过哪些dfs命令？Hadoop常用端口？文件block？如何计算集群所需的硬盘大小？&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Hive Sql原理  &lt;a href=&#34;http://tech.meituan.com/hive-sql-to-mapreduce.html&#34;&gt;http://tech.meituan.com/hive-sql-to-mapreduce.html&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Hive UDF UDAF区别，Hive 行转列怎么实现？ concat_ws collection&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;HiveClient和Beeline区别&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;数据倾斜问题&lt;a href=&#34;http://www.cnblogs.com/ggjucheng/archive/2013/01/03/2842860.html&#34;&gt;http://www.cnblogs.com/ggjucheng/archive/2013/01/03/2842860.html&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Hive Metadata作用，Hive 分区表，新增一个字段，老的日志不认，显示为空，如何处理？&lt;a href=&#34;http://blog.csdn.net/lxpbs8851/article/details/17118841&#34;&gt;http://blog.csdn.net/lxpbs8851/article/details/17118841&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Spark的优势？&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;流计算Storm Trident API，如何保证有且只有一次
+&lt;a href=&#34;http://www.flyne.org/article/222&#34;&gt;http://www.flyne.org/article/222&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;任务调度：
 重试，幂等性
-如何保证数据的完整性和准确性？
-- 点击去重
-例如：logtime,userId,adId,actionType, 1小时内的点击只能算一次。
-- Hive表存储的方式？哪些常用的文件存储格式？
-- simpledateformat的多线程问题 MR中会有问题吗？
-- Hive提高Map的数量，Hive小文件CombinedInputFormat
-- 可视化，Ad hoc
-- 数据仓库相关，如何分层，建模？拉链表&lt;/p&gt;
+如何保证数据的完整性和准确性？&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;点击去重
+例如：logtime,userId,adId,actionType, 1小时内的点击只能算一次。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Hive表存储的方式？哪些常用的文件存储格式？&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;simpledateformat的多线程问题 MR中会有问题吗？&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Hive提高Map的数量，Hive小文件CombinedInputFormat&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;可视化，Ad hoc&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;数据仓库相关，如何分层，建模？拉链表&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
 </description>
     </item>
     
@@ -880,251 +1022,6 @@ save
 &lt;p&gt;对父母和家庭有亏欠,工作不够走心,在与赚钱能力无关东西上投入的精力太多.&lt;/p&gt;
 
 &lt;p&gt;一大波聪明的小孩毕业进入BAT,一大波努力的老码农转行做互联网.现在机会很好,工作比较宽松,希望2016能真心喜欢并投入到与赚钱能力有关的事业中去.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>一次Ajax上传文件的调试过程</title>
-      <link>https://lawulu.github.io/post/%E4%B8%80%E6%AC%A1Ajax%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E8%B0%83%E8%AF%95%E8%BF%87%E7%A8%8B/</link>
-      <pubDate>Sat, 19 Dec 2015 00:00:00 +0000</pubDate>
-      
-      <guid>https://lawulu.github.io/post/%E4%B8%80%E6%AC%A1Ajax%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E8%B0%83%E8%AF%95%E8%BF%87%E7%A8%8B/</guid>
-      <description>
-
-&lt;p&gt;很久不做Web了,帮一小弟解决的一个问题.发现新人解决问题都是在Search and Try,据他说无脑搜了很久,但是不会利用Chrome,也不会分析问题.&lt;/p&gt;
-
-&lt;h2 id=&#34;现象和代码&#34;&gt;现象和代码&lt;/h2&gt;
-
-&lt;h3 id=&#34;js端&#34;&gt;Js端&lt;/h3&gt;
-
-&lt;p&gt;使用的FormData&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;var formData = new FormData();
-    var actionUrl = &amp;quot;/report/agentUpload&amp;quot;;
-    var form = new FormData();
-    form.append(&amp;quot;file&amp;quot;, $(&amp;quot;#reportFile&amp;quot; )[0]);
-
-    var xhr = new XMLHttpRequest();
-    xhr.open(&amp;quot;post&amp;quot;, actionUrl, true);
-    xhr.onload = function () {
-         alert(&amp;quot;上传完成!&amp;quot;);
-    };
-
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;server端&#34;&gt;Server端&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;public String upload(HttpServletRequest request, @RequestParam(value=&amp;quot;file&amp;quot;,required = true) MultipartFile file, ModelMap model)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;但是就是取不到,报错：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Required MultipartFile parameter &#39;file&#39; is not present
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;server端的问题&#34;&gt;Server端的问题？&lt;/h2&gt;
-
-&lt;p&gt;是否发到了Server？&lt;/p&gt;
-
-&lt;p&gt;看Chrome Network面板里面这次请求的Request：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;------WebKitFormBoundaryNLPhxKE21THaBaN1
-Content-Disposition: form-data; name=&amp;quot;file&amp;quot;
-
-[object HTMLInputElement]
-
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;貌似是正确的,在Server端确认一下,将参数加上required=false
-查看request:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;multipartParameters = {HashMap@8882}  size = 1
-multipartParameterContentTypes = {HashMap@8883}  size = 1
-multipartFiles = {LinkedMultiValueMap@8884}  size = 0
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Request里面有东西,但是multipartFiles没有东西……&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;其实这时候应该已经看出问题了,因为那个值是一个String,但是没注意,自己盲目以为只要带multipartParameters就是文件&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;debug到CommonsMultipartResolver的resolveMultipart方法,里面有这段判断&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;protected MultipartParsingResult parseFileItems(List&amp;lt;FileItem&amp;gt; fileItems, String encoding) {
-		MultiValueMap&amp;lt;String, MultipartFile&amp;gt; multipartFiles = new LinkedMultiValueMap&amp;lt;String, MultipartFile&amp;gt;();
-		Map&amp;lt;String, String[]&amp;gt; multipartParameters = new HashMap&amp;lt;String, String[]&amp;gt;();
-		Map&amp;lt;String, String&amp;gt; multipartParameterContentTypes = new HashMap&amp;lt;String, String&amp;gt;();
-
-		// Extract multipart files and multipart parameters.
-		for (FileItem fileItem : fileItems) {
-			if (fileItem.isFormField()) {
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;如果是false…就往MultipartFile里面填值.
-难道是Content-type的问题？&lt;/p&gt;
-
-&lt;h3 id=&#34;去js端&#34;&gt;去Js端&lt;/h3&gt;
-
-&lt;p&gt;先找到如何打印Formdata的：
-&lt;a href=&#34;http://stackoverflow.com/questions/17066875/how-to-inspect-formdata&#34;&gt;http://stackoverflow.com/questions/17066875/how-to-inspect-formdata&lt;/a&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;for (var pair of formData.entries()) {
-    console.log(pair[0]+ &#39;, &#39; + pair[1]); 
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;打印的东西是：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;file, [object HTMLInputElement]
-
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;决定采用原始的document.getElementById(&amp;ldquo;reportFile&amp;rdquo;).files[]&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;lastModifiedDate: Tue Dec 20 2015 10:39:39 GMT+0800 (CST)name: &amp;quot;工作簿1.xlsx&amp;quot;size: 23168type: &amp;quot;application/vnd.openxmlformats-officedocument.spreadsheetml.sheet&amp;quot;webkitRelativePath: &amp;quot;&amp;quot;__proto__: File
-
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;最终发现问题：
-应该用&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt; $(&amp;quot;#reportFile&amp;quot; )[0].files[0]
-
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;结论&#34;&gt;结论&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;盲目的去搜索其实非常浪费时间&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;要善用Chrome Console&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;chrome的一些调试技巧&#34;&gt;Chrome的一些调试技巧&lt;/h2&gt;
-
-&lt;h3 id=&#34;如何找到对应的元素触发的function&#34;&gt;如何找到对应的元素触发的function？&lt;/h3&gt;
-
-&lt;p&gt;可以在EventListerner里面把Click当做断点，也可以点击某个元素，找到对应监听的EventListener,或者对某一个片dom点击&lt;code&gt;Break on subtree modification&lt;/code&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;缓存相关&#34;&gt;缓存相关&lt;/h3&gt;
-
-&lt;ol&gt;
-&lt;li&gt;强制刷新 cmd+shift+r&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;可以在设置中禁止缓存&lt;/p&gt;
-
-&lt;h3 id=&#34;console&#34;&gt;console&lt;/h3&gt;
-
-&lt;p&gt;在某个页面，可以在console页面随时调试,甚至可以执行函数：&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;pre&gt;&lt;code&gt;$(&#39;.choose_endcard&#39;).click()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;But,为什么Xpath选择的不能调用Click…&lt;/p&gt;
-
-&lt;h3 id=&#34;setting里面可以对console-log加上timestamp&#34;&gt;Setting里面可以对console.log加上Timestamp&lt;/h3&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>一个诡异的Data source is closed问题</title>
-      <link>https://lawulu.github.io/post/%E4%B8%80%E4%B8%AA%E8%AF%A1%E5%BC%82%E7%9A%84Data%20source%20is%20closed%E9%97%AE%E9%A2%98/</link>
-      <pubDate>Mon, 19 Oct 2015 00:00:00 +0000</pubDate>
-      
-      <guid>https://lawulu.github.io/post/%E4%B8%80%E4%B8%AA%E8%AF%A1%E5%BC%82%E7%9A%84Data%20source%20is%20closed%E9%97%AE%E9%A2%98/</guid>
-      <description>
-
-&lt;h3 id=&#34;问题由起&#34;&gt;问题由起&lt;/h3&gt;
-
-&lt;p&gt;因为某些问题(这个问题稍后再提),将线上的DBCP版本从1.4升级到2.1,大概扫了一下官方文档,没有迁移指南,只是几个属性名称变了,感觉问题不大,直接升级.升级之后,UT一下,通过.但是上线之后一直报下面错误：
-&amp;gt;Cause: org.springframework.jdbc.CannotGetJdbcConnectionException: Could not get JDBC Connection; nested exception is java.sql.SQLException: Data source is closed
-    at org.apache.ibatis.exceptions.ExceptionFactory.wrapException(ExceptionFactory.java:23)
-    at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:107)
-    at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:98)
-    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-    at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
-    at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-    at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:386)
-    &amp;hellip; 43 more&lt;/p&gt;
-
-&lt;h3 id=&#34;问题背景&#34;&gt;问题背景&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;项目因为需要动态切换数据源,使用的是++AbstractRoutingDataSource++&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;需要动态切换的数据源比较多,项目初始化时候通过++BeanDefinitionBuilder++来根据数据库配置动态创建数据源,而报错的连接正是动态生成的的数据源.&lt;/p&gt;
-
-&lt;h3 id=&#34;问题定位&#34;&gt;问题定位&lt;/h3&gt;
-
-&lt;h4 id=&#34;为什么ut测试成功&#34;&gt;为什么UT测试成功&lt;/h4&gt;
-
-&lt;p&gt;原来是UT的时候,因为配置文件,测试其实走的是++AbstractRoutingDataSource++的默认的数据源,并没有走动态生成的数据源&lt;/p&gt;
-
-&lt;h4 id=&#34;怀疑是参数问题或者其他原因&#34;&gt;怀疑是参数问题或者其他原因&lt;/h4&gt;
-
-&lt;p&gt;只设置JDBC Url,依旧报错；换成dbcp,不报错.&lt;/p&gt;
-
-&lt;h4 id=&#34;abstractroutingdatasource的问题&#34;&gt;AbstractRoutingDataSource的问题？&lt;/h4&gt;
-
-&lt;p&gt;使用XML配置,没有问题&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;strong&gt;至此,基本确认是++DBCP2++和++BeanDefinitionBuilder++&lt;/strong&gt;的问题&lt;/p&gt;
-
-&lt;h3 id=&#34;查看源码和debug&#34;&gt;查看源码和Debug&lt;/h3&gt;
-
-&lt;h4 id=&#34;basicdatasource-dbcp1和2有什么区别&#34;&gt;BasicDataSource DBCP1和2有什么区别？&lt;/h4&gt;
-
-&lt;p&gt;DBCP2实现了更多的接口：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBeanRegistration, AutoCloseable 
-
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id=&#34;查看dbcp2创建链接和销毁的地方&#34;&gt;查看DBCP2创建链接和销毁的地方&lt;/h4&gt;
-
-&lt;p&gt;是没有Create Connection还是什么时候被Close了？
-被Close了&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;
-		this.beanDefinitionMap.put(beanName, beanDefinition);
-
-		if (oldBeanDefinition != null || containsSingleton(beanName)) {
-			resetBeanDefinition(beanName);
-		}
-		
-		
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;pre&gt;&lt;code&gt;protected void resetBeanDefinition(String beanName) {
-		// Remove the merged bean definition for the given bean, if already created.
-		clearMergedBeanDefinition(beanName);
-
-		// Remove corresponding bean from singleton cache, if any. Shouldn&#39;t usually
-		// be necessary, rather just meant for overriding a context&#39;s default beans
-		// (e.g. the default StaticMessageSource in a StaticApplicationContext).
-		destroySingleton(beanName);
-
-		// Reset all bean definitions that have the given bean as parent (recursively).
-		for (String bdName : this.beanDefinitionNames) {
-			if (!beanName.equals(bdName)) {
-				BeanDefinition bd = this.beanDefinitionMap.get(bdName);
-				if (beanName.equals(bd.getParentName())) {
-					resetBeanDefinition(bdName);
-				}
-			}
-		}
-	}
-
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;原来Spring创建Bean的时候会检查是否有oldBeanDefinition,如果有则销毁之.而DBCP2实现了AutoCloseable接口,在这里直接被Close了.&lt;/p&gt;
-
-&lt;h4 id=&#34;为什么有oldbeandefinition&#34;&gt;为什么有oldBeanDefinition？&lt;/h4&gt;
-
-&lt;p&gt;为了支持另一种类型的数据源,引入了一个Bug,会在Spring BeanFactory里面引入重复的定义,因为在AbstractRoutingDataSource中是正确的,所以一直没有发现这个问题.第二次会销毁上次的Bean.
-其实在DBCP1时候,也会销毁,但是因为在动态定义的时候没有定义destroy-method=&amp;ldquo;close&amp;rdquo;,其实会引起内存的泄露？&lt;/p&gt;
-
-&lt;p&gt;结论：很多看似运行完好的软件其实都危机四伏..&lt;/p&gt;
 </description>
     </item>
     

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>璐濒殉漂流记</title>
+    <link>https://lawulu.github.io/tags/math/feed/index.xml</link>
+    <description>Recent content on 璐濒殉漂流记</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <atom:link href="https://lawulu.github.io/tags/math/feed/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>ML-决策树和回归</title>
+      <link>https://lawulu.github.io/post/ML-%E5%9B%9E%E5%BD%92%E5%92%8C%E5%86%B3%E7%AD%96%E6%A0%91/</link>
+      <pubDate>Fri, 20 May 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://lawulu.github.io/post/ML-%E5%9B%9E%E5%BD%92%E5%92%8C%E5%86%B3%E7%AD%96%E6%A0%91/</guid>
+      <description>
+
+&lt;h2 id=&#34;决策树&#34;&gt;决策树&lt;/h2&gt;
+
+&lt;h3 id=&#34;理论基础&#34;&gt;理论基础&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;信息熵：-p(x)*lnp(x)的和,如果信息熵高的话，说明不稳定，不确定性大。例如一个0.5vs0.5的硬币和一个0.99vs0.01的硬币。&lt;/li&gt;
+&lt;li&gt;条件熵：H(Y|X)=&lt;/li&gt;
+&lt;li&gt;信息增益：互信息&lt;/li&gt;
+&lt;li&gt;信息增益率&lt;/li&gt;
+&lt;li&gt;基尼系数（两个定义）
+ID3,C4.5,CART&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;建立决策树，核心的问题是如何选择特征值作为根节点？
+找到不确定性降低最快的，即构建一个信息熵下降最快的树&lt;/p&gt;
+
+&lt;p&gt;决策树的评价：&lt;/p&gt;
+
+&lt;p&gt;随机森林，对M个样本，是随机选出N个样本，并且放回，构造L颗树，然后投票选出分类，这是一种集中的思想，每一个树不完美，然后一起就很完美。（分类器不一定用决策树，也可能用SVM、LR之类，但是效果不好，因为是强分类器，对噪声比较敏感）
+事实上，回归也可以使用集中这种精神。&lt;/p&gt;
+
+&lt;p&gt;也有可能是在特征上加入了随机性，只取某些特征。降低了某些特征的影响。&lt;/p&gt;
+
+&lt;p&gt;怎么确定树的个数？
+这个是一个超参数，和lambda也一样，拍脑袋，然后验证。
+很多实践中，N=M,因为有1-1/e的概率会重复，会去掉捣乱分子，然后防止过拟合。各个大学的特征脸，加完除以n之后就会把不太好的特征给抹掉&lt;/p&gt;
+
+&lt;p&gt;平方根大法，每次平方根个样本&lt;/p&gt;
+
+&lt;h3 id=&#34;决策树也可以用来拟合&#34;&gt;决策树也可以用来拟合&lt;/h3&gt;
+
+&lt;p&gt;即每一段当做一个连续值&lt;/p&gt;
+
+&lt;p&gt;投票机制，可以加权。
+例如，电影加权评分调节冷门和热门比赛。
+拉普拉斯平滑，例如中韩比赛前四次都输了，计算最新比赛的胜率，本来应该是0/4，但是为了平滑，按照1/4+1来算。&lt;/p&gt;
+
+&lt;h2 id=&#34;回归&#34;&gt;回归&lt;/h2&gt;
+
+&lt;h3 id=&#34;数学理论&#34;&gt;数学理论&lt;/h3&gt;
+
+&lt;h4 id=&#34;中心极限定理&#34;&gt;中心极限定理&lt;/h4&gt;
+
+&lt;h4 id=&#34;e的含义&#34;&gt;e的含义&lt;/h4&gt;
+
+&lt;p&gt;a的x次方，只有a=e时候的导数是一致的，对应现实是利息，利息将时间考虑了进来。&lt;/p&gt;
+
+&lt;h3 id=&#34;回归分析&#34;&gt;回归分析&lt;/h3&gt;
+
+&lt;h4 id=&#34;目标函数&#34;&gt;目标函数&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;假设误差是IID高斯分布，对真个样本空间来说，观察到所有样本的联合分布是所有的误差分布乘起来，对之求对数然后求导，得到均方误差公式，某种意义上来说，样本的因变量Y也是符合高斯分布的。&lt;/li&gt;
+&lt;li&gt;更一般意义的，均方误差公式其实对应的是欧氏距离。&lt;/li&gt;
+&lt;li&gt;均方误差公式可以写成矩阵相乘的形式，θX-Y&lt;/li&gt;
+&lt;li&gt;扰动，就类似于θ的值非常大的话，函数在样本空间之外的空间就可能出现过拟合，所以要防止θ过大，增加一个lamdaI矩阵，这个lamda叫做超常数，可以是指定的，例如=0.0001,根据训练数据&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>ML-数学准备</title>
+      <link>https://lawulu.github.io/post/ML-%E6%95%B0%E5%AD%A6%E5%87%86%E5%A4%87/</link>
+      <pubDate>Mon, 18 Apr 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://lawulu.github.io/post/ML-%E6%95%B0%E5%AD%A6%E5%87%86%E5%A4%87/</guid>
+      <description>
+
+&lt;h2 id=&#34;概率-描述性统计量&#34;&gt;概率：描述性统计量&lt;/h2&gt;
+
+&lt;p&gt;本部分内容来自&lt;code&gt;《程序员的统计学》&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;均值和方差&#34;&gt;均值和方差&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;对于苹果来说，均值是有意义的，但是对于南瓜来说，均值是没有意义的。&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;均值是描述集中趋势，方差是描述分散的情况。考虑到单位的情况，可以用标准差。&lt;/p&gt;
+
+&lt;h3 id=&#34;分布和函数&#34;&gt;分布和函数&lt;/h3&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;PMF 离散 概率质量函数&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;PDF 连续 概率密度函数&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;CDF 连续型，是PDF的积分，离散型，单调递增函数&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;PS：数轴上有无穷多个点，取值取到任意一个指定的点的概率都是0，所以要引入PDF&lt;/p&gt;
+
+&lt;p&gt;在数据比较多的时候，每个值的概率就会降低，随机的噪声影响比较大，PMF就不适合了，更适合使用CDF&lt;/p&gt;
+
+&lt;h3 id=&#34;常见连续分布&#34;&gt;常见连续分布&lt;/h3&gt;
+
+&lt;p&gt;高数忘光了..&lt;/p&gt;
+
+&lt;h4 id=&#34;指数分布和泊松分布&#34;&gt;指数分布和泊松分布&lt;/h4&gt;
+
+&lt;p&gt;数学期望是1/lambda&lt;/p&gt;
+
+&lt;h4 id=&#34;正态分布&#34;&gt;正态分布&lt;/h4&gt;
+
+&lt;h2 id=&#34;高数-导数&#34;&gt;高数：导数&lt;/h2&gt;
+
+&lt;h3 id=&#34;极值-梯度下降&#34;&gt;极值，梯度下降&lt;/h3&gt;
+
+&lt;p&gt;//TODO&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

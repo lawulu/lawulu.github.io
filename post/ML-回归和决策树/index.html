@@ -2,20 +2,20 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>404 Page not found - 璐濒殉漂流记</title>
+  <title>ML-决策树和回归 - 璐濒殉漂流记</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
   
-  <meta name="description" content="404 Page not found">
+  <meta name="description" content="决策树 理论基础 信息熵：-p(x)*lnp(x)的和,如果信息熵高的话，说明不稳定，不确定性大。例如一个0.5vs0.5的硬币和一个0.99v">
   <meta name="author" content="Lawulu">
-  <meta itemprop="name" content="404 Page not found - 璐濒殉漂流记">
-  <meta itemprop="description" content="404 Page not found">
+  <meta itemprop="name" content="ML-决策树和回归 - 璐濒殉漂流记">
+  <meta itemprop="description" content="决策树 理论基础 信息熵：-p(x)*lnp(x)的和,如果信息熵高的话，说明不稳定，不确定性大。例如一个0.5vs0.5的硬币和一个0.99v">
   <meta itemprop="image" content="https://lawulu.github.io/img/author.jpg">
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@inza9hi" />
-  <meta name="twitter:title" content="404 Page not found - 璐濒殉漂流记" />
+  <meta name="twitter:title" content="ML-决策树和回归 - 璐濒殉漂流记" />
   
   <meta name="twitter:description" content="">
-  <link rel="alternate" href="https://lawulu.github.io/feed.xml" title="璐濒殉漂流记" type="application/rss+xml"/>
+  
   <link rel="shortcut icon" href="https://lawulu.github.io/img/favicon.ico"/>
   <link rel="apple-touch-icon" href="https://lawulu.github.io/apple-touch-icon.png" />
   <link rel="apple-touch-icon-precomposed" href="https://lawulu.github.io/apple-touch-icon.png" />
@@ -59,11 +59,167 @@
 
   </header>
   <div id="container">
-    <div id="main">
-      
-      你访问的页面不存在
-      
+    <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody">
+    <header class="article-info clearfix">
+  <h1 itemprop="name">
+      <a href="https://lawulu.github.io/post/ML-%E5%9B%9E%E5%BD%92%E5%92%8C%E5%86%B3%E7%AD%96%E6%A0%91/" title="ML-决策树和回归" itemprop="url">ML-决策树和回归</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="" title="Lawulu">Lawulu</a>
+    
+  </p>
+  <p class="article-time">
+    <time datetime="2016-05-20 00:00:00 &#43;0000 UTC" itemprop="datePublished">2016年05月20日</time>
+  </p>
+</header>
+
+	<div class="article-content">
+    
+		<div class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+      <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#决策树">决策树</a>
+<ul>
+<li><a href="#理论基础">理论基础</a></li>
+<li><a href="#决策树也可以用来拟合">决策树也可以用来拟合</a></li>
+</ul></li>
+<li><a href="#回归">回归</a>
+<ul>
+<li><a href="#数学理论">数学理论</a>
+<ul>
+<li><a href="#中心极限定理">中心极限定理</a></li>
+<li><a href="#e的含义">e的含义</a></li>
+</ul></li>
+<li><a href="#回归分析">回归分析</a>
+<ul>
+<li><a href="#目标函数">目标函数</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+		</div>
+    
+    
+
+<h2 id="决策树">决策树</h2>
+
+<h3 id="理论基础">理论基础</h3>
+
+<ul>
+<li>信息熵：-p(x)*lnp(x)的和,如果信息熵高的话，说明不稳定，不确定性大。例如一个0.5vs0.5的硬币和一个0.99vs0.01的硬币。</li>
+<li>条件熵：H(Y|X)=</li>
+<li>信息增益：互信息</li>
+<li>信息增益率</li>
+<li>基尼系数（两个定义）
+ID3,C4.5,CART</li>
+</ul>
+
+<p>建立决策树，核心的问题是如何选择特征值作为根节点？
+找到不确定性降低最快的，即构建一个信息熵下降最快的树</p>
+
+<p>决策树的评价：</p>
+
+<p>随机森林，对M个样本，是随机选出N个样本，并且放回，构造L颗树，然后投票选出分类，这是一种集中的思想，每一个树不完美，然后一起就很完美。（分类器不一定用决策树，也可能用SVM、LR之类，但是效果不好，因为是强分类器，对噪声比较敏感）
+事实上，回归也可以使用集中这种精神。</p>
+
+<p>也有可能是在特征上加入了随机性，只取某些特征。降低了某些特征的影响。</p>
+
+<p>怎么确定树的个数？
+这个是一个超参数，和lambda也一样，拍脑袋，然后验证。
+很多实践中，N=M,因为有1-1/e的概率会重复，会去掉捣乱分子，然后防止过拟合。各个大学的特征脸，加完除以n之后就会把不太好的特征给抹掉</p>
+
+<p>平方根大法，每次平方根个样本</p>
+
+<h3 id="决策树也可以用来拟合">决策树也可以用来拟合</h3>
+
+<p>即每一段当做一个连续值</p>
+
+<p>投票机制，可以加权。
+例如，电影加权评分调节冷门和热门比赛。
+拉普拉斯平滑，例如中韩比赛前四次都输了，计算最新比赛的胜率，本来应该是0/4，但是为了平滑，按照1/4+1来算。</p>
+
+<h2 id="回归">回归</h2>
+
+<h3 id="数学理论">数学理论</h3>
+
+<h4 id="中心极限定理">中心极限定理</h4>
+
+<h4 id="e的含义">e的含义</h4>
+
+<p>a的x次方，只有a=e时候的导数是一致的，对应现实是利息，利息将时间考虑了进来。</p>
+
+<h3 id="回归分析">回归分析</h3>
+
+<h4 id="目标函数">目标函数</h4>
+
+<ol>
+<li>假设误差是IID高斯分布，对真个样本空间来说，观察到所有样本的联合分布是所有的误差分布乘起来，对之求对数然后求导，得到均方误差公式，某种意义上来说，样本的因变量Y也是符合高斯分布的。</li>
+<li>更一般意义的，均方误差公式其实对应的是欧氏距离。</li>
+<li>均方误差公式可以写成矩阵相乘的形式，θX-Y</li>
+<li>扰动，就类似于θ的值非常大的话，函数在样本空间之外的空间就可能出现过拟合，所以要防止θ过大，增加一个lamdaI矩阵，这个lamda叫做超常数，可以是指定的，例如=0.0001,根据训练数据</li>
+</ol>
+
+	</div>
+  <footer class="article-footer clearfix">
+  
+
+<div class="article-tags">
+  <span></span>
+  
+  <a href="https://lawulu.github.io/tags/ml">ml</a>
+  
+  <a href="https://lawulu.github.io/tags/math">math</a>
+  
+</div>
+
+
+
+
+
+<div class="article-categories">
+  <span></span>
+  
+  <a class="article-category-link" href="https://lawulu.github.io/categories/%E4%BF%83%E8%BF%9B%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%8F%91%E5%B1%95%E8%A1%8C%E5%8A%A8%E7%BA%B2%E8%A6%81">促进大数据发展行动纲要</a>
+  
+</div>
+
+
+
+  <div class="article-share" id="share">
+    <div data-url="https://lawulu.github.io/post/ML-%E5%9B%9E%E5%BD%92%E5%92%8C%E5%86%B3%E7%AD%96%E6%A0%91/" data-title="ML-决策树和回归" data-tsina="" class="share clearfix">
     </div>
+  </div>
+</footer>
+
+	</article>
+  
+<section class="comment">
+  <div class="ds-thread" data-thread-key="https://lawulu.github.io/post/ML-%E5%9B%9E%E5%BD%92%E5%92%8C%E5%86%B3%E7%AD%96%E6%A0%91/"
+   data-title="ML-决策树和回归" data-url="https://lawulu.github.io/post/ML-%E5%9B%9E%E5%BD%92%E5%92%8C%E5%86%B3%E7%AD%96%E6%A0%91/"></div>
+</section>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"inza9hi"};
+(function() {
+  var ds = document.createElement('script');
+  ds.type = 'text/javascript';ds.async = true;
+  ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+  ds.charset = 'UTF-8';
+  (document.getElementsByTagName('head')[0]
+  || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+</script>
+
+
+
+
+</div>
+
     <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
 <div id="asidepart">
 <div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
@@ -357,10 +513,6 @@
 
 
   
-<div class="rsspart">
-  <a rel="nofollow" href="https://lawulu.github.io/feed.xml" type="application/rss+xml" target="_blank">RSS 订阅</a>
-</div>
-
 
 </aside>
 </div>
@@ -455,6 +607,38 @@ $(document).ready(function(){
 
 <script type="text/javascript">
 $(document).ready(function(){
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){
   var $this = $('.share'),
       url = $this.attr('data-url'),
       encodedUrl = encodeURIComponent(url),
@@ -481,6 +665,27 @@ $(document).ready(function(){
 });
 </script>
 
+
+<link rel="stylesheet" href="https://lawulu.github.io/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="https://lawulu.github.io/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+});
+</script>
 
 
 

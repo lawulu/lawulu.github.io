@@ -2,20 +2,20 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>404 Page not found - 璐濒殉漂流记</title>
+  <title>招人很难 - 璐濒殉漂流记</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
   
-  <meta name="description" content="404 Page not found">
+  <meta name="description" content="其实要求很简单： 会Hive,能用Hive完成基本需求。真正的接触过一个线上项目。 有责任心,靠谱,因为要独当一面,能保证数据的完整性和准确性。">
   <meta name="author" content="Lawulu">
-  <meta itemprop="name" content="404 Page not found - 璐濒殉漂流记">
-  <meta itemprop="description" content="404 Page not found">
+  <meta itemprop="name" content="招人很难 - 璐濒殉漂流记">
+  <meta itemprop="description" content="其实要求很简单： 会Hive,能用Hive完成基本需求。真正的接触过一个线上项目。 有责任心,靠谱,因为要独当一面,能保证数据的完整性和准确性。">
   <meta itemprop="image" content="https://lawulu.github.io/img/author.jpg">
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@inza9hi" />
-  <meta name="twitter:title" content="404 Page not found - 璐濒殉漂流记" />
+  <meta name="twitter:title" content="招人很难 - 璐濒殉漂流记" />
   
   <meta name="twitter:description" content="">
-  <link rel="alternate" href="https://lawulu.github.io/feed.xml" title="璐濒殉漂流记" type="application/rss+xml"/>
+  
   <link rel="shortcut icon" href="https://lawulu.github.io/img/favicon.ico"/>
   <link rel="apple-touch-icon" href="https://lawulu.github.io/apple-touch-icon.png" />
   <link rel="apple-touch-icon-precomposed" href="https://lawulu.github.io/apple-touch-icon.png" />
@@ -59,11 +59,153 @@
 
   </header>
   <div id="container">
-    <div id="main">
-      
-      你访问的页面不存在
-      
+    <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody">
+    <header class="article-info clearfix">
+  <h1 itemprop="name">
+      <a href="https://lawulu.github.io/post/%E6%8B%9B%E4%BA%BA%E5%BE%88%E9%9A%BE/" title="招人很难" itemprop="url">招人很难</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="" title="Lawulu">Lawulu</a>
+    
+  </p>
+  <p class="article-time">
+    <time datetime="2016-03-18 00:00:00 &#43;0000 UTC" itemprop="datePublished">2016年03月18日</time>
+  </p>
+</header>
+
+	<div class="article-content">
+    
+		<div class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+      <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#其实要求很简单">其实要求很简单：</a></li>
+<li><a href="#招人很难">招人很难：</a></li>
+<li><a href="#我总结的一些发问点">我总结的一些发问点：</a></li>
+</ul></li>
+</ul>
+</nav>
+		</div>
+    
+    
+
+<h2 id="其实要求很简单">其实要求很简单：</h2>
+
+<ol>
+<li>会Hive,能用Hive完成基本需求。真正的接触过一个线上项目。</li>
+<li>有责任心,靠谱,因为要独当一面,能保证数据的完整性和准确性。</li>
+<li>能以数据的思维来提供业务。</li>
+<li>加分项:日志收集/Spark/机器学习。</li>
+</ol>
+
+<h2 id="招人很难">招人很难：</h2>
+
+<ol>
+<li>跟着培训班或者看视频学了一些皮毛，或者在数据部门打杂，问起各种原理工具，也答得可以，但是一让解决问题，连思路都没有。</li>
+<li>真正做过的要价很高，所以我觉得还不如从Java培养，毕竟我们这有相当一部分工作是用Java做Batch</li>
+</ol>
+
+<h2 id="我总结的一些发问点">我总结的一些发问点：</h2>
+
+<ul>
+<li><p>Hadoop常用的组件，相关软件，namenode原理，为什么要有Yarn？</p></li>
+
+<li><p>Hadoop相关组件，Zookeeper，Sqoop，Hbase等</p></li>
+
+<li><p>用过哪些dfs命令？Hadoop常用端口？文件block？如何计算集群所需的硬盘大小？</p></li>
+
+<li><p>Hive Sql原理  <a href="http://tech.meituan.com/hive-sql-to-mapreduce.html">http://tech.meituan.com/hive-sql-to-mapreduce.html</a></p></li>
+
+<li><p>Hive UDF UDAF区别，Hive 行转列怎么实现？ concat_ws collection</p></li>
+
+<li><p>HiveClient和Beeline区别</p></li>
+
+<li><p>数据倾斜问题<a href="http://www.cnblogs.com/ggjucheng/archive/2013/01/03/2842860.html">http://www.cnblogs.com/ggjucheng/archive/2013/01/03/2842860.html</a></p></li>
+
+<li><p>Hive Metadata作用，Hive 分区表，新增一个字段，老的日志不认，显示为空，如何处理？<a href="http://blog.csdn.net/lxpbs8851/article/details/17118841">http://blog.csdn.net/lxpbs8851/article/details/17118841</a></p></li>
+
+<li><p>Spark的优势？</p></li>
+
+<li><p>流计算Storm Trident API，如何保证有且只有一次
+<a href="http://www.flyne.org/article/222">http://www.flyne.org/article/222</a></p></li>
+
+<li><p>任务调度：
+重试，幂等性
+如何保证数据的完整性和准确性？</p></li>
+
+<li><p>点击去重
+例如：logtime,userId,adId,actionType, 1小时内的点击只能算一次。</p></li>
+
+<li><p>Hive表存储的方式？哪些常用的文件存储格式？</p></li>
+
+<li><p>simpledateformat的多线程问题 MR中会有问题吗？</p></li>
+
+<li><p>Hive提高Map的数量，Hive小文件CombinedInputFormat</p></li>
+
+<li><p>可视化，Ad hoc</p></li>
+
+<li><p>数据仓库相关，如何分层，建模？拉链表</p></li>
+</ul>
+
+	</div>
+  <footer class="article-footer clearfix">
+  
+
+<div class="article-tags">
+  <span></span>
+  
+  <a href="https://lawulu.github.io/tags/%E6%8B%9B%E8%81%98">招聘</a>
+  
+  <a href="https://lawulu.github.io/tags/%E7%AE%A1%E7%90%86">管理</a>
+  
+</div>
+
+
+
+
+
+<div class="article-categories">
+  <span></span>
+  
+  <a class="article-category-link" href="https://lawulu.github.io/categories/%E4%BB%A5%E5%BE%B7%E6%9C%8D%E4%BA%BA">以德服人</a>
+  
+</div>
+
+
+
+  <div class="article-share" id="share">
+    <div data-url="https://lawulu.github.io/post/%E6%8B%9B%E4%BA%BA%E5%BE%88%E9%9A%BE/" data-title="招人很难" data-tsina="" class="share clearfix">
     </div>
+  </div>
+</footer>
+
+	</article>
+  
+<section class="comment">
+  <div class="ds-thread" data-thread-key="https://lawulu.github.io/post/%E6%8B%9B%E4%BA%BA%E5%BE%88%E9%9A%BE/"
+   data-title="招人很难" data-url="https://lawulu.github.io/post/%E6%8B%9B%E4%BA%BA%E5%BE%88%E9%9A%BE/"></div>
+</section>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"inza9hi"};
+(function() {
+  var ds = document.createElement('script');
+  ds.type = 'text/javascript';ds.async = true;
+  ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+  ds.charset = 'UTF-8';
+  (document.getElementsByTagName('head')[0]
+  || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+</script>
+
+
+
+
+</div>
+
     <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
 <div id="asidepart">
 <div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
@@ -357,10 +499,6 @@
 
 
   
-<div class="rsspart">
-  <a rel="nofollow" href="https://lawulu.github.io/feed.xml" type="application/rss+xml" target="_blank">RSS 订阅</a>
-</div>
-
 
 </aside>
 </div>
@@ -455,6 +593,38 @@ $(document).ready(function(){
 
 <script type="text/javascript">
 $(document).ready(function(){
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){
   var $this = $('.share'),
       url = $this.attr('data-url'),
       encodedUrl = encodeURIComponent(url),
@@ -481,6 +651,27 @@ $(document).ready(function(){
 });
 </script>
 
+
+<link rel="stylesheet" href="https://lawulu.github.io/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="https://lawulu.github.io/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+});
+</script>
 
 
 

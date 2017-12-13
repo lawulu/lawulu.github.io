@@ -159,7 +159,7 @@ class ZhihuSpider(scrapy.Spider):
 &lt;h2 id=&#34;splash&#34;&gt;Splash&lt;/h2&gt;
 
 &lt;p&gt;Pyspider是用的&lt;code&gt;PhantomJS&lt;/code&gt;,Scrapy提供了一个基于Docker和Lua的Splash.
-这货的问题是Splash没有保持渲染状态的方法,对于复杂的JS交互,一般的做法是一个lua脚本执行很多次,最后返回所有的结果.这样爬取的颗粒比较大,如果中间出现异常,不好处理,而且调用&lt;code&gt;splash::wait()&lt;/code&gt;总感觉不靠谱,没有提供Dom加载之后的回调吗？&lt;/p&gt;
+这货的问题是Splash没有保持渲染状态的方法,对于复杂的JS交互,一般的做法是一个lua脚本执行很多次,最后返回所有的结果.这样爬取的颗粒比较大,如果中间出现异常,不好处理,而且调用&lt;code&gt;splash::wait()&lt;/code&gt;总感觉不靠谱,没有提供Dom加载之后的回调吗？貌似也无法解决共用tab的问题。&lt;/p&gt;
 
 &lt;h3 id=&#34;原理&#34;&gt;原理&lt;/h3&gt;
 

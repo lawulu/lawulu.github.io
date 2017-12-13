@@ -83,17 +83,16 @@
 <ul>
 <li>
 <ul>
-<li>
-<ul>
 <li><a href="#缘起">缘起</a></li>
 <li><a href="#数据分析">数据分析</a>
 <ul>
-<li><a href="#下载并处理cdn原始日志">下载并处理CDN原始日志</a></li>
+<li><a href="#下载并处理cdn原始日志">下载并处理CDN原始日志</a>
+<ul>
 <li><a href="#用sql分析">用Sql分析</a></li>
+</ul></li>
 </ul></li>
 <li><a href="#结论">结论</a></li>
 <li><a href="#校验">校验</a></li>
-</ul></li>
 </ul></li>
 </ul>
 </nav>
@@ -101,13 +100,13 @@
     
     
 
-<h3 id="缘起">缘起</h3>
+<h2 id="缘起">缘起</h2>
 
 <p>公司运营的很大一个成本就是CDN耗费。对比Impression和Click</p>
 
-<h3 id="数据分析">数据分析</h3>
+<h2 id="数据分析">数据分析</h2>
 
-<h4 id="下载并处理cdn原始日志">下载并处理CDN原始日志</h4>
+<h3 id="下载并处理cdn原始日志">下载并处理CDN原始日志</h3>
 
 <ol>
 <li>由于官方提供的合并下载日志工具在Mac下不能用，随机选取一个小时的日志：</li>
@@ -189,12 +188,12 @@ select sum(rsp_size) from  cdn_log
 
 </code></pre>
 
-<h3 id="结论">结论</h3>
+<h2 id="结论">结论</h2>
 
 <p>由于IP,UA,URL可以唯一确定一次UV，我们公司有30%的用户占用了40%的流量，对同一个视频会不停的反复下载。
 最后查明，是SDK的bug，正在下载视频时候，如果切换到后台，下载会直接停止。所以会反复下载视频，浪费流量。</p>
 
-<h3 id="校验">校验</h3>
+<h2 id="校验">校验</h2>
 
 <ol>
 <li>计算ResponseSize之后和Console里面同一时间段的</li>

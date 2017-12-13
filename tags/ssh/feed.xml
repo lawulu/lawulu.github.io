@@ -10,10 +10,10 @@
     
     <item>
       <title>都是DNS惹的祸</title>
-      <link>https://lawulu.github.io/post/%E9%83%BD%E6%98%AFDNS%E6%83%B9%E7%9A%84%E8%B4%A7/</link>
+      <link>https://lawulu.github.io/post/%E9%83%BD%E6%98%AFDNS%E6%83%B9%E7%9A%84%E7%A5%B8/</link>
       <pubDate>Sat, 01 Aug 2015 00:00:00 +0000</pubDate>
       
-      <guid>https://lawulu.github.io/post/%E9%83%BD%E6%98%AFDNS%E6%83%B9%E7%9A%84%E8%B4%A7/</guid>
+      <guid>https://lawulu.github.io/post/%E9%83%BD%E6%98%AFDNS%E6%83%B9%E7%9A%84%E7%A5%B8/</guid>
       <description>
 
 &lt;p&gt;最近因为工位调整,内部用的测试机换了个地方,结果发现上面部署的应用变得都反应奇慢,每次SSH上去也要卡顿很久.&lt;/p&gt;

@@ -6,8 +6,111 @@
     <description>Recent content in Post-rsses on 璐濒殉漂流记</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Sat, 04 Mar 2017 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 15 Dec 2017 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://lawulu.github.io/post/feed/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>小陈与大数据的故事</title>
+      <link>https://lawulu.github.io/post/%E5%B0%8F%E9%99%88%E4%B8%8E%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%9A%84%E6%95%85%E4%BA%8B/</link>
+      <pubDate>Fri, 15 Dec 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://lawulu.github.io/post/%E5%B0%8F%E9%99%88%E4%B8%8E%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%9A%84%E6%95%85%E4%BA%8B/</guid>
+      <description>
+
+&lt;p&gt;&lt;em&gt;本篇为公众号&lt;code&gt;码农翻身&lt;/code&gt;的约稿&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;在学校&#34;&gt;在学校&lt;/h2&gt;
+
+&lt;p&gt;做为一个科班出身的程序员，在小陈还不明白自己所学的的数据结构和操作系统这些专业课跟未来的工作有什么关系，甚至未来做什么也不清楚时候，小陈最喜欢做的事就是看电影，看完还舍不得删。那个时代流行的还是“为人不识武藤兰，阅遍电影也枉然”，电影还有很多是rm格式的，几百兆都算大的，但是架不住小陈对一衣带水邻国文化的热爱，只有120G的硬盘让他很快有了另一个爱好：整理硬盘，每次有新资源出来，小陈都得想办法腾点空间出来。&lt;/p&gt;
+
+&lt;p&gt;后来教育网里一个叫Maze的软件在我校流行开来，这个软件可以在局域网内以P2P的方式完成资源共享。喜大普奔，小陈得意洋洋的宣布自己终于不用整理硬盘了，自己硬盘里面只存一部分经典的，想看什么电影从别人机器里面拖，哪怕自己临时要看一个美帝大片，删掉一部分电影，删掉之后都还能从别人机器里面拖回来。&lt;/p&gt;
+
+&lt;p&gt;直到有一天，小陈临时删了一位老师的代表作，等想找回来时候，不知道是学校调整了网络路由还是因为高年级学生的离校，这部本来在Maze中非常常见的电影居然一个都找不到了。小陈被室友嘲笑之余，怒而卸载了Maze，并决定要开发一套更好的共享资源软件：要有一个元数据服务器，所有使用者的硬盘的读写都由元数据服务器来管理，元数据保证每份电影都至少存在2份以上，而不是像现在这样保存什么电影，全靠用户心照不宣的默契和自己的兴趣。&lt;/p&gt;
+
+&lt;p&gt;不过小陈也面临着毕业，自然没有时间去搞这些乱七八糟的东西，为了找工作，开始恶补各种技能。这已经是2011年，大数据已经开始火起来了，小陈开始试着学习大数据的知识。搞Android培训的那波人摇身一变开始培训Hadoop了，小陈上了一次试听课之后，回来开始向室友生成，自己的创意被Google和Hadoop给剽窃了！大数据首先要解决的都是存储问问题，GFS，以及受之启发的Hadoop HDFS，完全就是照着自己的资源共享软件思路来的。&lt;/p&gt;
+
+&lt;p&gt;其实小陈知道，Google在2003年就把GFS的论文给写出来，开发这个GFS时候武老师可能还没有出道，甚至BigData这个词还没有被清楚的定义。但是Google作为技术最领先，体量最大的搜索引擎公司，很早就面临和自己类似的问题:大量的数据(信息索引和网页快照等等)要怎么存储存储在哪里的问题。Google选择的是用大量的通用硬件组成一个可以横向扩展的集群去对存储和处理这些海量的数据。这种英雄所见略同的感觉，让小陈决定要从事大数据开发，毕竟这个越来越自我的世界，随着移动互联网的爆发，每个人制造的垃圾数据会越来越容易，而制造垃圾数据的人也会越来越多。&lt;/p&gt;
+
+&lt;h2 id=&#34;第一份工作&#34;&gt;第一份工作&lt;/h2&gt;
+
+&lt;p&gt;找大数据的工作并不顺利，心仪的公司嫌自己没有经验，给Offer的公司貌似没有多少数据，只是想趁着大数据热忽悠一把。阴错阳差，小陈找到一份Java开发的工作。这家公司专做某行业的软件，公司不大但发展很快，待遇还算不错。小陈第一周上班主要学习公司的技术框架，然后就懵逼了。面试时候非要分清POBOVO，现在项目所有的参数传递都是List&lt;Map&gt;；面试时候各种设计模式的问，结果这项目的大部分的业务逻辑都是写在SQL存储过程里面的，甚至JS里面也夹杂了很多SQL；自研的一个工作流框架对应的库表，各种预留字段，从field1，field2一直到field8。在小陈犹豫着要不要换家公司，技术总监的几句话给忽悠住了他：这个世界的所有事物，即所谓的对象，都是可以用List&lt;Map&gt;来表示；SQL是史上的最好的DSL，一定要充分利用，如果想写，用SQL实现一个Dijkstra算法都可以[注1]；这框架虽然不走寻常路，但是有PHP的开发速度，也利用JVM的性能和Java的生态系统。&lt;/p&gt;
+
+&lt;p&gt;小陈不仅觉得总监的话很有道理，而且这些话跟大数据的思路也有几份相似。Google开启大数据时代最重要的就是三篇论文:Google File System,讲如何分布式存储大数据；Google MapReduce,讲如何分布式计算大数据；Google Bigtable,实现了一个数据库，以便在分布式下快速读写结构化数据。对应的开源实现是Hadoop Hdfs，Hadoop MapReduce，HBase。这个识万物为List&lt;Map&gt;的思路不就是MapReduce的思路吗，而那个预留字段的数据库设计其实有点Bigtable/HBase的风范，不管神似与否至少形似。工作一段时间，小陈感觉这糙快猛的框架确实还是很适合这个需求变化比较快的行业，对他自己来说，至少写SQL和实现业务需求的能力提高了不少。一年之后，小陈跳槽到一家三线互联网公司做大数据，凭借的就是这两项能力。&lt;/p&gt;
+
+&lt;h2 id=&#34;大数据工作和两个领导&#34;&gt;大数据工作和两个领导&lt;/h2&gt;
+
+&lt;p&gt;新公司工作主要基于Shell调用Hive，把数据从日志往Oracle里面导，经常还要给业务部门提数。所以，虽然在做大数据，工作内容只是从上家公司的Oracle PL/SQL换成了Hive SQL。Map-Reduce虽然直指大数据计算的本源，但是奈何这个世界太复杂，产品经理的需求太多，表达力有点欠缺。而且又很多通用的需求，例如数据之间的Join和Group，完全可以提炼出来，于是Facebook向开源社区捐献了Hive，用史上的最好的DSL作为查询语言交给熟悉SQL的人去使用，Hive引擎负责把SQL翻译成MapReduce。小陈得偿所愿进入大数据行业，但是很快就厌倦了：Shell管理起来太麻烦，跟其他系统交互起来不方便；Hive运行太慢，资源利用率低，有时候跑了十几分钟结果出来了发现自己的SQL有一个简单的错误；想推动HadoopV2的落地，让Yarn去合理的管理集群资源，领导和同事都不愿意承担风险。小陈隐约觉得自己做的东西并没有给公司带来应有的价值，只是让报表的维度增加一些。领导告诉小陈，大数据并不是解决一切问题的灵丹妙药，数据越来越多，增加更多的是无价值的数据，而大数据处理的日志等数据与业务数据相比，信息熵要低的多。&lt;/p&gt;
+
+&lt;p&gt;就这么工作一年后，老板也对数据部门不满意，赶走了老领导，挖来一个大厂的架构师来主管整合所有数据相关业务。新领导上来就大刀阔斧，部门架构调整，把一部分数据相关的开发并了过来，整个部门一分为二，一部分往上跟业务和产品部门打交道，一部分下沉做大数据平台时候。小陈果断的选择了去做平台。&lt;/p&gt;
+
+&lt;p&gt;如果说老领导强调的是数据完整性和正确性，数据对业务的支撑，新领导更强调数据对产品和决策的反馈，技术的先进性。按照新领导的意思，以做用户数据仓库为出发点，从数据收集、数据转换、数据模型、数据查询、数据可视化到任务调度和平台监控，要重新梳理现有每一个模块的技术架构。这个时候，大数据相关技术已经可以说是百花齐放百家争鸣，围绕着Hadoop，几乎每个领域都有一两个出色的解决方案。领导要求使用技术要向代表技术先进性，相关软件版本落后不能超过2年，鼓励使用3年以内的新项目。小陈很高兴，感觉可以大干一场了。因为态度积极，小陈很受新领导的器重，小陈先负责用其他SQL on Hadoop的如Impala/Presto来代替Hive的部分功能，提高查询效率，后来又负责引入实时计算框架Storm，虽然只是用来计算PV/UV，但好歹是实时的。总之是趟坑无数，背锅无数，忙得不亦乐乎。&lt;/p&gt;
+
+&lt;p&gt;直到又过一年公司裁员，小陈才发现数据部门是重灾区。和领导吃散伙饭，小陈开始鸣不平，觉得咱们的平台做了这么多，大家加班这么辛苦，为什么就没人懂欣赏呢。领导却直言自己早就知道这个结局，部门折腾了一年，老板只看到数据部门人员和机器一直在增加，却经常收到其他部门各种抱怨，产品抱怨进度太慢啊，商务说数据不懂业务啊，研发说总是要配合数据做这做那啊，运营说报表没有老系统方便数据老出问题等等。相处这么久，领导已经把小陈当心腹了，直言一开始想把有些业务拿到数据这边统一处理，技术出身搞不定公司复杂的关系，阻力太大；埋头把平台理顺，而在强势老板的公司里面，自己还是没有抓住老板的需求和业务的痛点，所以对老板来说，确实没为公司带来什么价值。领导的这番肺腑之言对小陈触动很大，开始重新审视自己的过去的工作。不管怎样小陈这时候找下一份工作已经有了一份资本。&lt;/p&gt;
+
+&lt;h2 id=&#34;在创业公司&#34;&gt;在创业公司&lt;/h2&gt;
+
+&lt;p&gt;在全民创业的浪潮中，小陈来到一家创业公司，这里还没有什么&amp;rdquo;大数据&amp;rdquo;,但是CEO的数据要介入整个产品和运营中的承诺和希望打动了小陈，而且这里有机会从零开始有机会按照自己的思路规划整个公司的大数据业务。这个时候，大数据圈最火的是Spark，Spark以基于内存的DAG计算引擎为基础，提供了批量计算，实时计算，交互式查询，机器学习，基本上实现了One Stack To Rule Them All，而且Spark也有SparkSQL。小陈选择了围绕Spark来构建整个系统，并且拥抱云计算了，直接选择云服务，希望自己能专注于让数据产生价值。小陈工作分这么几部分:输出报表数据;给一个数据科学家打杂，帮他整理数据提取特征，实现一些算法;每天花一个小时看数据，解释数据和用数据去解释。小陈成了对公司业务和系统最了解的人，比产品和QA都要了解，并且提出了很多优化和改进。CEO很满意，年终时候大笔一挥给了更多的期权，然而没什么卵用，因为融资寒冬来的时候，公司还是倒了。&lt;/p&gt;
+
+&lt;h2 id=&#34;在大厂&#34;&gt;在大厂&lt;/h2&gt;
+
+&lt;p&gt;小陈已经拖家带口了，感觉自己不再年轻，在机构Offer之间犹豫了很久之后，选择了去一个大厂做螺丝钉，这里流程和工具都已经非常完善了，用的Hadoop都是自己定制甚至已经跟社区不兼容了。小陈业务时间乐于参加各种线下各种活动，积攒自己的人脉，坚持更新Blog，提升自己的名气。&lt;/p&gt;
+
+&lt;p&gt;这个时候Google推出了Beam计算框架。其实Google抛出了三大论文之后，表面上很沉寂，自己内部的系统却一直在向前演进，例如老版的GFS已经被Colossus被代替。直到Google眼红AWS投身云计算时候，发现客户都更习惯开源的那套东西，甚至Google把自己的BigTable服务往外卖的时候，不得不兼容BigTable的山寨产品HBase的API。这就好比一个欧洲人找到一个中国建筑师建一个亚洲古代建筑，中国建筑师给建了一个唐朝风格的建筑，欧洲人说，你这建的不大对，我在日本看到的都是这样那样。Google为了争夺话语权，把自己最新的产品拿出来开源，要一统所有的计算框架，不管你底层是Storm还是Spark，按照Beam的API来处理数据，底层可以随意切换Spark和自家的Cloud Dataflow，甚至为了师出有因，大力提携Flink和Spark打擂台。小陈相信这个框架会一统江湖，为了自己的KPI和升级, 准备在公司推Apache Beam。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Imply和Confluent破解</title>
+      <link>https://lawulu.github.io/post/Imply%E5%92%8CConfluent%E7%A0%B4%E8%A7%A3/</link>
+      <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://lawulu.github.io/post/Imply%E5%92%8CConfluent%E7%A0%B4%E8%A7%A3/</guid>
+      <description>
+
+&lt;p&gt;其实这两个软件还是比较容易破解的，首先开发者并没有把精力放到反破解上面，相关功能做的很简单。第二没有服务器交互的反破解还是很难的，即时是有服务器交互(例如Idea)，也有人搞出各种License Server出来&lt;/p&gt;
+
+&lt;h2 id=&#34;imply-pivot&#34;&gt;Imply Pivot&lt;/h2&gt;
+
+&lt;p&gt;搜索&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;grep -ri &#39;Pivot evaluation license expired&#39; .
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;发现有个文件&lt;code&gt;./node_modules/@implydata/im-auth/build/server/utils/license-manager/license-manager.js&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;里面有这个逻辑：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;        var e = path.join(this.varDir, &amp;quot;.pivot-first-run&amp;quot;);
+        return Q(fs.readFile(e, {encoding: &amp;quot;utf-8&amp;quot;})).then(function (e) {
+            var r = new Date(e.trim());
+            if (isNaN(r)) throw new Error(&amp;quot;invalid date&amp;quot;);
+            return {created: false, firstRun: r}
+        }).catch(function (r) {
+            var t = new Date;
+            return Q(fs.writeFile(e, t.toISOString())).then(function () {
+                return {created: true, firstRun: t}
+            })
+        })
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;找到文件&lt;code&gt;find . -name &amp;quot;.imply-first-run&amp;quot;&lt;/code&gt;
+把里面日期改一下就行了&lt;/p&gt;
+
+&lt;h2 id=&#34;confluent&#34;&gt;Confluent&lt;/h2&gt;
+
+&lt;p&gt;坑一：一开始搞反了..一直没报错 还以为没生效&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;jar uf /service/app/confluent-4.0.0/share/java/confluent-control-center/control-center-4.0.0.jar io/confluent/controlcenter/license/LicenseModule.class
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;坑二：zsh ll不显示隐藏文件，习惯把ll = ls-al 而不是ls -ah&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; return License.baseClaims(&amp;quot;demo&amp;quot;, bfa.creationTime().toMillis() + TimeUnit.DAYS.toMillis(30L), true);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;所以其实修改该文件的createTime就行了..&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>CDN流量日志简单分析</title>
@@ -19,7 +122,7 @@
 
 &lt;h2 id=&#34;缘起&#34;&gt;缘起&lt;/h2&gt;
 
-&lt;p&gt;公司运营的很大一个成本就是CDN耗费。对比Impression和Click&lt;/p&gt;
+&lt;p&gt;公司运营的很大一个成本就是CDN耗费。对比Impression和CDN消耗量就会很奇怪，不该有这么多的CDN消耗的。&lt;/p&gt;
 
 &lt;h2 id=&#34;数据分析&#34;&gt;数据分析&lt;/h2&gt;
 
@@ -119,6 +222,99 @@ select sum(rsp_size) from  cdn_log
 CURL  -i -X HEAD &#39;https://streaming.lawulu.com/default/256b9db1-a1ce-4983-8906-4568fa7a9c75-144.mp4&#39;
 &lt;/code&gt;&lt;/li&gt;
 &lt;/ol&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>广协的IP库到底准不住</title>
+      <link>https://lawulu.github.io/post/%E5%B9%BF%E5%8D%8F%E7%9A%84IP%E5%BA%93%E5%88%B0%E5%BA%95%E5%87%86%E4%B8%8D%E4%BD%8F/</link>
+      <pubDate>Sat, 25 Feb 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://lawulu.github.io/post/%E5%B9%BF%E5%8D%8F%E7%9A%84IP%E5%BA%93%E5%88%B0%E5%BA%95%E5%87%86%E4%B8%8D%E4%BD%8F/</guid>
+      <description>
+
+&lt;h2 id=&#34;缘起&#34;&gt;缘起&lt;/h2&gt;
+
+&lt;p&gt;对于CPM广告，地域定向是非常重要的。广告协会提供了ip库，方便AdNetwork和第三方监控做地域定向。百度默认以ip138做为其&amp;rdquo;IP&amp;rdquo;关键字的第一个入口，我相信ip138的库是比较准的，那广协的IP库和ip138的库差别大吗？&lt;/p&gt;
+
+&lt;h2 id=&#34;数据分析&#34;&gt;数据分析&lt;/h2&gt;
+
+&lt;h3 id=&#34;随机从线上提取10000个ip-并使用广协库解析成对应城市&#34;&gt;随机从线上提取10000个ip，并使用广协库解析成对应城市&lt;/h3&gt;
+
+&lt;p&gt;从某个时段原始Nginx日志中的ip(300W+)随机取10000条
+使用pandas&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;csv = pd.read_csv(&#39;/tmp/ip.log&#39;)
+np.savetxt(&#39;/tmp/ipSample.log&#39;,csv.sample(10000).values,fmt=&#39;%s&#39;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;根据ip获取ip138对应的城市&#34;&gt;根据ip获取ip138对应的城市&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;reload(sys)
+sys.setdefaultencoding(&#39;utf-8&#39;)
+
+# get data from web
+def get_data(query):
+    url = &amp;quot;http://m.ip138.com/ip.asp?ip=&amp;quot; + query
+    res = requests.get(url)
+    print &#39;get data for &#39;+ query +&#39; result:&#39; + str(res.status_code)
+    if(res.status_code != 200):
+        return &#39;Failed Response&#39;
+    else:
+        return parse_html(res.content)
+
+def parse_html(html):
+    res = BeautifulSoup(html,&amp;quot;html.parser&amp;quot;).find_all(&amp;quot;p&amp;quot;, &amp;quot;result&amp;quot;)
+    result =split(res[0])
+    if len(res)&amp;gt;1:
+        result=result+&amp;quot;,&amp;quot;+ split(res[1])
+    return result
+
+def split(str):
+    try:
+        splits=str.string.encode(&amp;quot;utf-8&amp;quot;).split(&#39;：&#39;)
+        return splits[1]
+    except RuntimeError:
+        return &#39;Split Error:&#39;+str
+
+with open(&#39;/tmp/ipSample.log&#39;) as source:
+    with open(&#39;ip138Result.csv&#39;,&#39;aw&#39;) as result:
+        for line in source:
+            ip = line.strip(&#39;\n&#39;)
+            ipStr=get_data(ip)
+            time.sleep(0.1)
+            result.write(ip+&#39;|&#39;+ipStr+&#39;\n&#39;)
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;取全国60强城市-统计两个结果的差距&#34;&gt;取全国60强城市，统计两个结果的差距&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.mnw.cn/news/china/886245.html&#34;&gt;http://www.mnw.cn/news/china/886245.html&lt;/a&gt; 60强城市&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;citys=[&#39;上海&#39;,&#39;北京&#39;,&#39;广州&#39;,&#39;深圳&#39;,&#39;成都&#39;,&#39;重庆&#39;,&#39;杭州&#39;,&#39;南京&#39;,&#39;沈阳&#39;,&#39;苏州&#39;,&#39;天津&#39;,&#39;武汉&#39;,&#39;西安&#39;,&#39;长沙&#39;,&#39;大连&#39;,&#39;济南&#39;,&#39;宁波&#39;,&#39;青岛&#39;,&#39;无锡&#39;,&#39;厦门&#39;,&#39;郑州&#39;,&#39;长春&#39;,&#39;常州&#39;,&#39;哈尔滨&#39;,&#39;福州&#39;,&#39;昆明&#39;,&#39;合肥&#39;,&#39;东莞&#39;,&#39;石家庄&#39;,&#39;呼和浩特&#39;,&#39;南昌&#39;,&#39;温州&#39;,&#39;佛山&#39;,&#39;贵阳&#39;,&#39;南宁&#39;,&#39;海口&#39;,&#39;湖州&#39;,&#39;唐山&#39;,&#39;临沂&#39;,&#39;嘉兴&#39;,&#39;绍兴&#39;,&#39;南通&#39;,&#39;徐州&#39;,&#39;泉州&#39;,&#39;太原&#39;,&#39;烟台&#39;,&#39;乌鲁木齐&#39;,&#39;潍坊&#39;,&#39;珠海&#39;,&#39;洛阳&#39;,&#39;中山&#39;,&#39;兰州&#39;,&#39;金华&#39;,&#39;淮安&#39;,&#39;吉林&#39;,&#39;威海&#39;,&#39;淄博&#39;,&#39;银川&#39;,&#39;扬州&#39;,&#39;芜湖&#39;,&#39;盐城&#39;,&#39;宜昌&#39;,&#39;西宁&#39;,&#39;襄阳&#39;,&#39;绵阳&#39;]
+files =[&amp;quot;ip138Result.csv&amp;quot;,&amp;quot;ipResultV2.log&amp;quot;]
+import subprocess, datetime, sys
+def checkNums(file,city):
+    p = subprocess.Popen(&amp;quot;&amp;quot;&amp;quot; cat &amp;quot;&amp;quot;&amp;quot; + file + &amp;quot;&amp;quot;&amp;quot;| grep &amp;quot;&amp;quot;&amp;quot;+ city +&amp;quot;&amp;quot;&amp;quot;  |wc -l &amp;quot;&amp;quot;&amp;quot;, shell=True, stdout=subprocess.PIPE );
+    p.wait()
+    out = p.stdout.readlines()[0]
+    return str(out).strip()
+
+for city in citys:
+    result = city + &amp;quot;\t&amp;quot;
+    for file in files:
+        result = result +checkNums(file,city)+ &amp;quot;\t&amp;quot;
+    print  result
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;结论&#34;&gt;结论&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;北京相差比较大，系统库比Ip138库多出一倍&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;其他城市 上海 深圳 南京 苏州 大连 宁波等也相差在20%以上。
+可以说跟IP138差别还是比较大的。&lt;/p&gt;
+
+&lt;p&gt;但是三线城市比较准。&lt;/p&gt;
 </description>
     </item>
     
@@ -380,6 +576,74 @@ casper.options.onResourceReceived = function(casperObject, res) {
 跟我们那时候比,一个是生源差了,初中按片升学,没有重点初中,中考招生,教委要求重点高中在某个分数线之后需要和普通高中轮流录取,换句话来说,重点高中不重点了,想想90年代时候,母校每个年级还有重点班,也被教委给取消了;另外就是很多好老师都去大城市了,也招不来好老师了.事实上,跨县高中之间竞争不大,升学率跟校长和县教委政绩挂钩不大,教委和校长没有动力去高压学生.&lt;/p&gt;
 
 &lt;p&gt;高考不公平,单纯讨论分数没有意义. 因为各省市的情况不一样. 假如全国一套卷子一个录取线,相信我,不出三年,帝都人大附学生的考分绝对不比衡水差. 横向比较一本率(考虑到很多省内211招取了很多本地考生,或许用985录取率)才有意义.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>闲言碎语·网络作家的水平如何</title>
+      <link>https://lawulu.github.io/post/%E7%BD%91%E7%BB%9C%E4%BD%9C%E5%AE%B6/</link>
+      <pubDate>Sat, 16 Apr 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://lawulu.github.io/post/%E7%BD%91%E7%BB%9C%E4%BD%9C%E5%AE%B6/</guid>
+      <description>&lt;p&gt;今天在知乎看到有人在推采铜的新书：《精进：如何成为一个很厉害的人》。去jd和z家，居然都缺货，上次买《机器学习》也是这样，难道现在卖书也靠水军（网上口碑非常好）和饥渴营销（缺货）了吗？&lt;/p&gt;
+
+&lt;p&gt;其实，买过几本网上成名的作家，包括我非常喜欢的马伯庸，实体书都非常烂，在网上抖机灵还可以 系统的写点东西出来就不行了。&lt;/p&gt;
+
+&lt;p&gt;不是说文笔不行，大概是太过失望了。其实现代人看书已经没人在乎文笔了， 小说类都是在拼讲故事的能力和想象力， 非小说类就是能把事情说清楚就行。&lt;/p&gt;
+
+&lt;p&gt;群里面有人批评韩寒的长安乱，说有次韩寒上节目批评冰心文字不好，而&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;冰心还写过一篇东西关于少年儿童写日记的问题，好象是答小读者吧。里面写的关于文章里的毛病，你看韩寒基本上就是这样。比如喜欢用“最”，“极”之类的，但没有具体的描述，因为观察不细致，而词汇也不够 —— 这个就基本上说韩了&lt;/p&gt;
+
+&lt;p&gt;想起之前余秋雨讲他在路边小报看一个案件，一个绑架案，根据案犯的一条纸条判断出案犯语文水平很高抓住案犯的，那纸条写的非常言简意赅条理清楚&lt;/p&gt;
+
+&lt;p&gt;韩寒在模仿钱钟书，钱也是一个很简单的事情，非要绕着说，但是绕的非常耐读非常有意思。这段模仿的太拙劣了&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>招人很难</title>
+      <link>https://lawulu.github.io/post/%E6%9C%80%E8%BF%91%E6%8B%9B%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%9A%84%E5%87%A0%E4%B8%AA%E6%83%B3%E6%B3%95/</link>
+      <pubDate>Fri, 18 Mar 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://lawulu.github.io/post/%E6%9C%80%E8%BF%91%E6%8B%9B%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%9A%84%E5%87%A0%E4%B8%AA%E6%83%B3%E6%B3%95/</guid>
+      <description>&lt;p&gt;其实要求很简单：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;会Hive,能用Hive完成基本需求。真正的接触过一个线上项目。&lt;/li&gt;
+&lt;li&gt;有责任心,靠谱,因为要独当一面,能保证数据的完整性和准确性。&lt;/li&gt;
+&lt;li&gt;能以数据的思维来提供业务。&lt;/li&gt;
+&lt;li&gt;加分项:日志收集/Spark/机器学习。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;招人很难，
+1. 跟着培训班或者看视频学了一些皮毛，或者在数据部门打杂，问起各种原理工具，也答得可以，但是一让解决问题，连思路都没有。
+2. 真正做过的要价很高，所以我觉得还不如从Java培养，毕竟我们这有相当一部分工作是用Java做Batch&lt;/p&gt;
+
+&lt;p&gt;我总结的一些发问点：
+- Hadoop常用的组件，相关软件，namenode原理，为什么要有Yarn？
+- Hadoop相关组件，Zookeeper，Sqoop，Hbase等
+- 用过哪些dfs命令？Hadoop常用端口？文件block？如何计算集群所需的硬盘大小？
+- Hive Sql原理  &lt;a href=&#34;http://tech.meituan.com/hive-sql-to-mapreduce.html&#34;&gt;http://tech.meituan.com/hive-sql-to-mapreduce.html&lt;/a&gt;
+- Hive UDF UDAF区别，Hive 行转列怎么实现？ concat_ws collection
+- HiveClient和Beeline区别
+- 数据倾斜问题&lt;a href=&#34;http://www.cnblogs.com/ggjucheng/archive/2013/01/03/2842860.html&#34;&gt;http://www.cnblogs.com/ggjucheng/archive/2013/01/03/2842860.html&lt;/a&gt;
+- Hive Metadata作用，Hive 分区表，新增一个字段，老的日志不认，显示为空，如何处理？&lt;a href=&#34;http://blog.csdn.net/lxpbs8851/article/details/17118841&#34;&gt;http://blog.csdn.net/lxpbs8851/article/details/17118841&lt;/a&gt;
+- Spark的优势？
+- 流计算Storm Trident API，如何保证有且只有一次
+   &lt;a href=&#34;http://www.flyne.org/article/222&#34;&gt;http://www.flyne.org/article/222&lt;/a&gt;
+- 任务调度：
+重试，幂等性
+如何保证数据的完整性和准确性？
+- 点击去重
+例如：logtime,userId,adId,actionType, 1小时内的点击只能算一次。
+- Hive表存储的方式？哪些常用的文件存储格式？
+- simpledateformat的多线程问题 MR中会有问题吗？
+- Hive提高Map的数量，Hive小文件CombinedInputFormat
+- 可视化，Ad hoc
+- 数据仓库相关，如何分层，建模？拉链表&lt;/p&gt;
 </description>
     </item>
     
@@ -911,418 +1175,6 @@ class ZhihuSpider(scrapy.Spider):
 快速入门：&lt;a href=&#34;http://tylerneylon.com/a/learn-lua/&#34;&gt;http://tylerneylon.com/a/learn-lua/&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;Lua稍微复杂并且可以玩出花的内置机制就是Metatable了,可以重载对字典(对象)各种操作符.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Logback的一些奇技淫巧</title>
-      <link>https://lawulu.github.io/post/Logback%E7%9A%84%E4%B8%80%E4%BA%9B%E5%A5%87%E6%8A%80%E6%B7%AB%E5%B7%A7/</link>
-      <pubDate>Sun, 23 Aug 2015 00:00:00 +0000</pubDate>
-      
-      <guid>https://lawulu.github.io/post/Logback%E7%9A%84%E4%B8%80%E4%BA%9B%E5%A5%87%E6%8A%80%E6%B7%AB%E5%B7%A7/</guid>
-      <description>
-
-&lt;p&gt;Logback是一款非常优秀的日志框架.但是每个开发面对的需求也是多种多样的.
-如果你有下面的需求,那你看了这篇文章就可以了：&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;每次调用链都生成一个唯一的traceId&lt;/li&gt;
-&lt;li&gt;修改配置文件即时生效,例如,为了定位一个问题,临时将log级别修改为debug&lt;/li&gt;
-&lt;li&gt;不同环境使用不同的配置&lt;/li&gt;
-&lt;li&gt;Logback的默认Rolling策略是：有新的Log产生,如果需要rolling,则rename原来的文件.这样会存在的一个问题就是,如果没有新的log产生,就不会重命名原来的文件.如果遇上需要同步日志(例如Rsync),就会出现问题.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;日志的traceid&#34;&gt;日志的TraceId&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;在Filter里面增加一个,ThreadLocal based 变量：&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;pre&gt;&lt;code&gt;
-public class CustomFilter extends OncePerRequestFilter {
-	
-	private static final Random random = new Random(System.currentTimeMillis()); //TODO
-
-	@Override
-	protected void doFilterInternal(HttpServletRequest request,
-			HttpServletResponse response, FilterChain filterChain)
-			throws ServletException, IOException {
-		
-	
-		request.setAttribute(ApiConstants.RQID, rnd);
-		
-		response.setHeader(ApiConstants.HEADER_RQID, rnd);
-		MDC.put(ApiConstants.RQID, rnd);
-		try{
-			filterChain.doFilter(request, response);
-		}finally{
-			MDC.remove(ApiConstants.RQID);
-		}
-
-	}
-
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;配置文件&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;pre&gt;&lt;code&gt; &amp;lt;encoder&amp;gt;
-	        &amp;lt;pattern&amp;gt;%d{yyyy-MM-dd HH:mm:ss} %-4relative [%thread] %-5level %logger{35} [%X{x-jjk-rqid:-notFound}]- %msg%n&amp;lt;/pattern&amp;gt;
-	    &amp;lt;/encoder&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;自动更新配置&#34;&gt;自动更新配置&lt;/h3&gt;
-
-&lt;p&gt;显然会影响效率&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;lt;configuration debug=&amp;quot;true&amp;quot; scan=&amp;quot;true&amp;quot; scanPeriod=&amp;quot;1 minutes&amp;quot;&amp;gt;
-
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;各个环境引入不同的profile&#34;&gt;各个环境引入不同的Profile&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;	&amp;lt;property resource=&amp;quot;config/config-${envTarget}.properties&amp;quot;/&amp;gt;
-
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;基于条件写不同的文件-siftingappender&#34;&gt;基于条件写不同的文件：SiftingAppender&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt; &amp;lt;appender name=&amp;quot;stats&amp;quot; class=&amp;quot;ch.qos.logback.classic.sift.SiftingAppender&amp;quot;&amp;gt;
-        &amp;lt;!-- in the absence of the class attribute, it is assumed that the
-             desired discriminator type is
-             ch.qos.logback.classic.sift.MDCBasedDiscriminator --&amp;gt;
-        &amp;lt;discriminator&amp;gt;
-            &amp;lt;key&amp;gt;date&amp;lt;/key&amp;gt;
-            &amp;lt;defaultValue&amp;gt;unknown&amp;lt;/defaultValue&amp;gt;
-        &amp;lt;/discriminator&amp;gt;
-        &amp;lt;sift&amp;gt;
-            &amp;lt;appender name=&amp;quot;FILE-${date}&amp;quot; class=&amp;quot;ch.qos.logback.core.FileAppender&amp;quot;&amp;gt;
-                &amp;lt;file&amp;gt;/mnt/media-${date}.log&amp;lt;/file&amp;gt;
-                &amp;lt;!--&amp;lt;append&amp;gt;false&amp;lt;/append&amp;gt;--&amp;gt;
-                &amp;lt;encoder&amp;gt;
-                    &amp;lt;pattern&amp;gt;%msg%n&amp;lt;/pattern&amp;gt;
-                    &amp;lt;charset&amp;gt;UTF-8&amp;lt;/charset&amp;gt;
-                &amp;lt;/encoder&amp;gt;
-            &amp;lt;/appender&amp;gt;
-        &amp;lt;/sift&amp;gt;
-    &amp;lt;/appender&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;代码中需要写MDC变量：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;        MDC.put(&amp;quot;date&amp;quot;, dateString);
-
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>一种统一的API签名校验实现</title>
-      <link>https://lawulu.github.io/post/%E4%B8%80%E7%A7%8D%E7%BB%9F%E4%B8%80%E7%9A%84API%E7%AD%BE%E5%90%8D%E6%A0%A1%E9%AA%8C%E6%96%B9%E6%B3%95/</link>
-      <pubDate>Mon, 10 Aug 2015 00:00:00 +0000</pubDate>
-      
-      <guid>https://lawulu.github.io/post/%E4%B8%80%E7%A7%8D%E7%BB%9F%E4%B8%80%E7%9A%84API%E7%AD%BE%E5%90%8D%E6%A0%A1%E9%AA%8C%E6%96%B9%E6%B3%95/</guid>
-      <description>
-
-&lt;h2 id=&#34;签名方法&#34;&gt;签名方法:&lt;/h2&gt;
-
-&lt;h2 id=&#34;header&#34;&gt;Header:&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code&gt;
-@RequestHeader(value = &amp;quot;x-header-timestamp&amp;quot;) Long timestamp,
-@RequestHeader(value = &amp;quot;x-header-appid&amp;quot;) String appid,
-@RequestHeader(value = &amp;quot;x-header-sign&amp;quot;) String sign
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;源串-orignalstring&#34;&gt;源串 orignalString:&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code&gt;
-HttpMethod=URI&amp;amp;Param1=Value1&amp;amp;Param2=Value2RequestBodySeckeyTimestamp
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;注1:Method大写
-注2:为方便期间Param不排序,如果出问题再说
-注3:ResustBody可能为空
-注4:SecKey跟AppId是一一对应.&lt;/p&gt;
-
-&lt;h2 id=&#34;签名-sign&#34;&gt;签名 sign:&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code&gt;sign=Md5(orignalString).toUpperCase
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;暂时只支持MD5&lt;/p&gt;
-
-&lt;h2 id=&#34;实现&#34;&gt;实现:&lt;/h2&gt;
-
-&lt;p&gt;原则上,应该和业务逻辑代码分离,不影响业务逻辑代码的开发&lt;/p&gt;
-
-&lt;h3 id=&#34;1-根据注解mapping需要检查签名的方法&#34;&gt;1 根据注解Mapping需要检查签名的方法&lt;/h3&gt;
-
-&lt;p&gt;例如:Spring @ControllerAdvice(annotations = RestController.class)
-如需要,可自定义自己的注解&lt;/p&gt;
-
-&lt;h3 id=&#34;2-获取参数&#34;&gt;2 获取参数&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;
-@ModelAttribute
-	public void checkSign(HttpServletRequest request, HttpServletResponse response, @RequestBody(required=false) String requestbody,
-			@RequestHeader(value = &amp;quot;x-header-timestamp&amp;quot;) Long timestamp,
-			@RequestHeader(value = &amp;quot;x-header-appid&amp;quot;) String appid,
-			@RequestHeader(value = &amp;quot;x-header-sign&amp;quot;) String sign) 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;3-计算签名&#34;&gt;3 计算签名&lt;/h3&gt;
-
-&lt;p&gt;可能需要在GLobalExceptionHandler中增加&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;
-    @ExceptionHandler(ServletRequestBindingException.class) 
-    	@ResponseStatus(HttpStatus.BAD_REQUEST)	
-    	@ResponseBody 
-    	ErrorMessage handleServletRequestBindingException(ServletRequestBindingException ex) {	
-    		
-    		LOGGER.debug(&amp;quot;handleServletRequestBindingException&amp;quot;, ex);
-    		return new ErrorMessage(ErrorCode.INVALID_HEADER.getCode(), ex.getMessage());//TODO
-    	}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;增加filter&#34;&gt;增加Filter&lt;/h2&gt;
-
-&lt;p&gt;注意：因为在ControllerAdvice消费了Request的InputStream,所以需要在前面的Filter中Copy一份Request出来
-代码如下：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;/**
- * Wrapper used to be able to consume multiple times the InputStream provided by
- * HttpServletRequest
- *
- * @author lawulu
- * @see https://github.com/ClouDesire/spring-utils/
- * 
- */
-
-public class CustomHttpServletRequestWrapper extends HttpServletRequestWrapper {
-    private final byte[] body;
-
-    public CustomHttpServletRequestWrapper(HttpServletRequest request) throws IOException {
-        super(request);
-        if (request.getContentType() != null
-                &amp;amp;&amp;amp; request.getContentType().contains(MediaType.APPLICATION_JSON.toString())) {
-            InputStream inputStream = request.getInputStream();
-            if (inputStream != null) {
-                body = IOUtils.toByteArray(inputStream);
-                return;
-            }
-        }
-        body = null;
-    }
-
-    @Override
-    public ServletInputStream getInputStream() throws IOException {
-        if (body == null)
-            return super.getInputStream();
-
-        final ByteArrayInputStream stream = new ByteArrayInputStream(body);
-        ServletInputStream inputStream = new ServletInputStream() {
-            @Override
-            public int read() throws IOException {
-                return stream.read();
-            }
-        };
-        return inputStream;
-    }
-
-    @Override
-    public BufferedReader getReader() throws IOException {
-        if (body == null)
-            return super.getReader();
-
-        return new BufferedReader(new InputStreamReader(new ByteArrayInputStream(body), StandardCharsets.UTF_8));
-    }
-
-}
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>都是DNS惹的祸</title>
-      <link>https://lawulu.github.io/post/%E9%83%BD%E6%98%AFDNS%E6%83%B9%E7%9A%84%E8%B4%A7/</link>
-      <pubDate>Sat, 01 Aug 2015 00:00:00 +0000</pubDate>
-      
-      <guid>https://lawulu.github.io/post/%E9%83%BD%E6%98%AFDNS%E6%83%B9%E7%9A%84%E8%B4%A7/</guid>
-      <description>
-
-&lt;p&gt;最近因为工位调整,内部用的测试机换了个地方,结果发现上面部署的应用变得都反应奇慢,每次SSH上去也要卡顿很久.&lt;/p&gt;
-
-&lt;h2 id=&#34;是不是网络问题&#34;&gt;是不是网络问题?&lt;/h2&gt;
-
-&lt;h3 id=&#34;ping比较正常&#34;&gt;Ping比较正常&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;PING 192.168.214.227 (192.168.214.227): 56 data bytes
-64 bytes from 192.168.214.227: icmp_seq=0 ttl=64 time=0.073 ms
-64 bytes from 192.168.214.227: icmp_seq=1 ttl=64 time=0.100 ms
-64 bytes from 192.168.214.227: icmp_seq=2 ttl=64 time=0.092 ms
-64 bytes from 192.168.214.227: icmp_seq=3 ttl=64 time=0.074 ms
-64 bytes from 192.168.214.227: icmp_seq=4 ttl=64 time=0.057 ms
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;没有丢包,traceroute貌似也没有问题&lt;/p&gt;
-
-&lt;h3 id=&#34;测速&#34;&gt;测速&lt;/h3&gt;
-
-&lt;p&gt;生成一个大文件:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#*-*coding:utf-8 *-*
-&#39;&#39;&#39;&#39;&#39;
-Created on 2012-6-14
-
-&#39;&#39;&#39;
-def gen_file(path,size):
-    #首先以路径path新建一个文件，并设置模式为写
-    file = open(path,&#39;w&#39;)
-    #根据文件大小，偏移文件读取位置
-    file.seek(1024*1024*1024*size)#姑且以GB为单位吧
-    #然后在当前位置写入任何内容，必须要写入，不然文件不会那么大哦
-    file.write(&#39;\x00&#39;)
-    file.close()
-
-gen_file(&#39;./test.dat&#39;,1)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;scp上去,速度在兆级别..&lt;/p&gt;
-
-&lt;h2 id=&#34;ssh&#34;&gt;SSH&lt;/h2&gt;
-
-&lt;p&gt;用&lt;code&gt;ssh -v&lt;/code&gt; 找到Hang的地方,搜一下相关信息,很快就能找到需要改哪里.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;vim /etc/ssh/sshd_config
-UseDNS=no
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;重启&lt;code&gt;sudo service ssh restart&lt;/code&gt;解决问题&lt;/p&gt;
-
-&lt;h2 id=&#34;mysql&#34;&gt;Mysql&lt;/h2&gt;
-
-&lt;p&gt;mysql 客户端也有&lt;code&gt;--verbose&lt;/code&gt;的选项,但是设置了貌似没什么结果.搜了一下,很多说也是DNS的原因&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;show variables
-| skip_name_resolve                                 | OFF                                                                                                                     |
-
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;修改 &lt;code&gt;vim /etc/mysql/my.cnf&lt;/code&gt;
-增加一行 &lt;code&gt;skip-name-resolve&lt;/code&gt;&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Freemarker下为静态资源增加Version</title>
-      <link>https://lawulu.github.io/post/Freemarker%E4%B8%8B%E4%B8%BA%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E5%A2%9E%E5%8A%A0Version/</link>
-      <pubDate>Wed, 04 Jun 2014 00:00:00 +0000</pubDate>
-      
-      <guid>https://lawulu.github.io/post/Freemarker%E4%B8%8B%E4%B8%BA%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E5%A2%9E%E5%8A%A0Version/</guid>
-      <description>
-
-&lt;h2 id=&#34;源起&#34;&gt;源起&lt;/h2&gt;
-
-&lt;p&gt;因为客户端浏览器缓存问题，每次发布时候之后，经常遇到新修改的JS/CSS不生效，需要手动清理老版本的缓存。其实业界已经有成熟的解决方案，无非加上Version或者禁止客户端缓存，未免遗忘，在这里记录一下。&lt;/p&gt;
-
-&lt;h2 id=&#34;具体方案&#34;&gt;具体方案&lt;/h2&gt;
-
-&lt;h3 id=&#34;自定义一个freemarkervariables&#34;&gt;自定义一个FreemarkerVariables&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;public class FreemarkerVariables extends HashMap{
-    public FreemarkerVariables(){
-        super();
-        this.put(&amp;quot;resourceVersion&amp;quot;,&amp;quot;&amp;quot;+System.currentTimeMillis());
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;freemarker配置&#34;&gt;Freemarker配置&lt;/h3&gt;
-
-&lt;p&gt;使用了FreemarkerVariables&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;lt;bean id=&amp;quot;freemarkerVariables&amp;quot; class=&amp;quot;xxx.FreemarkerVariables&amp;quot;/&amp;gt;
-	&amp;lt;bean id=&amp;quot;freemarkerConfig&amp;quot; class=&amp;quot;org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer&amp;quot;&amp;gt;
-		&amp;lt;property name=&amp;quot;templateLoaderPath&amp;quot; value=&amp;quot;/WEB-INF/views/&amp;quot;/&amp;gt;
-		&amp;lt;property name=&amp;quot;freemarkerSettings&amp;quot;&amp;gt;
-			&amp;lt;props&amp;gt;
-				&amp;lt;prop key=&amp;quot;defaultEncoding&amp;quot;&amp;gt;UTF-8&amp;lt;/prop&amp;gt;
-			&amp;lt;/props&amp;gt;
-		&amp;lt;/property&amp;gt;
-		&amp;lt;property name=&amp;quot;freemarkerVariables&amp;quot; ref=&amp;quot;freemarkerVariables&amp;quot;/&amp;gt;
-	&amp;lt;/bean&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;批量替换&#34;&gt;批量替换&lt;/h3&gt;
-
-&lt;p&gt;做之前搜索了下，N多人都是写一个小工具。感谢现代IDE，直接替换就可以了。把所有的 &lt;code&gt;js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;&lt;/code&gt; 替换成&lt;code&gt;js?v=${resourceVersion}&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;&lt;/code&gt;即可，注意不要使用正则。&lt;/p&gt;
-
-&lt;h2 id=&#34;验证&#34;&gt;验证&lt;/h2&gt;
-
-&lt;p&gt;开发者的Chrome一般都是&lt;code&gt;Disable Cache&lt;/code&gt;的，这时候Header里面会有&lt;code&gt;no-cache&lt;/code&gt;，否则，应该可以看到&lt;code&gt;Status Code:304 Not Modified (from memory cache)&lt;/code&gt;之类的东西。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Idea在Ubuntu下面的使用</title>
-      <link>https://lawulu.github.io/post/Idea%E5%9C%A8Ubuntu%E4%B8%8B%E9%9D%A2%E7%9A%84%E4%BD%BF%E7%94%A8/</link>
-      <pubDate>Wed, 07 May 2014 00:00:00 +0000</pubDate>
-      
-      <guid>https://lawulu.github.io/post/Idea%E5%9C%A8Ubuntu%E4%B8%8B%E9%9D%A2%E7%9A%84%E4%BD%BF%E7%94%A8/</guid>
-      <description>
-
-&lt;h2 id=&#34;快捷键&#34;&gt;快捷键&lt;/h2&gt;
-
-&lt;h3 id=&#34;快捷键设定&#34;&gt;快捷键设定&lt;/h3&gt;
-
-&lt;p&gt;之前试图采用过Eclipse的快捷键,但是赶紧两种IDE的哲学相差还是比较大的,决定直接采用Idea默认的快捷键,然后再按习惯修改,例如Debug时候的F5F6之类.
-一开始用Gnome方案,因为Unbutu下系统快捷键跟Idea冲突比较多,但是按键实在是别扭,例如Eclipse里面的Alt+Left/Right
-在Default方案是Ctrl+Alt+Left/Right.这个和Unbuntu的切换Workspace冲突,Gnome方案是Shift+Alt+Left/Right,按起来好别扭..
-最后打算还是使用Default方案,直接在Keyboard里面把这几个快捷键给禁用了.
-还有一些输入法快捷键,我感觉其实只留Shift和ctrl+,就够了.Ctrl+Space,Ctrl+Alt+B(小语种软键盘)都要统统干掉.
-更换的快捷键:
-Alt+Left/Right和Ctrol+Alt+Left/Right互换. 一般打开Tab页比较多
-Ctrl+W 关闭 比Ctrl+F4好按一些
-Ctrl+D Duplication复制的机会比较少&lt;/p&gt;
-
-&lt;h3 id=&#34;一些常用快捷键&#34;&gt;一些常用快捷键&lt;/h3&gt;
-
-&lt;p&gt;Ctrl+alt+v
-单词跳 ctrl+left/right&lt;/p&gt;
-
-&lt;p&gt;ctrl+F12 outline
-Alt+insert 生成getter,setter
-修改了快捷键,Ctrl+shift+i
-列模式: alt+shift+insert&lt;/p&gt;
-
-&lt;h3 id=&#34;几个trick&#34;&gt;几个trick&lt;/h3&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;不输入参数,移动光标到行尾.ctrl+shift+enter&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;用惯了Eclipse快捷键的人可能会不习惯，sysout、foreach等快捷方式找不到了，main方法也无法自动补全了，其实这个在IntelliJ中有一个异常强大的模块Live Template来实现。
-例如，在class中尝试psvm+tab，则会发现main方法产生了；输入iter+tab，则生成了foreach语句。 live template还有一个surround的用法，选中某个变量，键入ctl+alt+j两次，则会出现自动补全的菜单。&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;建类的时候输入包名
-service.NewClass&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Mybatis:
-Could not autowire. No beans of &amp;lsquo;ApplicationMapper&amp;rsquo; type found. less&amp;hellip; (Ctrl+F1) Checks autowiring problems in a bean class.
-要装Mybatis插件或者将这个功能禁用掉
-&lt;a href=&#34;http://stackoverflow.com/questions/25379348/idea-inspects-batis-mapper-bean-wrong&#34;&gt;http://stackoverflow.com/questions/25379348/idea-inspects-batis-mapper-bean-wrong&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2 id=&#34;idea的缺陷&#34;&gt;Idea的缺陷：&lt;/h2&gt;
-
-&lt;p&gt;1 多线程Debug起来太渣，经常会断点不起作用&lt;/p&gt;
-
-&lt;p&gt;2 provided的不在classPath，例如，想在Idea下运行Hadoop，因为子项目比较多，N多Provided其他子项目的依赖&lt;/p&gt;
-
-&lt;p&gt;3 Test和Main不分&lt;/p&gt;
 </description>
     </item>
     

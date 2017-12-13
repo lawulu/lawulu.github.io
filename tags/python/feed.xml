@@ -18,7 +18,7 @@
 
 &lt;h2 id=&#34;缘起&#34;&gt;缘起&lt;/h2&gt;
 
-&lt;p&gt;公司运营的很大一个成本就是CDN耗费。对比Impression和Click&lt;/p&gt;
+&lt;p&gt;公司运营的很大一个成本就是CDN耗费。对比Impression和CDN消耗量就会很奇怪，不该有这么多的CDN消耗的。&lt;/p&gt;
 
 &lt;h2 id=&#34;数据分析&#34;&gt;数据分析&lt;/h2&gt;
 
@@ -118,6 +118,99 @@ select sum(rsp_size) from  cdn_log
 CURL  -i -X HEAD &#39;https://streaming.lawulu.com/default/256b9db1-a1ce-4983-8906-4568fa7a9c75-144.mp4&#39;
 &lt;/code&gt;&lt;/li&gt;
 &lt;/ol&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>广协的IP库到底准不住</title>
+      <link>https://lawulu.github.io/post/%E5%B9%BF%E5%8D%8F%E7%9A%84IP%E5%BA%93%E5%88%B0%E5%BA%95%E5%87%86%E4%B8%8D%E4%BD%8F/</link>
+      <pubDate>Sat, 25 Feb 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://lawulu.github.io/post/%E5%B9%BF%E5%8D%8F%E7%9A%84IP%E5%BA%93%E5%88%B0%E5%BA%95%E5%87%86%E4%B8%8D%E4%BD%8F/</guid>
+      <description>
+
+&lt;h2 id=&#34;缘起&#34;&gt;缘起&lt;/h2&gt;
+
+&lt;p&gt;对于CPM广告，地域定向是非常重要的。广告协会提供了ip库，方便AdNetwork和第三方监控做地域定向。百度默认以ip138做为其&amp;rdquo;IP&amp;rdquo;关键字的第一个入口，我相信ip138的库是比较准的，那广协的IP库和ip138的库差别大吗？&lt;/p&gt;
+
+&lt;h2 id=&#34;数据分析&#34;&gt;数据分析&lt;/h2&gt;
+
+&lt;h3 id=&#34;随机从线上提取10000个ip-并使用广协库解析成对应城市&#34;&gt;随机从线上提取10000个ip，并使用广协库解析成对应城市&lt;/h3&gt;
+
+&lt;p&gt;从某个时段原始Nginx日志中的ip(300W+)随机取10000条
+使用pandas&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;csv = pd.read_csv(&#39;/tmp/ip.log&#39;)
+np.savetxt(&#39;/tmp/ipSample.log&#39;,csv.sample(10000).values,fmt=&#39;%s&#39;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;根据ip获取ip138对应的城市&#34;&gt;根据ip获取ip138对应的城市&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;reload(sys)
+sys.setdefaultencoding(&#39;utf-8&#39;)
+
+# get data from web
+def get_data(query):
+    url = &amp;quot;http://m.ip138.com/ip.asp?ip=&amp;quot; + query
+    res = requests.get(url)
+    print &#39;get data for &#39;+ query +&#39; result:&#39; + str(res.status_code)
+    if(res.status_code != 200):
+        return &#39;Failed Response&#39;
+    else:
+        return parse_html(res.content)
+
+def parse_html(html):
+    res = BeautifulSoup(html,&amp;quot;html.parser&amp;quot;).find_all(&amp;quot;p&amp;quot;, &amp;quot;result&amp;quot;)
+    result =split(res[0])
+    if len(res)&amp;gt;1:
+        result=result+&amp;quot;,&amp;quot;+ split(res[1])
+    return result
+
+def split(str):
+    try:
+        splits=str.string.encode(&amp;quot;utf-8&amp;quot;).split(&#39;：&#39;)
+        return splits[1]
+    except RuntimeError:
+        return &#39;Split Error:&#39;+str
+
+with open(&#39;/tmp/ipSample.log&#39;) as source:
+    with open(&#39;ip138Result.csv&#39;,&#39;aw&#39;) as result:
+        for line in source:
+            ip = line.strip(&#39;\n&#39;)
+            ipStr=get_data(ip)
+            time.sleep(0.1)
+            result.write(ip+&#39;|&#39;+ipStr+&#39;\n&#39;)
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;取全国60强城市-统计两个结果的差距&#34;&gt;取全国60强城市，统计两个结果的差距&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.mnw.cn/news/china/886245.html&#34;&gt;http://www.mnw.cn/news/china/886245.html&lt;/a&gt; 60强城市&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;citys=[&#39;上海&#39;,&#39;北京&#39;,&#39;广州&#39;,&#39;深圳&#39;,&#39;成都&#39;,&#39;重庆&#39;,&#39;杭州&#39;,&#39;南京&#39;,&#39;沈阳&#39;,&#39;苏州&#39;,&#39;天津&#39;,&#39;武汉&#39;,&#39;西安&#39;,&#39;长沙&#39;,&#39;大连&#39;,&#39;济南&#39;,&#39;宁波&#39;,&#39;青岛&#39;,&#39;无锡&#39;,&#39;厦门&#39;,&#39;郑州&#39;,&#39;长春&#39;,&#39;常州&#39;,&#39;哈尔滨&#39;,&#39;福州&#39;,&#39;昆明&#39;,&#39;合肥&#39;,&#39;东莞&#39;,&#39;石家庄&#39;,&#39;呼和浩特&#39;,&#39;南昌&#39;,&#39;温州&#39;,&#39;佛山&#39;,&#39;贵阳&#39;,&#39;南宁&#39;,&#39;海口&#39;,&#39;湖州&#39;,&#39;唐山&#39;,&#39;临沂&#39;,&#39;嘉兴&#39;,&#39;绍兴&#39;,&#39;南通&#39;,&#39;徐州&#39;,&#39;泉州&#39;,&#39;太原&#39;,&#39;烟台&#39;,&#39;乌鲁木齐&#39;,&#39;潍坊&#39;,&#39;珠海&#39;,&#39;洛阳&#39;,&#39;中山&#39;,&#39;兰州&#39;,&#39;金华&#39;,&#39;淮安&#39;,&#39;吉林&#39;,&#39;威海&#39;,&#39;淄博&#39;,&#39;银川&#39;,&#39;扬州&#39;,&#39;芜湖&#39;,&#39;盐城&#39;,&#39;宜昌&#39;,&#39;西宁&#39;,&#39;襄阳&#39;,&#39;绵阳&#39;]
+files =[&amp;quot;ip138Result.csv&amp;quot;,&amp;quot;ipResultV2.log&amp;quot;]
+import subprocess, datetime, sys
+def checkNums(file,city):
+    p = subprocess.Popen(&amp;quot;&amp;quot;&amp;quot; cat &amp;quot;&amp;quot;&amp;quot; + file + &amp;quot;&amp;quot;&amp;quot;| grep &amp;quot;&amp;quot;&amp;quot;+ city +&amp;quot;&amp;quot;&amp;quot;  |wc -l &amp;quot;&amp;quot;&amp;quot;, shell=True, stdout=subprocess.PIPE );
+    p.wait()
+    out = p.stdout.readlines()[0]
+    return str(out).strip()
+
+for city in citys:
+    result = city + &amp;quot;\t&amp;quot;
+    for file in files:
+        result = result +checkNums(file,city)+ &amp;quot;\t&amp;quot;
+    print  result
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;结论&#34;&gt;结论&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;北京相差比较大，系统库比Ip138库多出一倍&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;其他城市 上海 深圳 南京 苏州 大连 宁波等也相差在20%以上。
+可以说跟IP138差别还是比较大的。&lt;/p&gt;
+
+&lt;p&gt;但是三线城市比较准。&lt;/p&gt;
 </description>
     </item>
     

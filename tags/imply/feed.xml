@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>璐濒殉漂流记</title>
+    <link>https://lawulu.github.io/tags/imply/feed/index.xml</link>
+    <description>Recent content on 璐濒殉漂流记</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <atom:link href="https://lawulu.github.io/tags/imply/feed/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Imply和Confluent破解</title>
+      <link>https://lawulu.github.io/post/Imply%E5%92%8CConfluent%E7%A0%B4%E8%A7%A3/</link>
+      <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://lawulu.github.io/post/Imply%E5%92%8CConfluent%E7%A0%B4%E8%A7%A3/</guid>
+      <description>
+
+&lt;p&gt;其实这两个软件还是比较容易破解的，首先开发者并没有把精力放到反破解上面，相关功能做的很简单。第二没有服务器交互的反破解还是很难的，即时是有服务器交互(例如Idea)，也有人搞出各种License Server出来&lt;/p&gt;
+
+&lt;h2 id=&#34;imply-pivot&#34;&gt;Imply Pivot&lt;/h2&gt;
+
+&lt;p&gt;搜索&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;grep -ri &#39;Pivot evaluation license expired&#39; .
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;发现有个文件&lt;code&gt;./node_modules/@implydata/im-auth/build/server/utils/license-manager/license-manager.js&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;里面有这个逻辑：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;        var e = path.join(this.varDir, &amp;quot;.pivot-first-run&amp;quot;);
+        return Q(fs.readFile(e, {encoding: &amp;quot;utf-8&amp;quot;})).then(function (e) {
+            var r = new Date(e.trim());
+            if (isNaN(r)) throw new Error(&amp;quot;invalid date&amp;quot;);
+            return {created: false, firstRun: r}
+        }).catch(function (r) {
+            var t = new Date;
+            return Q(fs.writeFile(e, t.toISOString())).then(function () {
+                return {created: true, firstRun: t}
+            })
+        })
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;找到文件&lt;code&gt;find . -name &amp;quot;.imply-first-run&amp;quot;&lt;/code&gt;
+把里面日期改一下就行了&lt;/p&gt;
+
+&lt;h2 id=&#34;confluent&#34;&gt;Confluent&lt;/h2&gt;
+
+&lt;p&gt;坑一：一开始搞反了..一直没报错 还以为没生效&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;jar uf /service/app/confluent-4.0.0/share/java/confluent-control-center/control-center-4.0.0.jar io/confluent/controlcenter/license/LicenseModule.class
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;坑二：zsh ll不显示隐藏文件，习惯把ll = ls-al 而不是ls -ah&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; return License.baseClaims(&amp;quot;demo&amp;quot;, bfa.creationTime().toMillis() + TimeUnit.DAYS.toMillis(30L), true);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;所以其实修改该文件的createTime就行了..&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -2,17 +2,17 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>一次Ajax上传文件的调试过程 - 璐濒殉漂流记</title>
+  <title>CDN流量日志简单分析 - 璐濒殉漂流记</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
   
-  <meta name="description" content="很久不做Web了,帮一小弟解决的一个问题.发现新人解决问题都是在Search and Try,据他说无脑搜了很久,但是不会利用Chrome,也不会分">
+  <meta name="description" content="缘起 公司运营的很大一个成本就是CDN耗费。对比Impression和Click 数据分析 下载并处理CDN原始日志 由于官方提供的合并下载日志工具">
   <meta name="author" content="Lawulu">
-  <meta itemprop="name" content="一次Ajax上传文件的调试过程 - 璐濒殉漂流记">
-  <meta itemprop="description" content="很久不做Web了,帮一小弟解决的一个问题.发现新人解决问题都是在Search and Try,据他说无脑搜了很久,但是不会利用Chrome,也不会分">
+  <meta itemprop="name" content="CDN流量日志简单分析 - 璐濒殉漂流记">
+  <meta itemprop="description" content="缘起 公司运营的很大一个成本就是CDN耗费。对比Impression和Click 数据分析 下载并处理CDN原始日志 由于官方提供的合并下载日志工具">
   <meta itemprop="image" content="https://lawulu.github.io/img/author.jpg">
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@inza9hi" />
-  <meta name="twitter:title" content="一次Ajax上传文件的调试过程 - 璐濒殉漂流记" />
+  <meta name="twitter:title" content="CDN流量日志简单分析 - 璐濒殉漂流记" />
   
   <meta name="twitter:description" content="">
   
@@ -63,7 +63,7 @@
 	<article itemprop="articleBody">
     <header class="article-info clearfix">
   <h1 itemprop="name">
-      <a href="https://lawulu.github.io/post/%E4%B8%80%E6%AC%A1Ajax%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E8%B0%83%E8%AF%95%E8%BF%87%E7%A8%8B/" title="一次Ajax上传文件的调试过程" itemprop="url">一次Ajax上传文件的调试过程</a>
+      <a href="https://lawulu.github.io/post/CDN%E6%B5%81%E9%87%8F%E6%97%A5%E5%BF%97%E7%AE%80%E5%8D%95%E5%88%86%E6%9E%90/" title="CDN流量日志简单分析" itemprop="url">CDN流量日志简单分析</a>
   </h1>
   <p class="article-author">By
     
@@ -71,7 +71,7 @@
     
   </p>
   <p class="article-time">
-    <time datetime="2015-12-19 00:00:00 &#43;0000 UTC" itemprop="datePublished">2015年12月19日</time>
+    <time datetime="2017-03-04 00:00:00 &#43;0000 UTC" itemprop="datePublished">2017年03月04日</time>
   </p>
 </header>
 
@@ -83,22 +83,16 @@
 <ul>
 <li>
 <ul>
-<li><a href="#现象和代码">现象和代码</a>
+<li>
 <ul>
-<li><a href="#js端">Js端</a></li>
-<li><a href="#server端">Server端</a></li>
+<li><a href="#缘起">缘起</a></li>
+<li><a href="#数据分析">数据分析</a>
+<ul>
+<li><a href="#下载并处理cdn原始日志">下载并处理CDN原始日志</a></li>
+<li><a href="#用sql分析">用Sql分析</a></li>
 </ul></li>
-<li><a href="#server端的问题">Server端的问题？</a>
-<ul>
-<li><a href="#去js端">去Js端</a></li>
 <li><a href="#结论">结论</a></li>
-</ul></li>
-<li><a href="#chrome的一些调试技巧">Chrome的一些调试技巧</a>
-<ul>
-<li><a href="#如何找到对应的元素触发的function">如何找到对应的元素触发的function？</a></li>
-<li><a href="#缓存相关">缓存相关</a></li>
-<li><a href="#console">console</a></li>
-<li><a href="#setting里面可以对console-log加上timestamp">Setting里面可以对console.log加上Timestamp</a></li>
+<li><a href="#校验">校验</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -107,137 +101,108 @@
     
     
 
-<p>很久不做Web了,帮一小弟解决的一个问题.发现新人解决问题都是在Search and Try,据他说无脑搜了很久,但是不会利用Chrome,也不会分析问题.</p>
+<h3 id="缘起">缘起</h3>
 
-<h2 id="现象和代码">现象和代码</h2>
+<p>公司运营的很大一个成本就是CDN耗费。对比Impression和Click</p>
 
-<h3 id="js端">Js端</h3>
+<h3 id="数据分析">数据分析</h3>
 
-<p>使用的FormData</p>
+<h4 id="下载并处理cdn原始日志">下载并处理CDN原始日志</h4>
 
-<pre><code>var formData = new FormData();
-    var actionUrl = &quot;/report/agentUpload&quot;;
-    var form = new FormData();
-    form.append(&quot;file&quot;, $(&quot;#reportFile&quot; )[0]);
+<ol>
+<li>由于官方提供的合并下载日志工具在Mac下不能用，随机选取一个小时的日志：</li>
+</ol>
 
-    var xhr = new XMLHttpRequest();
-    xhr.open(&quot;post&quot;, actionUrl, true);
-    xhr.onload = function () {
-         alert(&quot;上传完成!&quot;);
-    };
+<pre><code>wget https://cdnlog.cn-hangzhou.oss.aliyun-inc.com/streaming.lawulu.com/2017_03_04/streaming.lawulu.com_2017_03_04_1200_1300.gz?spm=5176.8232200.log.d10.83JI60&amp;OSSAccessKeyId=xxxxx&amp;
+</code></pre>
+
+<ol>
+<li>Python处理分析为CSV</li>
+</ol>
+
+<pre><code>pat = ( r'\[(.+)\]\s' #datetime
+           '(\d+.\d+.\d+.\d+)\s' #IP address
+           '-\s' #proxy ip
+            '\d+\s' #responseTime
+           '&quot;.+&quot;\s' #referrer
+           '&quot;(GET\s\S+mp4)&quot;\s'  # requested file
+            '\d+\s' #status
+           '\d+\s' #requestSIze
+           '(\d+)\s' #responseSize
+           '\D+\s' #HIT OR NOT
+           '&quot;(.+)&quot;\s' #user agent
+           '&quot;\S+&quot;' #contentType
+        )
+</code></pre>
+
+<p>@see <a href="https://github.com/richardasaurus/nginx-access-log-parser/blob/master/main.py">https://github.com/richardasaurus/nginx-access-log-parser/blob/master/main.py</a></p>
+
+<ol>
+<li>导入数据库</li>
+</ol>
+
+<pre><code>LOAD DATA INFILE 'cdnlogs.csv' 
+INTO TABLE test.cdn_log
+FIELDS TERMINATED BY ',' 
+LINES TERMINATED BY '\n' 
+(date_time,ip,url,rsp_size,ua);
+</code></pre>
+
+<ol>
+<li>数据校验</li>
+</ol>
+
+<pre><code>SELECT count(*)  FROM test.cdn_log 
+'206619'
 
 </code></pre>
 
-<h3 id="server端">Server端</h3>
+<pre><code>cat streaming.lawulu.com_2017_03_04_1200_1300 | wc -l
 
-<pre><code>public String upload(HttpServletRequest request, @RequestParam(value=&quot;file&quot;,required = true) MultipartFile file, ModelMap model)
+206618
 </code></pre>
 
-<p>但是就是取不到,报错：</p>
+<h4 id="用sql分析">用Sql分析</h4>
 
-<pre><code>Required MultipartFile parameter 'file' is not present
-</code></pre>
+<pre><code>
+select count(*), sum(rsp_size) from (
 
-<h2 id="server端的问题">Server端的问题？</h2>
+SELECT ip,ua,url,sum(rsp_size) as rsp_size FROM test.cdn_log group by ip,ua,url having count(*) =1 )a
 
-<p>是否发到了Server？</p>
 
-<p>看Chrome Network面板里面这次请求的Request：</p>
+'110643','598635187514'
 
-<pre><code>------WebKitFormBoundaryNLPhxKE21THaBaN1
-Content-Disposition: form-data; name=&quot;file&quot;
 
-[object HTMLInputElement]
+select count(*), sum(rsp_size) from (
 
-</code></pre>
+SELECT ip,ua,url,sum(rsp_size) as rsp_size FROM test.cdn_log group by ip,ua,url having count(*) &gt;1 )a
 
-<p>貌似是正确的,在Server端确认一下,将参数加上required=false
-查看request:</p>
 
-<pre><code>multipartParameters = {HashMap@8882}  size = 1
-multipartParameterContentTypes = {HashMap@8883}  size = 1
-multipartFiles = {LinkedMultiValueMap@8884}  size = 0
-</code></pre>
+'32670', '440010318426'
 
-<p>Request里面有东西,但是multipartFiles没有东西……</p>
+0.4236
+select 440010318426/(598635187514+440010318426) from dual 
 
-<p><em>其实这时候应该已经看出问题了,因为那个值是一个String,但是没注意,自己盲目以为只要带multipartParameters就是文件</em></p>
+select sum(rsp_size) from  cdn_log
 
-<p>debug到CommonsMultipartResolver的resolveMultipart方法,里面有这段判断</p>
-
-<pre><code>protected MultipartParsingResult parseFileItems(List&lt;FileItem&gt; fileItems, String encoding) {
-		MultiValueMap&lt;String, MultipartFile&gt; multipartFiles = new LinkedMultiValueMap&lt;String, MultipartFile&gt;();
-		Map&lt;String, String[]&gt; multipartParameters = new HashMap&lt;String, String[]&gt;();
-		Map&lt;String, String&gt; multipartParameterContentTypes = new HashMap&lt;String, String&gt;();
-
-		// Extract multipart files and multipart parameters.
-		for (FileItem fileItem : fileItems) {
-			if (fileItem.isFormField()) {
-</code></pre>
-
-<p>如果是false…就往MultipartFile里面填值.
-难道是Content-type的问题？</p>
-
-<h3 id="去js端">去Js端</h3>
-
-<p>先找到如何打印Formdata的：
-<a href="http://stackoverflow.com/questions/17066875/how-to-inspect-formdata">http://stackoverflow.com/questions/17066875/how-to-inspect-formdata</a></p>
-
-<pre><code>for (var pair of formData.entries()) {
-    console.log(pair[0]+ ', ' + pair[1]); 
-}
-</code></pre>
-
-<p>打印的东西是：</p>
-
-<pre><code>file, [object HTMLInputElement]
-
-</code></pre>
-
-<p>决定采用原始的document.getElementById(&ldquo;reportFile&rdquo;).files[]</p>
-
-<pre><code>lastModifiedDate: Tue Dec 20 2015 10:39:39 GMT+0800 (CST)name: &quot;工作簿1.xlsx&quot;size: 23168type: &quot;application/vnd.openxmlformats-officedocument.spreadsheetml.sheet&quot;webkitRelativePath: &quot;&quot;__proto__: File
-
-</code></pre>
-
-<p>最终发现问题：
-应该用</p>
-
-<pre><code> $(&quot;#reportFile&quot; )[0].files[0]
+1038645505940
 
 </code></pre>
 
 <h3 id="结论">结论</h3>
 
-<ul>
-<li><strong>盲目的去搜索其实非常浪费时间</strong></li>
-<li>要善用Chrome Console</li>
-</ul>
+<p>由于IP,UA,URL可以唯一确定一次UV，我们公司有30%的用户占用了40%的流量，对同一个视频会不停的反复下载。
+最后查明，是SDK的bug，正在下载视频时候，如果切换到后台，下载会直接停止。所以会反复下载视频，浪费流量。</p>
 
-<h2 id="chrome的一些调试技巧">Chrome的一些调试技巧</h2>
-
-<h3 id="如何找到对应的元素触发的function">如何找到对应的元素触发的function？</h3>
-
-<p>可以在EventListerner里面把Click当做断点，也可以点击某个元素，找到对应监听的EventListener,或者对某一个片dom点击<code>Break on subtree modification</code></p>
-
-<h3 id="缓存相关">缓存相关</h3>
+<h3 id="校验">校验</h3>
 
 <ol>
-<li>强制刷新 cmd+shift+r</li>
-
-<li><p>可以在设置中禁止缓存</p>
-
-<h3 id="console">console</h3>
-
-<p>在某个页面，可以在console页面随时调试,甚至可以执行函数：</p></li>
+<li>计算ResponseSize之后和Console里面同一时间段的</li>
+<li>
+<code>
+CURL  -i -X HEAD 'https://streaming.lawulu.com/default/256b9db1-a1ce-4983-8906-4568fa7a9c75-144.mp4'
+</code></li>
 </ol>
-
-<pre><code>$('.choose_endcard').click()
-</code></pre>
-
-<p>But,为什么Xpath选择的不能调用Click…</p>
-
-<h3 id="setting里面可以对console-log加上timestamp">Setting里面可以对console.log加上Timestamp</h3>
 
 	</div>
   <footer class="article-footer clearfix">
@@ -246,9 +211,9 @@ multipartFiles = {LinkedMultiValueMap@8884}  size = 0
 <div class="article-tags">
   <span></span>
   
-  <a href="https://lawulu.github.io/tags/js">js</a>
+  <a href="https://lawulu.github.io/tags/cdn">cdn</a>
   
-  <a href="https://lawulu.github.io/tags/chrome">chrome</a>
+  <a href="https://lawulu.github.io/tags/python">python</a>
   
 </div>
 
@@ -259,14 +224,14 @@ multipartFiles = {LinkedMultiValueMap@8884}  size = 0
 <div class="article-categories">
   <span></span>
   
-  <a class="article-category-link" href="https://lawulu.github.io/categories/%E7%88%86%E6%A0%88%E5%9F%BA%E7%BA%BF%E5%99%A8">爆栈&amp;基线器</a>
+  <a class="article-category-link" href="https://lawulu.github.io/categories/%E4%BF%83%E8%BF%9B%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%8F%91%E5%B1%95%E8%A1%8C%E5%8A%A8%E7%BA%B2%E8%A6%81">促进大数据发展行动纲要</a>
   
 </div>
 
 
 
   <div class="article-share" id="share">
-    <div data-url="https://lawulu.github.io/post/%E4%B8%80%E6%AC%A1Ajax%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E8%B0%83%E8%AF%95%E8%BF%87%E7%A8%8B/" data-title="一次Ajax上传文件的调试过程" data-tsina="" class="share clearfix">
+    <div data-url="https://lawulu.github.io/post/CDN%E6%B5%81%E9%87%8F%E6%97%A5%E5%BF%97%E7%AE%80%E5%8D%95%E5%88%86%E6%9E%90/" data-title="CDN流量日志简单分析" data-tsina="" class="share clearfix">
     </div>
   </div>
 </footer>
@@ -274,8 +239,8 @@ multipartFiles = {LinkedMultiValueMap@8884}  size = 0
 	</article>
   
 <section class="comment">
-  <div class="ds-thread" data-thread-key="https://lawulu.github.io/post/%E4%B8%80%E6%AC%A1Ajax%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E8%B0%83%E8%AF%95%E8%BF%87%E7%A8%8B/"
-   data-title="一次Ajax上传文件的调试过程" data-url="https://lawulu.github.io/post/%E4%B8%80%E6%AC%A1Ajax%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E8%B0%83%E8%AF%95%E8%BF%87%E7%A8%8B/"></div>
+  <div class="ds-thread" data-thread-key="https://lawulu.github.io/post/CDN%E6%B5%81%E9%87%8F%E6%97%A5%E5%BF%97%E7%AE%80%E5%8D%95%E5%88%86%E6%9E%90/"
+   data-title="CDN流量日志简单分析" data-url="https://lawulu.github.io/post/CDN%E6%B5%81%E9%87%8F%E6%97%A5%E5%BF%97%E7%AE%80%E5%8D%95%E5%88%86%E6%9E%90/"></div>
 </section>
 <script type="text/javascript">
 var duoshuoQuery = {short_name:"inza9hi"};

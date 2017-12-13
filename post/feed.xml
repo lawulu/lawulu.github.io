@@ -6,52 +6,119 @@
     <description>Recent content in Post-rsses on 璐濒殉漂流记</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Thu, 01 Dec 2016 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 04 Mar 2017 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://lawulu.github.io/post/feed/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
-      <title>Tracking以及FuseClick的一些胡言乱语</title>
-      <link>https://lawulu.github.io/post/Tracking%E4%BB%A5%E5%8F%8AFuseClick%E7%9A%84%E4%B8%80%E4%BA%9B%E8%83%A1%E8%A8%80%E4%B9%B1%E8%AF%AD/</link>
-      <pubDate>Thu, 01 Dec 2016 00:00:00 +0000</pubDate>
+      <title>CDN流量日志简单分析</title>
+      <link>https://lawulu.github.io/post/CDN%E6%B5%81%E9%87%8F%E6%97%A5%E5%BF%97%E7%AE%80%E5%8D%95%E5%88%86%E6%9E%90/</link>
+      <pubDate>Sat, 04 Mar 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://lawulu.github.io/post/Tracking%E4%BB%A5%E5%8F%8AFuseClick%E7%9A%84%E4%B8%80%E4%BA%9B%E8%83%A1%E8%A8%80%E4%B9%B1%E8%AF%AD/</guid>
+      <guid>https://lawulu.github.io/post/CDN%E6%B5%81%E9%87%8F%E6%97%A5%E5%BF%97%E7%AE%80%E5%8D%95%E5%88%86%E6%9E%90/</guid>
       <description>
 
-&lt;p&gt;&lt;em&gt;&lt;strong&gt;广告新人的一些感慨&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;h3 id=&#34;缘起&#34;&gt;缘起&lt;/h3&gt;
 
-&lt;h2 id=&#34;fuseclick要解决的痛点&#34;&gt;FuseClick要解决的痛点&lt;/h2&gt;
+&lt;p&gt;公司运营的很大一个成本就是CDN耗费。对比Impression和Click&lt;/p&gt;
 
-&lt;p&gt;在移动互联网烧钱大潮中，（传统来说）有流量变现能力只有广告了。当每一次点击都与钱相关时候，机会和随机会而来的混乱就出现了。对于移动强CPA广告来说，最大的痛点就是转化的核算和归因。各种第三方平台（友盟，TalkingData，热云……），各种不同的规范……，FuseClick就是对标Affiliate，成立的一家Tracking平台，帮助AdNetwork来统一追踪。更有野心的是，他家还要帮忙做优化。类似想统一混乱的公司还有Appcoach,mediation。。回头写一下。&lt;/p&gt;
+&lt;h3 id=&#34;数据分析&#34;&gt;数据分析&lt;/h3&gt;
 
-&lt;h2 id=&#34;tracking流程&#34;&gt;Tracking流程&lt;/h2&gt;
-
-&lt;h3 id=&#34;传统tracking&#34;&gt;传统Tracking&lt;/h3&gt;
-
-&lt;p&gt;对AdNetwork来说，由于无法知道是否安装完成，所以要通过第三方的平台来完成计费。所以，Tracking一般分为Click上报和Install的Postback。即当用户要下载一个App时候，AdNetwork马上告诉广告主（或者代表广告主的检测平台），快看，我这有个用户点击了，他要安装了！！然后就开始默默的等待..广告主收到一个安装，就会根据安装时候的信息反过来去找是谁上报的，一般会根据设备的信息（混乱之源之一)来匹配。所以上报时候一定要把设备信息给带上。上报分302让客户端上报和S2S对接两种，按下不表。&lt;/p&gt;
-
-&lt;h3 id=&#34;宏替换&#34;&gt;宏替换&lt;/h3&gt;
-
-&lt;p&gt;由于AdNetwork要对接的第三方平台太多，而各家Tracking时候需要的参数是不一样的。（为什么没有一个广告协会之类规范一下？！），所以就会有宏替换这么一个奇特而又奇妙的东西。举一个例子：&lt;/p&gt;
-
-&lt;p&gt;假如，大家需要一个参数DeviceId，A家需要的上报是&lt;a href=&#34;http://a.com/tracking?did=XX,而B家需要的上报是http://b.com/tracking?device=XX，这时候客户需要让AdNetwork知道应该怎么上报，AdNetwork提供一批可供替换的变量，让客户自己填。例如DeviceId的变量是shebeihao，那么上面两家分别填写：http://a.com/tracking?did={shebeihao}，和http://a.com/tracking?device={shebeihao}，等上报时候，将这些信息都替换正确。&#34;&gt;http://a.com/tracking?did=XX,而B家需要的上报是http://b.com/tracking?device=XX，这时候客户需要让AdNetwork知道应该怎么上报，AdNetwork提供一批可供替换的变量，让客户自己填。例如DeviceId的变量是shebeihao，那么上面两家分别填写：http://a.com/tracking?did={shebeihao}，和http://a.com/tracking?device={shebeihao}，等上报时候，将这些信息都替换正确。&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;渠道包&#34;&gt;渠道包&lt;/h3&gt;
-
-&lt;p&gt;因为（国内）Android并没有一个强势如AppStore的（混乱之源之一）应用商店，所以就会有渠道包这种东西。&lt;/p&gt;
-
-&lt;h2 id=&#34;fuseclick的做法&#34;&gt;Fuseclick的做法&lt;/h2&gt;
+&lt;h4 id=&#34;下载并处理cdn原始日志&#34;&gt;下载并处理CDN原始日志&lt;/h4&gt;
 
 &lt;ol&gt;
-&lt;li&gt;为每一个AdNetwork建立一个Tracking Link，在Dashboard中配置对应的宏和Postback Url。&lt;/li&gt;
-&lt;li&gt;提供报表做到小时级别的统一，方便了不同时区的用户。&lt;/li&gt;
+&lt;li&gt;由于官方提供的合并下载日志工具在Mac下不能用，随机选取一个小时的日志：&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h2 id=&#34;是不是可以这样&#34;&gt;是不是可以这样？&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;wget https://cdnlog.cn-hangzhou.oss.aliyun-inc.com/streaming.lawulu.com/2017_03_04/streaming.lawulu.com_2017_03_04_1200_1300.gz?spm=5176.8232200.log.d10.83JI60&amp;amp;OSSAccessKeyId=xxxxx&amp;amp;
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;（以下大部分都是猜测）
-不提供设备信息，只关心一个ClickId，然后把ClickId发给广告主，广告主使用渠道包来判断是否是来自于本渠道的激活，有的话就直接回调AdNetwork，当然这个要建立在三方互相信任的阶段。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Python处理分析为CSV&lt;/li&gt;
+&lt;/ol&gt;
 
-&lt;p&gt;FC公众号上面的这篇对广告行业的介绍写的挺好的。&lt;a href=&#34;http://www.wtoutiao.com/p/N56UUz.html&#34;&gt;http://www.wtoutiao.com/p/N56UUz.html&lt;/a&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;pat = ( r&#39;\[(.+)\]\s&#39; #datetime
+           &#39;(\d+.\d+.\d+.\d+)\s&#39; #IP address
+           &#39;-\s&#39; #proxy ip
+            &#39;\d+\s&#39; #responseTime
+           &#39;&amp;quot;.+&amp;quot;\s&#39; #referrer
+           &#39;&amp;quot;(GET\s\S+mp4)&amp;quot;\s&#39;  # requested file
+            &#39;\d+\s&#39; #status
+           &#39;\d+\s&#39; #requestSIze
+           &#39;(\d+)\s&#39; #responseSize
+           &#39;\D+\s&#39; #HIT OR NOT
+           &#39;&amp;quot;(.+)&amp;quot;\s&#39; #user agent
+           &#39;&amp;quot;\S+&amp;quot;&#39; #contentType
+        )
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;@see &lt;a href=&#34;https://github.com/richardasaurus/nginx-access-log-parser/blob/master/main.py&#34;&gt;https://github.com/richardasaurus/nginx-access-log-parser/blob/master/main.py&lt;/a&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;导入数据库&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;pre&gt;&lt;code&gt;LOAD DATA INFILE &#39;cdnlogs.csv&#39; 
+INTO TABLE test.cdn_log
+FIELDS TERMINATED BY &#39;,&#39; 
+LINES TERMINATED BY &#39;\n&#39; 
+(date_time,ip,url,rsp_size,ua);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ol&gt;
+&lt;li&gt;数据校验&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;pre&gt;&lt;code&gt;SELECT count(*)  FROM test.cdn_log 
+&#39;206619&#39;
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;cat streaming.lawulu.com_2017_03_04_1200_1300 | wc -l
+
+206618
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;用sql分析&#34;&gt;用Sql分析&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;
+select count(*), sum(rsp_size) from (
+
+SELECT ip,ua,url,sum(rsp_size) as rsp_size FROM test.cdn_log group by ip,ua,url having count(*) =1 )a
+
+
+&#39;110643&#39;,&#39;598635187514&#39;
+
+
+select count(*), sum(rsp_size) from (
+
+SELECT ip,ua,url,sum(rsp_size) as rsp_size FROM test.cdn_log group by ip,ua,url having count(*) &amp;gt;1 )a
+
+
+&#39;32670&#39;, &#39;440010318426&#39;
+
+0.4236
+select 440010318426/(598635187514+440010318426) from dual 
+
+select sum(rsp_size) from  cdn_log
+
+1038645505940
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;结论&#34;&gt;结论&lt;/h3&gt;
+
+&lt;p&gt;由于IP,UA,URL可以唯一确定一次UV，我们公司有30%的用户占用了40%的流量，对同一个视频会不停的反复下载。
+最后查明，是SDK的bug，正在下载视频时候，如果切换到后台，下载会直接停止。所以会反复下载视频，浪费流量。&lt;/p&gt;
+
+&lt;h3 id=&#34;校验&#34;&gt;校验&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;计算ResponseSize之后和Console里面同一时间段的&lt;/li&gt;
+&lt;li&gt;
+&lt;code&gt;
+CURL  -i -X HEAD &#39;https://streaming.lawulu.com/default/256b9db1-a1ce-4983-8906-4568fa7a9c75-144.mp4&#39;
+&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
 </description>
     </item>
     
@@ -1220,6 +1287,23 @@ Could not autowire. No beans of &amp;lsquo;ApplicationMapper&amp;rsquo; type fou
 &lt;a href=&#34;https://chimpler.wordpress.com/2013/03/20/playing-with-apache-hive-and-solr/&#34;&gt;https://chimpler.wordpress.com/2013/03/20/playing-with-apache-hive-and-solr/&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;Fork之后，做了一些修改：主要是针对Hive0.12和Solr新版本做的一些升级。&lt;a href=&#34;https://github.com/lawulu/hive-solr/&#34;&gt;https://github.com/lawulu/hive-solr/&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://lawulu.github.io/post/%E6%9C%80%E8%BF%91%E6%8B%9B%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%9A%84%E5%87%A0%E4%B8%AA%E6%83%B3%E6%B3%95/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://lawulu.github.io/post/%E6%9C%80%E8%BF%91%E6%8B%9B%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%9A%84%E5%87%A0%E4%B8%AA%E6%83%B3%E6%B3%95/</guid>
+      <description>&lt;p&gt;其实要求很简单：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;会Hive,能用Hive完成基本需求,简单的一个数据Imei去重，行转列&lt;/li&gt;
+&lt;li&gt;有责任心,靠谱,因为要独当一面,能保证数据的完整性和准确性，或者Azkaban等数据&lt;/li&gt;
+&lt;li&gt;能以数据的思维来提供业务，例如CDN流量突然变平了，怎么解释？&lt;/li&gt;
+&lt;li&gt;加分项:日志收集/Spark/机器学习&lt;/li&gt;
+&lt;/ol&gt;
 </description>
     </item>
     

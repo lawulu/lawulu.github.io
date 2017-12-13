@@ -2,17 +2,19 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>一次Ajax上传文件的调试过程 - 璐濒殉漂流记</title>
+  <title> - 璐濒殉漂流记</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
   
-  <meta name="description" content="很久不做Web了,帮一小弟解决的一个问题.发现新人解决问题都是在Search and Try,据他说无脑搜了很久,但是不会利用Chrome,也不会分">
+  <meta name="description" content="其实要求很简单：
+ 会Hive,能用Hive完成基本需求,简单的一个数据Imei去重，行转列 有责任心,靠谱,因为要独当一面,能保证数据的完整性和准确性，或者Azkaban等数据 能以数据的思维来提供业务，例如CDN流量突然变平了，怎么解释？ 加分项:日志收集/Spark/机器学习  ">
   <meta name="author" content="Lawulu">
-  <meta itemprop="name" content="一次Ajax上传文件的调试过程 - 璐濒殉漂流记">
-  <meta itemprop="description" content="很久不做Web了,帮一小弟解决的一个问题.发现新人解决问题都是在Search and Try,据他说无脑搜了很久,但是不会利用Chrome,也不会分">
+  <meta itemprop="name" content=" - 璐濒殉漂流记">
+  <meta itemprop="description" content="其实要求很简单：
+ 会Hive,能用Hive完成基本需求,简单的一个数据Imei去重，行转列 有责任心,靠谱,因为要独当一面,能保证数据的完整性和准确性，或者Azkaban等数据 能以数据的思维来提供业务，例如CDN流量突然变平了，怎么解释？ 加分项:日志收集/Spark/机器学习  ">
   <meta itemprop="image" content="https://lawulu.github.io/img/author.jpg">
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@inza9hi" />
-  <meta name="twitter:title" content="一次Ajax上传文件的调试过程 - 璐濒殉漂流记" />
+  <meta name="twitter:title" content=" - 璐濒殉漂流记" />
   
   <meta name="twitter:description" content="">
   
@@ -63,7 +65,7 @@
 	<article itemprop="articleBody">
     <header class="article-info clearfix">
   <h1 itemprop="name">
-      <a href="https://lawulu.github.io/post/%E4%B8%80%E6%AC%A1Ajax%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E8%B0%83%E8%AF%95%E8%BF%87%E7%A8%8B/" title="一次Ajax上传文件的调试过程" itemprop="url">一次Ajax上传文件的调试过程</a>
+      <a href="https://lawulu.github.io/post/%E6%9C%80%E8%BF%91%E6%8B%9B%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%9A%84%E5%87%A0%E4%B8%AA%E6%83%B3%E6%B3%95/" title="" itemprop="url"></a>
   </h1>
   <p class="article-author">By
     
@@ -71,202 +73,29 @@
     
   </p>
   <p class="article-time">
-    <time datetime="2015-12-19 00:00:00 &#43;0000 UTC" itemprop="datePublished">2015年12月19日</time>
+    <time datetime="0001-01-01 00:00:00 &#43;0000 UTC" itemprop="datePublished">0001年01月01日</time>
   </p>
 </header>
 
 	<div class="article-content">
     
-		<div class="toc-article">
-			<strong class="toc-title">文章目录</strong>
-      <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#现象和代码">现象和代码</a>
-<ul>
-<li><a href="#js端">Js端</a></li>
-<li><a href="#server端">Server端</a></li>
-</ul></li>
-<li><a href="#server端的问题">Server端的问题？</a>
-<ul>
-<li><a href="#去js端">去Js端</a></li>
-<li><a href="#结论">结论</a></li>
-</ul></li>
-<li><a href="#chrome的一些调试技巧">Chrome的一些调试技巧</a>
-<ul>
-<li><a href="#如何找到对应的元素触发的function">如何找到对应的元素触发的function？</a></li>
-<li><a href="#缓存相关">缓存相关</a></li>
-<li><a href="#console">console</a></li>
-<li><a href="#setting里面可以对console-log加上timestamp">Setting里面可以对console.log加上Timestamp</a></li>
-</ul></li>
-</ul></li>
-</ul>
-</nav>
-		</div>
-    
-    
-
-<p>很久不做Web了,帮一小弟解决的一个问题.发现新人解决问题都是在Search and Try,据他说无脑搜了很久,但是不会利用Chrome,也不会分析问题.</p>
-
-<h2 id="现象和代码">现象和代码</h2>
-
-<h3 id="js端">Js端</h3>
-
-<p>使用的FormData</p>
-
-<pre><code>var formData = new FormData();
-    var actionUrl = &quot;/report/agentUpload&quot;;
-    var form = new FormData();
-    form.append(&quot;file&quot;, $(&quot;#reportFile&quot; )[0]);
-
-    var xhr = new XMLHttpRequest();
-    xhr.open(&quot;post&quot;, actionUrl, true);
-    xhr.onload = function () {
-         alert(&quot;上传完成!&quot;);
-    };
-
-</code></pre>
-
-<h3 id="server端">Server端</h3>
-
-<pre><code>public String upload(HttpServletRequest request, @RequestParam(value=&quot;file&quot;,required = true) MultipartFile file, ModelMap model)
-</code></pre>
-
-<p>但是就是取不到,报错：</p>
-
-<pre><code>Required MultipartFile parameter 'file' is not present
-</code></pre>
-
-<h2 id="server端的问题">Server端的问题？</h2>
-
-<p>是否发到了Server？</p>
-
-<p>看Chrome Network面板里面这次请求的Request：</p>
-
-<pre><code>------WebKitFormBoundaryNLPhxKE21THaBaN1
-Content-Disposition: form-data; name=&quot;file&quot;
-
-[object HTMLInputElement]
-
-</code></pre>
-
-<p>貌似是正确的,在Server端确认一下,将参数加上required=false
-查看request:</p>
-
-<pre><code>multipartParameters = {HashMap@8882}  size = 1
-multipartParameterContentTypes = {HashMap@8883}  size = 1
-multipartFiles = {LinkedMultiValueMap@8884}  size = 0
-</code></pre>
-
-<p>Request里面有东西,但是multipartFiles没有东西……</p>
-
-<p><em>其实这时候应该已经看出问题了,因为那个值是一个String,但是没注意,自己盲目以为只要带multipartParameters就是文件</em></p>
-
-<p>debug到CommonsMultipartResolver的resolveMultipart方法,里面有这段判断</p>
-
-<pre><code>protected MultipartParsingResult parseFileItems(List&lt;FileItem&gt; fileItems, String encoding) {
-		MultiValueMap&lt;String, MultipartFile&gt; multipartFiles = new LinkedMultiValueMap&lt;String, MultipartFile&gt;();
-		Map&lt;String, String[]&gt; multipartParameters = new HashMap&lt;String, String[]&gt;();
-		Map&lt;String, String&gt; multipartParameterContentTypes = new HashMap&lt;String, String&gt;();
-
-		// Extract multipart files and multipart parameters.
-		for (FileItem fileItem : fileItems) {
-			if (fileItem.isFormField()) {
-</code></pre>
-
-<p>如果是false…就往MultipartFile里面填值.
-难道是Content-type的问题？</p>
-
-<h3 id="去js端">去Js端</h3>
-
-<p>先找到如何打印Formdata的：
-<a href="http://stackoverflow.com/questions/17066875/how-to-inspect-formdata">http://stackoverflow.com/questions/17066875/how-to-inspect-formdata</a></p>
-
-<pre><code>for (var pair of formData.entries()) {
-    console.log(pair[0]+ ', ' + pair[1]); 
-}
-</code></pre>
-
-<p>打印的东西是：</p>
-
-<pre><code>file, [object HTMLInputElement]
-
-</code></pre>
-
-<p>决定采用原始的document.getElementById(&ldquo;reportFile&rdquo;).files[]</p>
-
-<pre><code>lastModifiedDate: Tue Dec 20 2015 10:39:39 GMT+0800 (CST)name: &quot;工作簿1.xlsx&quot;size: 23168type: &quot;application/vnd.openxmlformats-officedocument.spreadsheetml.sheet&quot;webkitRelativePath: &quot;&quot;__proto__: File
-
-</code></pre>
-
-<p>最终发现问题：
-应该用</p>
-
-<pre><code> $(&quot;#reportFile&quot; )[0].files[0]
-
-</code></pre>
-
-<h3 id="结论">结论</h3>
-
-<ul>
-<li><strong>盲目的去搜索其实非常浪费时间</strong></li>
-<li>要善用Chrome Console</li>
-</ul>
-
-<h2 id="chrome的一些调试技巧">Chrome的一些调试技巧</h2>
-
-<h3 id="如何找到对应的元素触发的function">如何找到对应的元素触发的function？</h3>
-
-<p>可以在EventListerner里面把Click当做断点，也可以点击某个元素，找到对应监听的EventListener,或者对某一个片dom点击<code>Break on subtree modification</code></p>
-
-<h3 id="缓存相关">缓存相关</h3>
+    <p>其实要求很简单：</p>
 
 <ol>
-<li>强制刷新 cmd+shift+r</li>
-
-<li><p>可以在设置中禁止缓存</p>
-
-<h3 id="console">console</h3>
-
-<p>在某个页面，可以在console页面随时调试,甚至可以执行函数：</p></li>
+<li>会Hive,能用Hive完成基本需求,简单的一个数据Imei去重，行转列</li>
+<li>有责任心,靠谱,因为要独当一面,能保证数据的完整性和准确性，或者Azkaban等数据</li>
+<li>能以数据的思维来提供业务，例如CDN流量突然变平了，怎么解释？</li>
+<li>加分项:日志收集/Spark/机器学习</li>
 </ol>
-
-<pre><code>$('.choose_endcard').click()
-</code></pre>
-
-<p>But,为什么Xpath选择的不能调用Click…</p>
-
-<h3 id="setting里面可以对console-log加上timestamp">Setting里面可以对console.log加上Timestamp</h3>
 
 	</div>
   <footer class="article-footer clearfix">
   
 
-<div class="article-tags">
-  <span></span>
-  
-  <a href="https://lawulu.github.io/tags/js">js</a>
-  
-  <a href="https://lawulu.github.io/tags/chrome">chrome</a>
-  
-</div>
-
-
-
-
-
-<div class="article-categories">
-  <span></span>
-  
-  <a class="article-category-link" href="https://lawulu.github.io/categories/%E7%88%86%E6%A0%88%E5%9F%BA%E7%BA%BF%E5%99%A8">爆栈&amp;基线器</a>
-  
-</div>
-
 
 
   <div class="article-share" id="share">
-    <div data-url="https://lawulu.github.io/post/%E4%B8%80%E6%AC%A1Ajax%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E8%B0%83%E8%AF%95%E8%BF%87%E7%A8%8B/" data-title="一次Ajax上传文件的调试过程" data-tsina="" class="share clearfix">
+    <div data-url="https://lawulu.github.io/post/%E6%9C%80%E8%BF%91%E6%8B%9B%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%9A%84%E5%87%A0%E4%B8%AA%E6%83%B3%E6%B3%95/" data-title="" data-tsina="" class="share clearfix">
     </div>
   </div>
 </footer>
@@ -274,8 +103,8 @@ multipartFiles = {LinkedMultiValueMap@8884}  size = 0
 	</article>
   
 <section class="comment">
-  <div class="ds-thread" data-thread-key="https://lawulu.github.io/post/%E4%B8%80%E6%AC%A1Ajax%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E8%B0%83%E8%AF%95%E8%BF%87%E7%A8%8B/"
-   data-title="一次Ajax上传文件的调试过程" data-url="https://lawulu.github.io/post/%E4%B8%80%E6%AC%A1Ajax%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E8%B0%83%E8%AF%95%E8%BF%87%E7%A8%8B/"></div>
+  <div class="ds-thread" data-thread-key="https://lawulu.github.io/post/%E6%9C%80%E8%BF%91%E6%8B%9B%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%9A%84%E5%87%A0%E4%B8%AA%E6%83%B3%E6%B3%95/"
+   data-title="" data-url="https://lawulu.github.io/post/%E6%9C%80%E8%BF%91%E6%8B%9B%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%9A%84%E5%87%A0%E4%B8%AA%E6%83%B3%E6%B3%95/"></div>
 </section>
 <script type="text/javascript">
 var duoshuoQuery = {short_name:"inza9hi"};

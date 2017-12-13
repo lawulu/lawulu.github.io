@@ -9,6 +9,119 @@
     <atom:link href="https://lawulu.github.io/tags/python/feed/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
+      <title>CDN流量日志简单分析</title>
+      <link>https://lawulu.github.io/post/CDN%E6%B5%81%E9%87%8F%E6%97%A5%E5%BF%97%E7%AE%80%E5%8D%95%E5%88%86%E6%9E%90/</link>
+      <pubDate>Sat, 04 Mar 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://lawulu.github.io/post/CDN%E6%B5%81%E9%87%8F%E6%97%A5%E5%BF%97%E7%AE%80%E5%8D%95%E5%88%86%E6%9E%90/</guid>
+      <description>
+
+&lt;h3 id=&#34;缘起&#34;&gt;缘起&lt;/h3&gt;
+
+&lt;p&gt;公司运营的很大一个成本就是CDN耗费。对比Impression和Click&lt;/p&gt;
+
+&lt;h3 id=&#34;数据分析&#34;&gt;数据分析&lt;/h3&gt;
+
+&lt;h4 id=&#34;下载并处理cdn原始日志&#34;&gt;下载并处理CDN原始日志&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;由于官方提供的合并下载日志工具在Mac下不能用，随机选取一个小时的日志：&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;pre&gt;&lt;code&gt;wget https://cdnlog.cn-hangzhou.oss.aliyun-inc.com/streaming.lawulu.com/2017_03_04/streaming.lawulu.com_2017_03_04_1200_1300.gz?spm=5176.8232200.log.d10.83JI60&amp;amp;OSSAccessKeyId=xxxxx&amp;amp;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Python处理分析为CSV&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;pre&gt;&lt;code&gt;pat = ( r&#39;\[(.+)\]\s&#39; #datetime
+           &#39;(\d+.\d+.\d+.\d+)\s&#39; #IP address
+           &#39;-\s&#39; #proxy ip
+            &#39;\d+\s&#39; #responseTime
+           &#39;&amp;quot;.+&amp;quot;\s&#39; #referrer
+           &#39;&amp;quot;(GET\s\S+mp4)&amp;quot;\s&#39;  # requested file
+            &#39;\d+\s&#39; #status
+           &#39;\d+\s&#39; #requestSIze
+           &#39;(\d+)\s&#39; #responseSize
+           &#39;\D+\s&#39; #HIT OR NOT
+           &#39;&amp;quot;(.+)&amp;quot;\s&#39; #user agent
+           &#39;&amp;quot;\S+&amp;quot;&#39; #contentType
+        )
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;@see &lt;a href=&#34;https://github.com/richardasaurus/nginx-access-log-parser/blob/master/main.py&#34;&gt;https://github.com/richardasaurus/nginx-access-log-parser/blob/master/main.py&lt;/a&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;导入数据库&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;pre&gt;&lt;code&gt;LOAD DATA INFILE &#39;cdnlogs.csv&#39; 
+INTO TABLE test.cdn_log
+FIELDS TERMINATED BY &#39;,&#39; 
+LINES TERMINATED BY &#39;\n&#39; 
+(date_time,ip,url,rsp_size,ua);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ol&gt;
+&lt;li&gt;数据校验&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;pre&gt;&lt;code&gt;SELECT count(*)  FROM test.cdn_log 
+&#39;206619&#39;
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;cat streaming.lawulu.com_2017_03_04_1200_1300 | wc -l
+
+206618
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;用sql分析&#34;&gt;用Sql分析&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;
+select count(*), sum(rsp_size) from (
+
+SELECT ip,ua,url,sum(rsp_size) as rsp_size FROM test.cdn_log group by ip,ua,url having count(*) =1 )a
+
+
+&#39;110643&#39;,&#39;598635187514&#39;
+
+
+select count(*), sum(rsp_size) from (
+
+SELECT ip,ua,url,sum(rsp_size) as rsp_size FROM test.cdn_log group by ip,ua,url having count(*) &amp;gt;1 )a
+
+
+&#39;32670&#39;, &#39;440010318426&#39;
+
+0.4236
+select 440010318426/(598635187514+440010318426) from dual 
+
+select sum(rsp_size) from  cdn_log
+
+1038645505940
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;结论&#34;&gt;结论&lt;/h3&gt;
+
+&lt;p&gt;由于IP,UA,URL可以唯一确定一次UV，我们公司有30%的用户占用了40%的流量，对同一个视频会不停的反复下载。
+最后查明，是SDK的bug，正在下载视频时候，如果切换到后台，下载会直接停止。所以会反复下载视频，浪费流量。&lt;/p&gt;
+
+&lt;h3 id=&#34;校验&#34;&gt;校验&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;计算ResponseSize之后和Console里面同一时间段的&lt;/li&gt;
+&lt;li&gt;
+&lt;code&gt;
+CURL  -i -X HEAD &#39;https://streaming.lawulu.com/default/256b9db1-a1ce-4983-8906-4568fa7a9c75-144.mp4&#39;
+&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Scrapy</title>
       <link>https://lawulu.github.io/post/Scrapy%E5%88%9D%E7%AA%A5/</link>
       <pubDate>Thu, 15 Oct 2015 00:00:00 +0000</pubDate>

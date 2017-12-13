@@ -2,20 +2,20 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>一次Ajax上传文件的调试过程 - 璐濒殉漂流记</title>
+  <title>Cdn - 璐濒殉漂流记</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
   
-  <meta name="description" content="很久不做Web了,帮一小弟解决的一个问题.发现新人解决问题都是在Search and Try,据他说无脑搜了很久,但是不会利用Chrome,也不会分">
+  <meta name="description" content="Cdn">
   <meta name="author" content="Lawulu">
-  <meta itemprop="name" content="一次Ajax上传文件的调试过程 - 璐濒殉漂流记">
-  <meta itemprop="description" content="很久不做Web了,帮一小弟解决的一个问题.发现新人解决问题都是在Search and Try,据他说无脑搜了很久,但是不会利用Chrome,也不会分">
+  <meta itemprop="name" content="Cdn - 璐濒殉漂流记">
+  <meta itemprop="description" content="Cdn">
   <meta itemprop="image" content="https://lawulu.github.io/img/author.jpg">
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@inza9hi" />
-  <meta name="twitter:title" content="一次Ajax上传文件的调试过程 - 璐濒殉漂流记" />
+  <meta name="twitter:title" content="Cdn - 璐濒殉漂流记" />
   
   <meta name="twitter:description" content="">
-  
+  <link rel="alternate" href="https://lawulu.github.io/feed.xml" title="璐濒殉漂流记" type="application/rss+xml"/>
   <link rel="shortcut icon" href="https://lawulu.github.io/img/favicon.ico"/>
   <link rel="apple-touch-icon" href="https://lawulu.github.io/apple-touch-icon.png" />
   <link rel="apple-touch-icon-precomposed" href="https://lawulu.github.io/apple-touch-icon.png" />
@@ -59,241 +59,21 @@
 
   </header>
   <div id="container">
-    <div id="main" class="post" itemscope itemprop="blogPost">
-	<article itemprop="articleBody">
-    <header class="article-info clearfix">
-  <h1 itemprop="name">
-      <a href="https://lawulu.github.io/post/%E4%B8%80%E6%AC%A1Ajax%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E8%B0%83%E8%AF%95%E8%BF%87%E7%A8%8B/" title="一次Ajax上传文件的调试过程" itemprop="url">一次Ajax上传文件的调试过程</a>
-  </h1>
-  <p class="article-author">By
-    
-      <a href="" title="Lawulu">Lawulu</a>
-    
-  </p>
-  <p class="article-time">
-    <time datetime="2015-12-19 00:00:00 &#43;0000 UTC" itemprop="datePublished">2015年12月19日</time>
-  </p>
-</header>
-
-	<div class="article-content">
-    
-		<div class="toc-article">
-			<strong class="toc-title">文章目录</strong>
-      <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#现象和代码">现象和代码</a>
-<ul>
-<li><a href="#js端">Js端</a></li>
-<li><a href="#server端">Server端</a></li>
-</ul></li>
-<li><a href="#server端的问题">Server端的问题？</a>
-<ul>
-<li><a href="#去js端">去Js端</a></li>
-<li><a href="#结论">结论</a></li>
-</ul></li>
-<li><a href="#chrome的一些调试技巧">Chrome的一些调试技巧</a>
-<ul>
-<li><a href="#如何找到对应的元素触发的function">如何找到对应的元素触发的function？</a></li>
-<li><a href="#缓存相关">缓存相关</a></li>
-<li><a href="#console">console</a></li>
-<li><a href="#setting里面可以对console-log加上timestamp">Setting里面可以对console.log加上Timestamp</a></li>
-</ul></li>
-</ul></li>
-</ul>
-</nav>
-		</div>
-    
-    
-
-<p>很久不做Web了,帮一小弟解决的一个问题.发现新人解决问题都是在Search and Try,据他说无脑搜了很久,但是不会利用Chrome,也不会分析问题.</p>
-
-<h2 id="现象和代码">现象和代码</h2>
-
-<h3 id="js端">Js端</h3>
-
-<p>使用的FormData</p>
-
-<pre><code>var formData = new FormData();
-    var actionUrl = &quot;/report/agentUpload&quot;;
-    var form = new FormData();
-    form.append(&quot;file&quot;, $(&quot;#reportFile&quot; )[0]);
-
-    var xhr = new XMLHttpRequest();
-    xhr.open(&quot;post&quot;, actionUrl, true);
-    xhr.onload = function () {
-         alert(&quot;上传完成!&quot;);
-    };
-
-</code></pre>
-
-<h3 id="server端">Server端</h3>
-
-<pre><code>public String upload(HttpServletRequest request, @RequestParam(value=&quot;file&quot;,required = true) MultipartFile file, ModelMap model)
-</code></pre>
-
-<p>但是就是取不到,报错：</p>
-
-<pre><code>Required MultipartFile parameter 'file' is not present
-</code></pre>
-
-<h2 id="server端的问题">Server端的问题？</h2>
-
-<p>是否发到了Server？</p>
-
-<p>看Chrome Network面板里面这次请求的Request：</p>
-
-<pre><code>------WebKitFormBoundaryNLPhxKE21THaBaN1
-Content-Disposition: form-data; name=&quot;file&quot;
-
-[object HTMLInputElement]
-
-</code></pre>
-
-<p>貌似是正确的,在Server端确认一下,将参数加上required=false
-查看request:</p>
-
-<pre><code>multipartParameters = {HashMap@8882}  size = 1
-multipartParameterContentTypes = {HashMap@8883}  size = 1
-multipartFiles = {LinkedMultiValueMap@8884}  size = 0
-</code></pre>
-
-<p>Request里面有东西,但是multipartFiles没有东西……</p>
-
-<p><em>其实这时候应该已经看出问题了,因为那个值是一个String,但是没注意,自己盲目以为只要带multipartParameters就是文件</em></p>
-
-<p>debug到CommonsMultipartResolver的resolveMultipart方法,里面有这段判断</p>
-
-<pre><code>protected MultipartParsingResult parseFileItems(List&lt;FileItem&gt; fileItems, String encoding) {
-		MultiValueMap&lt;String, MultipartFile&gt; multipartFiles = new LinkedMultiValueMap&lt;String, MultipartFile&gt;();
-		Map&lt;String, String[]&gt; multipartParameters = new HashMap&lt;String, String[]&gt;();
-		Map&lt;String, String&gt; multipartParameterContentTypes = new HashMap&lt;String, String&gt;();
-
-		// Extract multipart files and multipart parameters.
-		for (FileItem fileItem : fileItems) {
-			if (fileItem.isFormField()) {
-</code></pre>
-
-<p>如果是false…就往MultipartFile里面填值.
-难道是Content-type的问题？</p>
-
-<h3 id="去js端">去Js端</h3>
-
-<p>先找到如何打印Formdata的：
-<a href="http://stackoverflow.com/questions/17066875/how-to-inspect-formdata">http://stackoverflow.com/questions/17066875/how-to-inspect-formdata</a></p>
-
-<pre><code>for (var pair of formData.entries()) {
-    console.log(pair[0]+ ', ' + pair[1]); 
-}
-</code></pre>
-
-<p>打印的东西是：</p>
-
-<pre><code>file, [object HTMLInputElement]
-
-</code></pre>
-
-<p>决定采用原始的document.getElementById(&ldquo;reportFile&rdquo;).files[]</p>
-
-<pre><code>lastModifiedDate: Tue Dec 20 2015 10:39:39 GMT+0800 (CST)name: &quot;工作簿1.xlsx&quot;size: 23168type: &quot;application/vnd.openxmlformats-officedocument.spreadsheetml.sheet&quot;webkitRelativePath: &quot;&quot;__proto__: File
-
-</code></pre>
-
-<p>最终发现问题：
-应该用</p>
-
-<pre><code> $(&quot;#reportFile&quot; )[0].files[0]
-
-</code></pre>
-
-<h3 id="结论">结论</h3>
-
-<ul>
-<li><strong>盲目的去搜索其实非常浪费时间</strong></li>
-<li>要善用Chrome Console</li>
-</ul>
-
-<h2 id="chrome的一些调试技巧">Chrome的一些调试技巧</h2>
-
-<h3 id="如何找到对应的元素触发的function">如何找到对应的元素触发的function？</h3>
-
-<p>可以在EventListerner里面把Click当做断点，也可以点击某个元素，找到对应监听的EventListener,或者对某一个片dom点击<code>Break on subtree modification</code></p>
-
-<h3 id="缓存相关">缓存相关</h3>
-
-<ol>
-<li>强制刷新 cmd+shift+r</li>
-
-<li><p>可以在设置中禁止缓存</p>
-
-<h3 id="console">console</h3>
-
-<p>在某个页面，可以在console页面随时调试,甚至可以执行函数：</p></li>
-</ol>
-
-<pre><code>$('.choose_endcard').click()
-</code></pre>
-
-<p>But,为什么Xpath选择的不能调用Click…</p>
-
-<h3 id="setting里面可以对console-log加上timestamp">Setting里面可以对console.log加上Timestamp</h3>
-
-	</div>
-  <footer class="article-footer clearfix">
-  
-
-<div class="article-tags">
-  <span></span>
-  
-  <a href="https://lawulu.github.io/tags/js">js</a>
-  
-  <a href="https://lawulu.github.io/tags/chrome">chrome</a>
-  
-</div>
-
-
-
-
-
-<div class="article-categories">
-  <span></span>
-  
-  <a class="article-category-link" href="https://lawulu.github.io/categories/%E7%88%86%E6%A0%88%E5%9F%BA%E7%BA%BF%E5%99%A8">爆栈&amp;基线器</a>
-  
-</div>
-
-
-
-  <div class="article-share" id="share">
-    <div data-url="https://lawulu.github.io/post/%E4%B8%80%E6%AC%A1Ajax%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E8%B0%83%E8%AF%95%E8%BF%87%E7%A8%8B/" data-title="一次Ajax上传文件的调试过程" data-tsina="" class="share clearfix">
-    </div>
-  </div>
-</footer>
-
-	</article>
-  
-<section class="comment">
-  <div class="ds-thread" data-thread-key="https://lawulu.github.io/post/%E4%B8%80%E6%AC%A1Ajax%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E8%B0%83%E8%AF%95%E8%BF%87%E7%A8%8B/"
-   data-title="一次Ajax上传文件的调试过程" data-url="https://lawulu.github.io/post/%E4%B8%80%E6%AC%A1Ajax%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E8%B0%83%E8%AF%95%E8%BF%87%E7%A8%8B/"></div>
+    <div id="main">
+      
+      <h2 id="2017-03">2017-03</h2>
+      
+      <section class="post" itemscope itemprop="blogPost">
+    <a href="https://lawulu.github.io/post/CDN%E6%B5%81%E9%87%8F%E6%97%A5%E5%BF%97%E7%AE%80%E5%8D%95%E5%88%86%E6%9E%90/" title="CDN流量日志简单分析" itemprop="url">
+    <h1 itemprop="name">CDN流量日志简单分析</h1>
+    <p itemprop="description">缘起 公司运营的很大一个成本就是CDN耗费。对比Impression和Click 数据分析 下载并处理CDN原始日志 由于官方提供的合并下载日志工具</p>
+    <time datetime="2017-03-04 00:00:00 &#43;0000 UTC" itemprop="datePublished">2017年03月04日</time>
+  </a>
 </section>
-<script type="text/javascript">
-var duoshuoQuery = {short_name:"inza9hi"};
-(function() {
-  var ds = document.createElement('script');
-  ds.type = 'text/javascript';ds.async = true;
-  ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-  ds.charset = 'UTF-8';
-  (document.getElementsByTagName('head')[0]
-  || document.getElementsByTagName('body')[0]).appendChild(ds);
-})();
-</script>
 
-
-
-
-</div>
-
+      
+      
+    </div>
     <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
 <div id="asidepart">
 <div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
@@ -502,6 +282,10 @@ var duoshuoQuery = {short_name:"inza9hi"};
 
 
   
+<div class="rsspart">
+  <a rel="nofollow" href="https://lawulu.github.io/feed.xml" type="application/rss+xml" target="_blank">RSS 订阅</a>
+</div>
+
 
 </aside>
 </div>
@@ -596,38 +380,6 @@ $(document).ready(function(){
 
 <script type="text/javascript">
 $(document).ready(function(){
-  var ai = $('.article-content>iframe'),
-      ae = $('.article-content>embed'),
-      t  = $('#toc'),
-      h  = $('article h2')
-      ah = $('article h2'),
-      ta = $('#toc.toc-aside'),
-      o  = $('.openaside'),
-      c  = $('.closeaside');
-  if(ai.length>0){
-    ai.wrap('<div class="video-container" />');
-  };
-  if(ae.length>0){
-   ae.wrap('<div class="video-container" />');
-  };
-  if(ah.length==0){
-    t.css('display','none');
-  }else{
-    c.click(function(){
-      ta.css('display', 'block').addClass('fadeIn');
-    });
-    o.click(function(){
-      ta.css('display', 'none');
-    });
-    $(window).scroll(function(){
-      ta.css("top",Math.max(140,320-$(this).scrollTop()));
-    });
-  };
-});
-</script>
-
-<script type="text/javascript">
-$(document).ready(function(){
   var $this = $('.share'),
       url = $this.attr('data-url'),
       encodedUrl = encodeURIComponent(url),
@@ -654,27 +406,6 @@ $(document).ready(function(){
 });
 </script>
 
-
-<link rel="stylesheet" href="https://lawulu.github.io/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="https://lawulu.github.io/fancybox/jquery.fancybox.pack.js"></script>
-<script type="text/javascript">
-$(document).ready(function(){
-  $('.article-content').each(function(i){
-    $(this).find('img').each(function(){
-      if ($(this).parent().hasClass('fancybox')) return;
-      var alt = this.alt;
-      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
-      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
-    });
-    $(this).find('.fancybox').each(function(){
-      $(this).attr('rel', 'article' + i);
-    });
-  });
-  if($.fancybox){
-    $('.fancybox').fancybox();
-  }
-});
-</script>
 
 
 

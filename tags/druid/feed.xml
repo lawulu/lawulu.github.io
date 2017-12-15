@@ -11,12 +11,16 @@
     <item>
       <title>Imply和Confluent破解</title>
       <link>https://lawulu.github.io/post/Imply%E5%92%8CConfluent%E7%A0%B4%E8%A7%A3/</link>
-      <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 20 Sep 2017 00:00:00 +0000</pubDate>
       
       <guid>https://lawulu.github.io/post/Imply%E5%92%8CConfluent%E7%A0%B4%E8%A7%A3/</guid>
       <description>
 
-&lt;p&gt;其实这两个软件还是比较容易破解的，首先开发者并没有把精力放到反破解上面，相关功能做的很简单;第二没有服务器交互的反破解还是很难的，尤其是对于Java这种容易反编译的软件来说。话说过来，即时是有服务器交互，例如Idea，也有人搞出各种License Server出来。&lt;/p&gt;
+&lt;p&gt;其实这两个软件还是比较容易破解的。因为：&lt;/p&gt;
+
+&lt;p&gt;首先开发者并没有把精力放到反破解上面，相关功能做的很简单;&lt;/p&gt;
+
+&lt;p&gt;第二没有服务器交互的反破解还是很难的，尤其是对于Java这种容易反编译的软件来说。话说过来，即时是有服务器交互，例如Idea，也有人搞出各种License Server出来。&lt;/p&gt;
 
 &lt;h2 id=&#34;imply-pivot&#34;&gt;Imply Pivot&lt;/h2&gt;
 

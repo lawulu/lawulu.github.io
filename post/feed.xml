@@ -62,12 +62,16 @@
     <item>
       <title>Imply和Confluent破解</title>
       <link>https://lawulu.github.io/post/Imply%E5%92%8CConfluent%E7%A0%B4%E8%A7%A3/</link>
-      <pubDate>Thu, 02 Nov 2017 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 20 Sep 2017 00:00:00 +0000</pubDate>
       
       <guid>https://lawulu.github.io/post/Imply%E5%92%8CConfluent%E7%A0%B4%E8%A7%A3/</guid>
       <description>
 
-&lt;p&gt;其实这两个软件还是比较容易破解的，首先开发者并没有把精力放到反破解上面，相关功能做的很简单;第二没有服务器交互的反破解还是很难的，尤其是对于Java这种容易反编译的软件来说。话说过来，即时是有服务器交互，例如Idea，也有人搞出各种License Server出来。&lt;/p&gt;
+&lt;p&gt;其实这两个软件还是比较容易破解的。因为：&lt;/p&gt;
+
+&lt;p&gt;首先开发者并没有把精力放到反破解上面，相关功能做的很简单;&lt;/p&gt;
+
+&lt;p&gt;第二没有服务器交互的反破解还是很难的，尤其是对于Java这种容易反编译的软件来说。话说过来，即时是有服务器交互，例如Idea，也有人搞出各种License Server出来。&lt;/p&gt;
 
 &lt;h2 id=&#34;imply-pivot&#34;&gt;Imply Pivot&lt;/h2&gt;
 
@@ -109,6 +113,65 @@
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;所以其实修改该文件的createTime就行了..&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>元数据管理</title>
+      <link>https://lawulu.github.io/post/%E5%85%83%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86/</link>
+      <pubDate>Sun, 02 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://lawulu.github.io/post/%E5%85%83%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86/</guid>
+      <description>
+
+&lt;h2 id=&#34;引子&#34;&gt;引子&lt;/h2&gt;
+
+&lt;h3 id=&#34;业务元数据&#34;&gt;业务元数据&lt;/h3&gt;
+
+&lt;p&gt;最近公司新来一个气场强大的产品，发现有些内部（研发和商务之间经过多次讨论之后形成的）常用的一些话术，他已经在改变对应的说法了。例如广告，因为数据库叫Campaign，所以技术这边都叫Campaign，商务本来已经要从Ad改成了Campaign了，现在有多了个说法叫offer；追踪链接的叫法本来要按照商务的来了，现在愈发混乱了。同一个含义对应的不同的表达，在需求到研发落地和数据流转时候，很容易出问题。&lt;/p&gt;
+
+&lt;p&gt;项目刚起时候，制定一个词典/元数据非常重要，并且要随着业务的发展及时更新。业务元数据可以极大的减少沟通成本。&lt;/p&gt;
+
+&lt;h3 id=&#34;一个悲剧&#34;&gt;一个悲剧&lt;/h3&gt;
+
+&lt;p&gt;IMEI在电信手机上，取到的是一个字符串而不是一个数字。Server发现这个问题之后，没有及时的同步到数据，结果被这个问题又坑了一次。&lt;/p&gt;
+
+&lt;h2 id=&#34;元数据是什么&#34;&gt;元数据是什么&lt;/h2&gt;
+
+&lt;p&gt;瓦利哥（神策数据的创始人）在知乎有一个非常好的专栏（&lt;a href=&#34;https://zhuanlan.zhihu.com/sangwf/20622902&#34;&gt;https://zhuanlan.zhihu.com/sangwf/20622902&lt;/a&gt;
+）。有一章专门讲百度的元数据服务的演进。
+所谓的元数据服务：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Schema：表字段的定义&lt;/li&gt;
+&lt;li&gt;数据就绪状态&lt;/li&gt;
+&lt;li&gt;对外服务的API&lt;/li&gt;
+&lt;li&gt;数据审计/变更&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;瓦利哥推荐了HCatalog，有空打算尝试一下，大概看了一下，是强制要求遵循某种规范。&lt;/p&gt;
+
+&lt;h2 id=&#34;业界解决方案&#34;&gt;业界解决方案&lt;/h2&gt;
+
+&lt;h3 id=&#34;wherehows&#34;&gt;Wherehows&lt;/h3&gt;
+
+&lt;p&gt;LinkedIn开源了一个数据发现和血缘管理工具，叫做Wherehows，开发团队全华人。解决的是类似的问题，不过并不是强制要求开发团队生产数据时候主动和metadata绑定，而是通过分析Scheduler log和Repo(如Azkaban和Hadoop job)，爬取其他数据（如关系数据库和HDFS)来建立元数据，并分析彼此的血缘关系。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://engineering.linkedin.com/blog/2016/03/open-sourcing-wherehows--a-data-discovery-and-lineage-portal&#34;&gt;https://engineering.linkedin.com/blog/2016/03/open-sourcing-wherehows--a-data-discovery-and-lineage-portal&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;google-goods&#34;&gt;Google Goods&lt;/h3&gt;
+
+&lt;p&gt;Google最近写了一篇相关论文，《Goods: Organizing Google’s Datasets》。论文中的Overview图和wherehows特别相似。看来big campany的big data都有相似的需求。Google公开的（可以被公司所有工程师查看的）datasets有26B，20多种格式，每天有很多数据在被删除..总之很有挑战性，但是依然只是一个论文。
+Goods支持用户对数据的标注。&lt;/p&gt;
+
+&lt;h2 id=&#34;实践&#34;&gt;实践&lt;/h2&gt;
+
+&lt;p&gt;上面两个对我们现在的公司太重了。现在公司所有的元数据都是通过Excel和Jira来管理，主要还是口头沟通。两个努力的方向：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;考虑想一个jar的方式把日志metadata（字段含义和顺序）给确定下来，日志的输出、收集和处理都依赖于这个jar，以版本号管理。甚至，Hive表结构变更也要依赖于metadata。嗯，首先要把日志统一由CIF(Api Gateway)来输出。&lt;/li&gt;
+&lt;li&gt;对于容易出错的东西，一定要拿出来公开讨论，例如公司SDK上报的Platform字段，IPad和Iphone不一样。&lt;/li&gt;
+&lt;/ol&gt;
 </description>
     </item>
     
@@ -315,6 +378,95 @@ for city in citys:
 可以说跟IP138差别还是比较大的。&lt;/p&gt;
 
 &lt;p&gt;但是三线城市比较准。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>使用SparkSQL替代Hive做ETL</title>
+      <link>https://lawulu.github.io/post/%E4%BD%BF%E7%94%A8SparkSQL%E6%9B%BF%E4%BB%A3Hive%E5%81%9AETL/</link>
+      <pubDate>Wed, 18 Jan 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://lawulu.github.io/post/%E4%BD%BF%E7%94%A8SparkSQL%E6%9B%BF%E4%BB%A3Hive%E5%81%9AETL/</guid>
+      <description>
+
+&lt;h2 id=&#34;spark的优势&#34;&gt;Spark的优势&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;性能，比基于Tez的Hive要快&lt;/li&gt;
+&lt;li&gt;编程友好：支持更多数据源格式的读和写；由于Spark可以做流处理和即席查询，某种程度上可以复用很多逻辑。&lt;/li&gt;
+&lt;li&gt;可以接入Hive-serde表，与无缝与Hive切换&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;可以忽略错误的输入或者格式&#34;&gt;可以忽略错误的输入或者格式&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;spark.sql.files.ignoreCorruptFiles = true&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;处理文本(json/csv)可以有三种模式：&lt;code&gt;PERMISSIVE DROPMALFORMED  FAILFAST&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;PERMISSIVE: 将数据放到某一列里面&lt;/p&gt;
+
+&lt;p&gt;DROPMALFORMED：丢弃错误记录&lt;/p&gt;
+
+&lt;p&gt;FAILFAST: 抛出异常&lt;/p&gt;
+
+&lt;h3 id=&#34;复杂结构的支持&#34;&gt;复杂结构的支持&lt;/h3&gt;
+
+&lt;p&gt;SELECT EXISTS(values, e -&amp;gt; e &amp;gt; 30) AS v FROM tbl_nested&lt;/p&gt;
+
+&lt;h3 id=&#34;函数&#34;&gt;函数&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;标准函数，UDF，不过UDF对于Spark引擎来说，是一个黑盒，建议不要用&lt;/li&gt;
+&lt;li&gt;agg函数&lt;/li&gt;
+&lt;li&gt;窗口函数，和hive类似&lt;/li&gt;
+&lt;li&gt;rank&lt;/li&gt;
+&lt;li&gt;lag&lt;/li&gt;
+&lt;li&gt;lead&lt;/li&gt;
+&lt;li&gt;其他&lt;/li&gt;
+&lt;li&gt;broadcast 利用了broadcast原语做join
+```
+##貌似不用的话，会优化成用broadcast?
+val left = Seq((0, &amp;ldquo;aa&amp;rdquo;), (0, &amp;ldquo;bb&amp;rdquo;)).toDF(&amp;ldquo;id&amp;rdquo;, &amp;ldquo;token&amp;rdquo;).as[(Int, String)]
+val right = Seq((&amp;ldquo;aa&amp;rdquo;, 0.99), (&amp;ldquo;bb&amp;rdquo;, 0.57)).toDF(&amp;ldquo;token&amp;rdquo;, &amp;ldquo;prob&amp;rdquo;).as[(String, Double)]&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;left.join(broadcast(right), &amp;ldquo;token&amp;rdquo;).explain(extended = true)&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;
+### 例子
+注意，如果是二维数组来说，从外往内是先列后行。和Java类似`        int[][][] a=new int[2][2][4];  
+`对应的是` [[[0, 0, 0, 0], [0, 0, 0, 0]], [[0, 0, 0, 0], [0, 0, 0, 0]]]  
+`
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;val df = Seq(1 -&amp;gt; 2).toDF(&amp;ldquo;i&amp;rdquo;, &amp;ldquo;j&amp;rdquo;)
+   val query = df.groupBy(&amp;lsquo;i)
+     .agg(max(&amp;lsquo;j).as(&amp;ldquo;aggOrdering&amp;rdquo;))
+     .orderBy(sum(&amp;lsquo;j))
+     .as[(Int, Int)]
+   query.collect contains (1, 2) // true&lt;/p&gt;
+
+&lt;p&gt;val df = Seq((1, 1), (-1, 1)).toDF(&amp;ldquo;key&amp;rdquo;, &amp;ldquo;value&amp;rdquo;)
+   df.createOrReplaceTempView(&amp;ldquo;src&amp;rdquo;)
+   scala&amp;gt; sql(&amp;ldquo;SELECT IF(a &amp;gt; 0, a, 0) FROM (SELECT key a FROM src) temp&amp;rdquo;).show
+   +&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;-+
+   |(IF((a &amp;gt; 0), a, 0))|
+   +&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;-+
+   |                  1|
+   |                  0|
+   +&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;-+&lt;/p&gt;
+
+&lt;p&gt;```&lt;/p&gt;
+
+&lt;h2 id=&#34;迁移中遇到的问题&#34;&gt;迁移中遇到的问题&lt;/h2&gt;
+
+&lt;h3 id=&#34;兼容问题&#34;&gt;兼容问题&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Hive UDF用到了SimpleDateFormat，Spark中会有问题&lt;/li&gt;
+&lt;li&gt;Spark 2.1 不支持MapJoin Hint&lt;/li&gt;
+&lt;/ul&gt;
 </description>
     </item>
     
@@ -849,265 +1001,6 @@ save
 &lt;li&gt;Auth的消耗非常少,只是在连接建立时候做一次鉴权,只有连接在,就不用再做鉴权&lt;/li&gt;
 &lt;li&gt;未来可能会有ACL机制,比如某些用户并没有&lt;code&gt;config set dir&lt;/code&gt;的权限&lt;/li&gt;
 &lt;/ol&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>How 2015 flies</title>
-      <link>https://lawulu.github.io/post/%E6%88%91%E7%9A%842015/</link>
-      <pubDate>Sun, 03 Jan 2016 00:00:00 +0000</pubDate>
-      
-      <guid>https://lawulu.github.io/post/%E6%88%91%E7%9A%842015/</guid>
-      <description>
-
-&lt;p&gt;光阴者,百代之过客也.在我年少畅想未来时候,2015从来都是遥远的,而现在,不管曾经多少梦想不管曾经多少遗憾,2015已经彻底逝者如斯夫了.这一年,发生了什么？&lt;/p&gt;
-
-&lt;h2 id=&#34;时间线&#34;&gt;时间线&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;年初S整个公司业绩不好,加上项目被cut off,一直想着换工作.后来又做了半年新项目,反而更加坚定了离开的念头.&lt;/li&gt;
-&lt;li&gt;6月份有了新去处,但是被S的一个领导拉去现在公司C,中间断断续续好几个机会都是S公司的人脉,总的来说,虽然一直后悔说应该早点离开,但在S公司还是非常愉快和值得留念的.&lt;/li&gt;
-&lt;li&gt;在公司C三个月之后,C公司发生大的人事变动,继年初之后,再一次见识到了职场的波澜壮阔.无愧于心,专心做好自己的事,提高自己才是王道.&lt;/li&gt;
-&lt;li&gt;9月份,许久的期盼之后,媳妇终于确认怀孕.备孕育儿这事是提升夫妻和谐关系增加家庭责任感的一件重要事情.&lt;/li&gt;
-&lt;li&gt;下半年一直想着提升生活质量,开始开车上下班,但是每天因为车位问题,还有车没什么智能辅助设备,诸多不便,一点也没有体会到驾驶的乐趣；眼看着房价一点点涨,却顾前顾后没有换房的勇气,到年底房价彻底涨起来之后,终于绝了换房的念头.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;从微博与微信回忆2015&#34;&gt;从微博与微信回忆2015&lt;/h2&gt;
-
-&lt;h3 id=&#34;年初感慨颇多&#34;&gt;年初感慨颇多&lt;/h3&gt;
-
-&lt;p&gt;感慨常立志：&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;其实这个时候最有价值的不是什么下决心做新东西,而是那些过去已经开始值得保持下去的旧东西&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;感慨自己：&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;这个世界上自信与真诚的人真是太少了！ 对自己要求太完美,不面对现实,喜欢做鸵鸟.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;感慨裁员风波的公司：&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;各路神仙上蹿下跳,各路跳梁粉墨登场,各色人等各显神通.随波逐流或奋力跃出,劳燕分飞稻粱谋！&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&#34;柴静雾霾调查&#34;&gt;柴静雾霾调查&lt;/h3&gt;
-
-&lt;p&gt;记得中学政治课本一直在笑话资本主义先污染后治理,奥运前夕有运动员说北京空气差还跟风去骂.在现在的政治体制下,如果执政者顾虑重重并无动于衷,屁民只能逆来顺受麻木不仁.&lt;/p&gt;
-
-&lt;h3 id=&#34;平凡世界电视剧版播出&#34;&gt;平凡世界电视剧版播出&lt;/h3&gt;
-
-&lt;p&gt;电视剧有亮点,但跟书中的感觉差距很大.初高中时候读了平凡有两遍以上,印象中,书中对官宦阶级小姐的YY和对爱读书的自傲,满足了在小城长大的我的很多不切实的幻想.事实上,路遥自己的人生比孙少平们更精彩.&lt;/p&gt;
-
-&lt;h3 id=&#34;父亲65岁生日&#34;&gt;父亲65岁生日&lt;/h3&gt;
-
-&lt;p&gt;仓促回郑,深深觉得现代化过程中,我们欠父母的太多太多.
-14年11月的感慨：
-&amp;gt;上一辈的痛苦和烦恼:三分之一是因为时运不济,遇到的通过个人努力就能抓住的机会太少；三分之一是因为贫穷,很长一段生命都在为温饱而挣扎；三分之一是因为对家庭对亲人付出太多.&lt;/p&gt;
-
-&lt;p&gt;之前看了&lt;a href=&#34;http://www.douban.com/note/468023670/&#34;&gt;三毛父亲给三毛的信&lt;/a&gt;,印象颇深.&lt;/p&gt;
-
-&lt;h3 id=&#34;尤文打入欧冠决赛&#34;&gt;尤文打入欧冠决赛&lt;/h3&gt;
-
-&lt;p&gt;有机会,实力差距太明显.&lt;/p&gt;
-
-&lt;h3 id=&#34;全民创业&#34;&gt;全民创业&lt;/h3&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;昨天见了一个做实业的老板,在自己花钱做移动互联网.说实业利润下降,说听到国家互联网+的口号很害怕都进来&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;来到现在公司也是受全民创业风潮的影响,事实上我感觉市面上80%的APP都是垃圾.真正能提高生活质量和效率的APP在哪里？&lt;/p&gt;
-
-&lt;h3 id=&#34;新公司&#34;&gt;新公司&lt;/h3&gt;
-
-&lt;p&gt;新的环境,新的同事,新的挑战&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;共事不是要证明自己比别人优秀,而是双赢.&lt;/p&gt;
-
-&lt;p&gt;反思不是要找理由去说明自己做对了&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&#34;母亲的来电&#34;&gt;母亲的来电&lt;/h3&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;昨天各种出事,忙得晕头转向,突然接到母亲电话,问关于QQ的一个简单问题.突然觉得,什么是生活呢？(8.24)&lt;/p&gt;
-
-&lt;p&gt;浑浑噩噩中,在这个世界上只有两种东西最能震撼人们的心灵,一是与老家的联系;二便是我们头顶上灿烂的雾霾.(12.1)&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&#34;股市和房事-经济头脑&#34;&gt;股市和房事,经济头脑&lt;/h3&gt;
-
-&lt;p&gt;年初稍赚了一笔,但是年中3000点时候没有回去.&lt;/p&gt;
-
-&lt;p&gt;今年也没有换房.前面有12年的教训,今年又是身边好几个人买房.之前也偶尔在关注房价,小区的房价从300W到350W,自己关注的几套房涨的涨卖的卖,这都是实实在在发生的事,但是执行力一点也没有.
-&amp;gt;执行力.一定要与有经济头脑的人为伍.虽然自称世界观已经稳定,但是可以学习的东西多着呢.&lt;/p&gt;
-
-&lt;h3 id=&#34;电影老炮儿&#34;&gt;电影老炮儿&lt;/h3&gt;
-
-&lt;p&gt;这片上映以来好评如潮,直接让我觉得自己三观不正了.还好这几天批评的多起来了.&lt;/p&gt;
-
-&lt;p&gt;其实不是价值观多样化的问题,而是实在觉得这片的编剧太粗制滥造,活活把对手写成脑残加傻逼了.
-拿《火星救援》来说,想办法在火星上种土豆,可以把九几年的火星探测器给加进来..老炮儿的编剧不是做作的明显就是完全不合逻辑.&lt;/p&gt;
-
-&lt;h3 id=&#34;开车&#34;&gt;开车&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;张爱玲说过,出名要趁早.其实很多事情都是这样.之前一直对开车这件事比较抵触,从去年拿到车,一直到今年11月份趁着大屯路封站才开始开.&lt;/li&gt;
-&lt;li&gt;感觉已经很多年没有新技能get√了.上一次还是学玩三国杀？自己看python和Android都是半途而废.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;总结&#34;&gt;总结&lt;/h2&gt;
-
-&lt;p&gt;对父母和家庭有亏欠,工作不够走心,在与赚钱能力无关东西上投入的精力太多.&lt;/p&gt;
-
-&lt;p&gt;一大波聪明的小孩毕业进入BAT,一大波努力的老码农转行做互联网.现在机会很好,工作比较宽松,希望2016能真心喜欢并投入到与赚钱能力有关的事业中去.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>一次Ajax上传文件的调试过程</title>
-      <link>https://lawulu.github.io/post/%E4%B8%80%E6%AC%A1Ajax%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E8%B0%83%E8%AF%95%E8%BF%87%E7%A8%8B/</link>
-      <pubDate>Sat, 19 Dec 2015 00:00:00 +0000</pubDate>
-      
-      <guid>https://lawulu.github.io/post/%E4%B8%80%E6%AC%A1Ajax%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E8%B0%83%E8%AF%95%E8%BF%87%E7%A8%8B/</guid>
-      <description>
-
-&lt;p&gt;很久不做Web了,帮一小弟解决的一个问题.发现新人解决问题都是在Search and Try,据他说无脑搜了很久,但是不会利用Chrome,也不会分析问题.&lt;/p&gt;
-
-&lt;h2 id=&#34;现象和代码&#34;&gt;现象和代码&lt;/h2&gt;
-
-&lt;h3 id=&#34;js端&#34;&gt;Js端&lt;/h3&gt;
-
-&lt;p&gt;使用的FormData&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;var formData = new FormData();
-    var actionUrl = &amp;quot;/report/agentUpload&amp;quot;;
-    var form = new FormData();
-    form.append(&amp;quot;file&amp;quot;, $(&amp;quot;#reportFile&amp;quot; )[0]);
-
-    var xhr = new XMLHttpRequest();
-    xhr.open(&amp;quot;post&amp;quot;, actionUrl, true);
-    xhr.onload = function () {
-         alert(&amp;quot;上传完成!&amp;quot;);
-    };
-
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;server端&#34;&gt;Server端&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;public String upload(HttpServletRequest request, @RequestParam(value=&amp;quot;file&amp;quot;,required = true) MultipartFile file, ModelMap model)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;但是就是取不到,报错：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Required MultipartFile parameter &#39;file&#39; is not present
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;server端的问题&#34;&gt;Server端的问题？&lt;/h2&gt;
-
-&lt;p&gt;是否发到了Server？&lt;/p&gt;
-
-&lt;p&gt;看Chrome Network面板里面这次请求的Request：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;------WebKitFormBoundaryNLPhxKE21THaBaN1
-Content-Disposition: form-data; name=&amp;quot;file&amp;quot;
-
-[object HTMLInputElement]
-
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;貌似是正确的,在Server端确认一下,将参数加上required=false
-查看request:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;multipartParameters = {HashMap@8882}  size = 1
-multipartParameterContentTypes = {HashMap@8883}  size = 1
-multipartFiles = {LinkedMultiValueMap@8884}  size = 0
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Request里面有东西,但是multipartFiles没有东西……&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;其实这时候应该已经看出问题了,因为那个值是一个String,但是没注意,自己盲目以为只要带multipartParameters就是文件&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;debug到CommonsMultipartResolver的resolveMultipart方法,里面有这段判断&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;protected MultipartParsingResult parseFileItems(List&amp;lt;FileItem&amp;gt; fileItems, String encoding) {
-		MultiValueMap&amp;lt;String, MultipartFile&amp;gt; multipartFiles = new LinkedMultiValueMap&amp;lt;String, MultipartFile&amp;gt;();
-		Map&amp;lt;String, String[]&amp;gt; multipartParameters = new HashMap&amp;lt;String, String[]&amp;gt;();
-		Map&amp;lt;String, String&amp;gt; multipartParameterContentTypes = new HashMap&amp;lt;String, String&amp;gt;();
-
-		// Extract multipart files and multipart parameters.
-		for (FileItem fileItem : fileItems) {
-			if (fileItem.isFormField()) {
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;如果是false…就往MultipartFile里面填值.
-难道是Content-type的问题？&lt;/p&gt;
-
-&lt;h3 id=&#34;去js端&#34;&gt;去Js端&lt;/h3&gt;
-
-&lt;p&gt;先找到如何打印Formdata的：
-&lt;a href=&#34;http://stackoverflow.com/questions/17066875/how-to-inspect-formdata&#34;&gt;http://stackoverflow.com/questions/17066875/how-to-inspect-formdata&lt;/a&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;for (var pair of formData.entries()) {
-    console.log(pair[0]+ &#39;, &#39; + pair[1]); 
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;打印的东西是：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;file, [object HTMLInputElement]
-
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;决定采用原始的document.getElementById(&amp;ldquo;reportFile&amp;rdquo;).files[]&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;lastModifiedDate: Tue Dec 20 2015 10:39:39 GMT+0800 (CST)name: &amp;quot;工作簿1.xlsx&amp;quot;size: 23168type: &amp;quot;application/vnd.openxmlformats-officedocument.spreadsheetml.sheet&amp;quot;webkitRelativePath: &amp;quot;&amp;quot;__proto__: File
-
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;最终发现问题：
-应该用&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt; $(&amp;quot;#reportFile&amp;quot; )[0].files[0]
-
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;结论&#34;&gt;结论&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;盲目的去搜索其实非常浪费时间&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;要善用Chrome Console&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;chrome的一些调试技巧&#34;&gt;Chrome的一些调试技巧&lt;/h2&gt;
-
-&lt;h3 id=&#34;如何找到对应的元素触发的function&#34;&gt;如何找到对应的元素触发的function？&lt;/h3&gt;
-
-&lt;p&gt;可以在EventListerner里面把Click当做断点，也可以点击某个元素，找到对应监听的EventListener,或者对某一个片dom点击&lt;code&gt;Break on subtree modification&lt;/code&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;缓存相关&#34;&gt;缓存相关&lt;/h3&gt;
-
-&lt;ol&gt;
-&lt;li&gt;强制刷新 cmd+shift+r&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;可以在设置中禁止缓存&lt;/p&gt;
-
-&lt;h3 id=&#34;console&#34;&gt;console&lt;/h3&gt;
-
-&lt;p&gt;在某个页面，可以在console页面随时调试,甚至可以执行函数：&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;pre&gt;&lt;code&gt;$(&#39;.choose_endcard&#39;).click()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;But,为什么Xpath选择的不能调用Click…&lt;/p&gt;
-
-&lt;h3 id=&#34;setting里面可以对console-log加上timestamp&#34;&gt;Setting里面可以对console.log加上Timestamp&lt;/h3&gt;
 </description>
     </item>
     

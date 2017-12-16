@@ -146,7 +146,7 @@ nohup ssh  -ND 3128 user@jumpserver &amp;amp;
     </item>
     
     <item>
-      <title>Preload和Play接口的兴衰史</title>
+      <title>Preload接口和Play接口的兴衰史</title>
       <link>https://lawulu.github.io/post/Preload%E5%92%8CPlay%E6%8E%A5%E5%8F%A3%E7%9A%84%E5%85%B4%E8%A1%B0%E5%8F%B2/</link>
       <pubDate>Thu, 01 Jun 2017 00:00:00 +0000</pubDate>
       
@@ -195,6 +195,8 @@ nohup ssh  -ND 3128 user@jumpserver &amp;amp;
 &lt;li&gt;激进的来说，每次Preload只预加载一次，播完就删&lt;/li&gt;
 &lt;li&gt;在应用启动和每次播放完成之后调用一次Preload&lt;/li&gt;
 &lt;/ol&gt;
+
+&lt;p&gt;Play的逻辑前置到Preload里面，Play沦为一个上报接口&lt;/p&gt;
 </description>
     </item>
     

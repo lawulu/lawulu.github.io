@@ -2,17 +2,17 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>Preload和Play接口的兴衰史 - 璐濒殉漂流记</title>
+  <title>Preload接口和Play接口的兴衰史 - 璐濒殉漂流记</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
   
   <meta name="description" content="对业务理解的深入和梳理，极大的方便了重构。先说结论：Preload的本质是告诉SDK下一次Impression应该展示哪个广告。 背景 对于Na">
   <meta name="author" content="Lawulu">
-  <meta itemprop="name" content="Preload和Play接口的兴衰史 - 璐濒殉漂流记">
+  <meta itemprop="name" content="Preload接口和Play接口的兴衰史 - 璐濒殉漂流记">
   <meta itemprop="description" content="对业务理解的深入和梳理，极大的方便了重构。先说结论：Preload的本质是告诉SDK下一次Impression应该展示哪个广告。 背景 对于Na">
   <meta itemprop="image" content="https://lawulu.github.io/img/author.jpg">
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@inza9hi" />
-  <meta name="twitter:title" content="Preload和Play接口的兴衰史 - 璐濒殉漂流记" />
+  <meta name="twitter:title" content="Preload接口和Play接口的兴衰史 - 璐濒殉漂流记" />
   
   <meta name="twitter:description" content="">
   
@@ -63,7 +63,7 @@
 	<article itemprop="articleBody">
     <header class="article-info clearfix">
   <h1 itemprop="name">
-      <a href="https://lawulu.github.io/post/Preload%E5%92%8CPlay%E6%8E%A5%E5%8F%A3%E7%9A%84%E5%85%B4%E8%A1%B0%E5%8F%B2/" title="Preload和Play接口的兴衰史" itemprop="url">Preload和Play接口的兴衰史</a>
+      <a href="https://lawulu.github.io/post/Preload%E5%92%8CPlay%E6%8E%A5%E5%8F%A3%E7%9A%84%E5%85%B4%E8%A1%B0%E5%8F%B2/" title="Preload接口和Play接口的兴衰史" itemprop="url">Preload接口和Play接口的兴衰史</a>
   </h1>
   <p class="article-author">By
     
@@ -144,6 +144,8 @@
 <li>在应用启动和每次播放完成之后调用一次Preload</li>
 </ol>
 
+<p>Play的逻辑前置到Preload里面，Play沦为一个上报接口</p>
+
 	</div>
   <footer class="article-footer clearfix">
   
@@ -171,7 +173,7 @@
 
 
   <div class="article-share" id="share">
-    <div data-url="https://lawulu.github.io/post/Preload%E5%92%8CPlay%E6%8E%A5%E5%8F%A3%E7%9A%84%E5%85%B4%E8%A1%B0%E5%8F%B2/" data-title="Preload和Play接口的兴衰史" data-tsina="" class="share clearfix">
+    <div data-url="https://lawulu.github.io/post/Preload%E5%92%8CPlay%E6%8E%A5%E5%8F%A3%E7%9A%84%E5%85%B4%E8%A1%B0%E5%8F%B2/" data-title="Preload接口和Play接口的兴衰史" data-tsina="" class="share clearfix">
     </div>
   </div>
 </footer>
@@ -180,7 +182,7 @@
   
 <section class="comment">
   <div class="ds-thread" data-thread-key="https://lawulu.github.io/post/Preload%E5%92%8CPlay%E6%8E%A5%E5%8F%A3%E7%9A%84%E5%85%B4%E8%A1%B0%E5%8F%B2/"
-   data-title="Preload和Play接口的兴衰史" data-url="https://lawulu.github.io/post/Preload%E5%92%8CPlay%E6%8E%A5%E5%8F%A3%E7%9A%84%E5%85%B4%E8%A1%B0%E5%8F%B2/"></div>
+   data-title="Preload接口和Play接口的兴衰史" data-url="https://lawulu.github.io/post/Preload%E5%92%8CPlay%E6%8E%A5%E5%8F%A3%E7%9A%84%E5%85%B4%E8%A1%B0%E5%8F%B2/"></div>
 </section>
 <script type="text/javascript">
 var duoshuoQuery = {short_name:"inza9hi"};

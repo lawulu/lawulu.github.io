@@ -9,22 +9,161 @@
     <atom:link href="https://lawulu.github.io/tags/ad/feed/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
-      <title>Tracking以及FuseClick的一些胡言乱语</title>
-      <link>https://lawulu.github.io/post/Tracking%E4%BB%A5%E5%8F%8AFuseClick%E7%9A%84%E4%B8%80%E4%BA%9B%E8%83%A1%E8%A8%80%E4%B9%B1%E8%AF%AD/</link>
-      <pubDate>Thu, 01 Dec 2016 00:00:00 +0000</pubDate>
+      <title>数据需要收集哪些数据</title>
+      <link>https://lawulu.github.io/post/%E6%95%B0%E6%8D%AE%E9%9C%80%E8%A6%81%E6%94%B6%E9%9B%86%E5%93%AA%E4%BA%9B%E6%95%B0%E6%8D%AE/</link>
+      <pubDate>Thu, 15 Jun 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://lawulu.github.io/post/Tracking%E4%BB%A5%E5%8F%8AFuseClick%E7%9A%84%E4%B8%80%E4%BA%9B%E8%83%A1%E8%A8%80%E4%B9%B1%E8%AF%AD/</guid>
+      <guid>https://lawulu.github.io/post/%E6%95%B0%E6%8D%AE%E9%9C%80%E8%A6%81%E6%94%B6%E9%9B%86%E5%93%AA%E4%BA%9B%E6%95%B0%E6%8D%AE/</guid>
       <description>
 
-&lt;p&gt;&lt;em&gt;&lt;strong&gt;广告新人的一些感慨&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;h2 id=&#34;背景&#34;&gt;背景&lt;/h2&gt;
 
-&lt;h2 id=&#34;fuseclick要解决的痛点&#34;&gt;FuseClick要解决的痛点&lt;/h2&gt;
+&lt;p&gt;最近线上遇到一些问题，分析起来还是要抓瞎，完全不知道怎么去定位。只能从代码去分析&amp;hellip;觉得之前的设计的数据收集太简单了，只是以报表需求为导向设计的。那我们还需要收集哪些数据呢？&lt;/p&gt;
 
-&lt;p&gt;在移动互联网烧钱大潮中，（传统来说）有流量变现能力只有广告了。当每一次点击都与钱相关时候，机会和随机会而来的混乱就出现了。对于移动强CPA广告来说，最大的痛点就是转化的核算和归因。各种第三方平台（友盟，TalkingData，热云……），各种不同的规范……，FuseClick就是对标Affiliate，成立的一家Tracking平台，帮助AdNetwork来统一追踪。更有野心的是，他家还要帮忙做优化。类似想统一混乱的公司还有Appcoach,mediation。。回头写一下。&lt;/p&gt;
+&lt;h2 id=&#34;能解释业务的数据&#34;&gt;能解释业务的数据&lt;/h2&gt;
+
+&lt;h3 id=&#34;所有业务要串起来&#34;&gt;所有业务要串起来&lt;/h3&gt;
+
+&lt;p&gt;业务有三条线：
+- Active
+- Config
+- Preload-&amp;gt;Impression-&amp;gt;Event-&amp;gt;Click-&amp;gt;Install&lt;/p&gt;
+
+&lt;p&gt;改动：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;最核心的广告生命周期是否可以用一个Id呢？如果不能，每一步要讲上一步的id给带上来。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;CDN的下载要带上一个preloadId，然后开启参数过滤，通过关联preloadId将下载流程也关联到核心业务上去。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;重复Id上报的问题&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;server日志&#34;&gt;Server日志&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;ELK要用起来，亦可以调研一下阿里的日志服务&lt;/li&gt;
+&lt;li&gt;规范Server输出，尤其是Filter广告时候，要将挑选广告失败的原因记录到日志里面&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;可追溯每个客户端的行为的数据&#34;&gt;可追溯每个客户端的行为的数据&lt;/h2&gt;
+
+&lt;p&gt;最近几个痛点：流量端说我们的填充率对低，而我们报表的填充率非常高；点击广告主上报跟服务器上报总是对不上；点击率中有真实点击和误点击区分不开。所以要收集这些数据：
+- APP对SDK的接口调用都要记录
+- SDK和Server之外的所有交互（点击上报，CDN下载）都要记录
+- 以上记录可以通过开关来控制
+- EndCard的点击率要能区分点击区域，找到真实的点击率&lt;/p&gt;
+
+&lt;h2 id=&#34;其他数据&#34;&gt;其他数据&lt;/h2&gt;
+
+&lt;p&gt;抓友商的包，发现友商有一个SessionStart和SessionEnd的接口，这个要加上。貌似SessionEnd不准，因为每次进入后台，SDK没有机会发请求到Server。&lt;/p&gt;
+
+&lt;h2 id=&#34;实施&#34;&gt;实施&lt;/h2&gt;
+
+&lt;h3 id=&#34;ab测试准备&#34;&gt;AB测试准备&lt;/h3&gt;
+
+&lt;p&gt;增加一个Header&lt;code&gt;x-clad-tag&lt;/code&gt;,在Config接口下发下去，给用户打标签，并贯彻到整个业务流程&lt;/p&gt;
+
+&lt;h3 id=&#34;上报服务拆分&#34;&gt;上报服务拆分&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Impr,Click等事件上报因为只是记一个数字，要和Preload业务从逻辑和部署上都分开，避免互相干扰&lt;/li&gt;
+&lt;li&gt;并且上报地址应该是Preload下发下去，而非写死，并且支持同一事件的多重上报。这样易于控制，甚至以后可以作弊（按照某人的说法：&amp;rdquo;&lt;code&gt;我们不主动作恶，但是在恶劣的环境下，要有保护自己的手段。&lt;/code&gt;&amp;ldquo;）&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Preload和Play接口的兴衰史</title>
+      <link>https://lawulu.github.io/post/Preload%E5%92%8CPlay%E6%8E%A5%E5%8F%A3%E7%9A%84%E5%85%B4%E8%A1%B0%E5%8F%B2/</link>
+      <pubDate>Thu, 01 Jun 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://lawulu.github.io/post/Preload%E5%92%8CPlay%E6%8E%A5%E5%8F%A3%E7%9A%84%E5%85%B4%E8%A1%B0%E5%8F%B2/</guid>
+      <description>
+
+&lt;p&gt;对业务理解的深入和梳理，极大的方便了重构。先说结论：&lt;strong&gt;Preload的本质是告诉SDK下一次Impression应该展示哪个广告&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;h2 id=&#34;背景&#34;&gt;背景&lt;/h2&gt;
+
+&lt;p&gt;对于Native移动视频广告来说，一方面网络条件所限，另一方面要提升用户和广告主的体验，播放广告基本都是以预加载的形式提前把广告加载完成。这个特性让Ad Serving的流程大大不同。&lt;/p&gt;
+
+&lt;h2 id=&#34;第一版的做法&#34;&gt;第一版的做法&lt;/h2&gt;
+
+&lt;h3 id=&#34;提供了两个接口&#34;&gt;提供了两个接口:&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Preload,用来告诉SDK有哪些广告可以下载，然后告诉SDK开始下载，一般是三到五条。&lt;/li&gt;
+&lt;li&gt;Play，在SDK有曝光机会的时候，SDK将已经预加载完成的广告告诉Server，Server从中挑出可播的广告。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;问题&#34;&gt;问题&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Preload和Play两个接口时间上有间隔，在另一个时间点，各种条件已经变化了，需要重新挑选广告。所以同一次曝光机会，可能需要挑选两次。&lt;/li&gt;
+&lt;li&gt;Play接口的响应时间要求很高，客户端的网络又不稳定。&lt;/li&gt;
+&lt;li&gt;整个链路太长，又有些条件不可控，所以Ad Serving的逻辑很难优化。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;梳理业务-重新定义&#34;&gt;梳理业务，重新定义&lt;/h2&gt;
+
+&lt;h3 id=&#34;其他部门角度&#34;&gt;其他部门角度&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;对商务来说，尾量可以接受，甚至非常正常。这意味着，各种定向控制并不需要那么严谨。&lt;/li&gt;
+&lt;li&gt;对运营来说，CDN的消耗相比转化率的提高并不重要，更迫切需要一个可以快速干扰Ranking的办法。&lt;/li&gt;
+&lt;li&gt;对产品来说，需要让事情简单化。我们的Preload的挑选广告就对应传统Ad产品中的那次挑选广告就OK。&lt;/li&gt;
+&lt;li&gt;对数据来说，填充率的计算需要和流量方匹配。对应第一版来说，填充率，是用Play接口的成功返回/Play接口的调用。&lt;/li&gt;
+&lt;li&gt;对技术来说，Play接口要求太高，优化起来太困难。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;那么&#34;&gt;那么&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Preload接口挑选广告，Play接口只做Impression的上报&lt;/li&gt;
+&lt;li&gt;激进的来说，每次Preload只预加载一次，播完就删&lt;/li&gt;
+&lt;li&gt;在应用启动和每次播放完成之后调用一次Preload&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>广告的Tracking(AdNetwork&#39;s Point of view)</title>
+      <link>https://lawulu.github.io/post/%E5%B9%BF%E5%91%8A%E7%9A%84Tracking/</link>
+      <pubDate>Thu, 01 Dec 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://lawulu.github.io/post/%E5%B9%BF%E5%91%8A%E7%9A%84Tracking/</guid>
+      <description>
+
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;广告新人的一些感想&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;在移动互联网烧钱大潮中，（传统来说）有流量变现能力只有广告了。当每一次点击都与钱相关时候，机会和伴随机会而来的混乱就出现了。&lt;/p&gt;
+
+&lt;h2 id=&#34;商机&#34;&gt;商机&lt;/h2&gt;
+
+&lt;p&gt;对于移动强CPA广告来说，最大的痛点就是转化的核算和归因。各种第三方平台（友盟，TalkingData，热云……），各种不同的规范……，能否成立的一家Tracking平台，帮助AdNetwork来统一追踪。甚至有了各家的数据之后（因为各家的为了Tracking，都要把DevieId通过平台透传）：可以收钱做优化，因为平台（从整个宏观数据可以看出）知道哪类流量适合哪类推广；也可以卖数据甚至卖流量。其实类似想统一混乱的公司有Appcoach,Affiliate，mediation。。简单写一下我们用的FC.&lt;/p&gt;
+
+&lt;h3 id=&#34;fc的做法&#34;&gt;FC的做法&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;为每一个AdNetwork建立一个Tracking Link，在Dashboard中配置对应的宏和Postback Url。&lt;/li&gt;
+&lt;li&gt;提供报表做到小时级别的统一，方便了不同时区的用户。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;归因是怎么做的&#34;&gt;归因是怎么做的&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;渠道包，因为（国内）Android并没有一个强势如AppStore的（混乱之源之一）应用商店，所以就会有渠道包这种东西。之前公司每次上线Android，有专门的应用分发脚本，给不同渠道的包不一样。这样就可以知道各个渠道的推广情况。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;根据设备id归因：对于Android来说国内是IMEI和AndroidId，国外是GAID。iOS比较规范，一般使用IDFA，不过新版iOS用户据说可以关闭广告追踪。详细流程再下面讲。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Fingerprint：大的平台会基于设备的零散数据例如ip,ua，通过数据积累，当遇到没有设备id信息的归因问题时，就用这些零散的数据作为唯一标示确认唯一性。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Referrer来源：如果应用商店支持，可以传递参数表明自己的渠道信息。&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
 
 &lt;h2 id=&#34;tracking流程&#34;&gt;Tracking流程&lt;/h2&gt;
 
-&lt;h3 id=&#34;传统tracking&#34;&gt;传统Tracking&lt;/h3&gt;
+&lt;h3 id=&#34;tracking&#34;&gt;Tracking&lt;/h3&gt;
 
 &lt;p&gt;对AdNetwork来说，由于无法知道是否安装完成，所以要通过第三方的平台来完成计费。所以，Tracking一般分为Click上报和Install的Postback。即当用户要下载一个App时候，AdNetwork马上告诉广告主（或者代表广告主的检测平台），快看，我这有个用户点击了，他要安装了！！然后就开始默默的等待..广告主收到一个安装，就会根据安装时候的信息反过来去找是谁上报的，一般会根据设备的信息（混乱之源之一)来匹配。所以上报时候一定要把设备信息给带上。上报分302让客户端上报和S2S对接两种，按下不表。&lt;/p&gt;
 
@@ -32,25 +171,7 @@
 
 &lt;p&gt;由于AdNetwork要对接的第三方平台太多，而各家Tracking时候需要的参数是不一样的。（为什么没有一个广告协会之类规范一下？！），所以就会有宏替换这么一个奇特而又奇妙的东西。举一个例子：&lt;/p&gt;
 
-&lt;p&gt;假如，大家需要一个参数DeviceId，A家需要的上报是&lt;a href=&#34;http://a.com/tracking?did=XX,而B家需要的上报是http://b.com/tracking?device=XX，这时候客户需要让AdNetwork知道应该怎么上报，AdNetwork提供一批可供替换的变量，让客户自己填。例如DeviceId的变量是shebeihao，那么上面两家分别填写：http://a.com/tracking?did={shebeihao}，和http://a.com/tracking?device={shebeihao}，等上报时候，将这些信息都替换正确。&#34;&gt;http://a.com/tracking?did=XX,而B家需要的上报是http://b.com/tracking?device=XX，这时候客户需要让AdNetwork知道应该怎么上报，AdNetwork提供一批可供替换的变量，让客户自己填。例如DeviceId的变量是shebeihao，那么上面两家分别填写：http://a.com/tracking?did={shebeihao}，和http://a.com/tracking?device={shebeihao}，等上报时候，将这些信息都替换正确。&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;渠道包&#34;&gt;渠道包&lt;/h3&gt;
-
-&lt;p&gt;因为（国内）Android并没有一个强势如AppStore的（混乱之源之一）应用商店，所以就会有渠道包这种东西。&lt;/p&gt;
-
-&lt;h2 id=&#34;fuseclick的做法&#34;&gt;Fuseclick的做法&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;为每一个AdNetwork建立一个Tracking Link，在Dashboard中配置对应的宏和Postback Url。&lt;/li&gt;
-&lt;li&gt;提供报表做到小时级别的统一，方便了不同时区的用户。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2 id=&#34;是不是可以这样&#34;&gt;是不是可以这样？&lt;/h2&gt;
-
-&lt;p&gt;（以下大部分都是猜测）
-不提供设备信息，只关心一个ClickId，然后把ClickId发给广告主，广告主使用渠道包来判断是否是来自于本渠道的激活，有的话就直接回调AdNetwork，当然这个要建立在三方互相信任的阶段。&lt;/p&gt;
-
-&lt;p&gt;FC公众号上面的这篇对广告行业的介绍写的挺好的。&lt;a href=&#34;http://www.wtoutiao.com/p/N56UUz.html&#34;&gt;http://www.wtoutiao.com/p/N56UUz.html&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;假如，大家需要一个参数DeviceId，A家需要的上报是&lt;a href=&#34;http://a.com/tracking?did=XX,而B家需要的上报是http://b.com/tracking?device=XX，这时候客户需要让AdNetwork知道应该怎么上报，AdNetwork提供一批可供替换的变量，让客户自己填。例如DeviceId的变量是shebeihao，那么上面两家分别填写：http://a.com/tracking?did={shebeihao}，和http://a.com/tracking?device={shebeihao}，等上报时候，将这些信息都替换正确。等归因完成，Postback时候，也可以走同样的流程。&#34;&gt;http://a.com/tracking?did=XX,而B家需要的上报是http://b.com/tracking?device=XX，这时候客户需要让AdNetwork知道应该怎么上报，AdNetwork提供一批可供替换的变量，让客户自己填。例如DeviceId的变量是shebeihao，那么上面两家分别填写：http://a.com/tracking?did={shebeihao}，和http://a.com/tracking?device={shebeihao}，等上报时候，将这些信息都替换正确。等归因完成，Postback时候，也可以走同样的流程。&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     

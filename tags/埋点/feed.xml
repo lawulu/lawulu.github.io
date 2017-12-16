@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>璐濒殉漂流记</title>
+    <link>https://lawulu.github.io/tags/%E5%9F%8B%E7%82%B9/feed/index.xml</link>
+    <description>Recent content on 璐濒殉漂流记</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <atom:link href="https://lawulu.github.io/tags/%E5%9F%8B%E7%82%B9/feed/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>数据需要收集哪些数据</title>
+      <link>https://lawulu.github.io/post/%E6%95%B0%E6%8D%AE%E9%9C%80%E8%A6%81%E6%94%B6%E9%9B%86%E5%93%AA%E4%BA%9B%E6%95%B0%E6%8D%AE/</link>
+      <pubDate>Thu, 15 Jun 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://lawulu.github.io/post/%E6%95%B0%E6%8D%AE%E9%9C%80%E8%A6%81%E6%94%B6%E9%9B%86%E5%93%AA%E4%BA%9B%E6%95%B0%E6%8D%AE/</guid>
+      <description>
+
+&lt;h2 id=&#34;背景&#34;&gt;背景&lt;/h2&gt;
+
+&lt;p&gt;最近线上遇到一些问题，分析起来还是要抓瞎，完全不知道怎么去定位。只能从代码去分析&amp;hellip;觉得之前的设计的数据收集太简单了，只是以报表需求为导向设计的。那我们还需要收集哪些数据呢？&lt;/p&gt;
+
+&lt;h2 id=&#34;能解释业务的数据&#34;&gt;能解释业务的数据&lt;/h2&gt;
+
+&lt;h3 id=&#34;所有业务要串起来&#34;&gt;所有业务要串起来&lt;/h3&gt;
+
+&lt;p&gt;业务有三条线：
+- Active
+- Config
+- Preload-&amp;gt;Impression-&amp;gt;Event-&amp;gt;Click-&amp;gt;Install&lt;/p&gt;
+
+&lt;p&gt;改动：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;最核心的广告生命周期是否可以用一个Id呢？如果不能，每一步要讲上一步的id给带上来。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;CDN的下载要带上一个preloadId，然后开启参数过滤，通过关联preloadId将下载流程也关联到核心业务上去。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;重复Id上报的问题&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;server日志&#34;&gt;Server日志&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;ELK要用起来，亦可以调研一下阿里的日志服务&lt;/li&gt;
+&lt;li&gt;规范Server输出，尤其是Filter广告时候，要将挑选广告失败的原因记录到日志里面&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;可追溯每个客户端的行为的数据&#34;&gt;可追溯每个客户端的行为的数据&lt;/h2&gt;
+
+&lt;p&gt;最近几个痛点：流量端说我们的填充率对低，而我们报表的填充率非常高；点击广告主上报跟服务器上报总是对不上；点击率中有真实点击和误点击区分不开。所以要收集这些数据：
+- APP对SDK的接口调用都要记录
+- SDK和Server之外的所有交互（点击上报，CDN下载）都要记录
+- 以上记录可以通过开关来控制
+- EndCard的点击率要能区分点击区域，找到真实的点击率&lt;/p&gt;
+
+&lt;h2 id=&#34;其他数据&#34;&gt;其他数据&lt;/h2&gt;
+
+&lt;p&gt;抓友商的包，发现友商有一个SessionStart和SessionEnd的接口，这个要加上。貌似SessionEnd不准，因为每次进入后台，SDK没有机会发请求到Server。&lt;/p&gt;
+
+&lt;h2 id=&#34;实施&#34;&gt;实施&lt;/h2&gt;
+
+&lt;h3 id=&#34;ab测试准备&#34;&gt;AB测试准备&lt;/h3&gt;
+
+&lt;p&gt;增加一个Header&lt;code&gt;x-clad-tag&lt;/code&gt;,在Config接口下发下去，给用户打标签，并贯彻到整个业务流程&lt;/p&gt;
+
+&lt;h3 id=&#34;上报服务拆分&#34;&gt;上报服务拆分&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Impr,Click等事件上报因为只是记一个数字，要和Preload业务从逻辑和部署上都分开，避免互相干扰&lt;/li&gt;
+&lt;li&gt;并且上报地址应该是Preload下发下去，而非写死，并且支持同一事件的多重上报。这样易于控制，甚至以后可以作弊（按照某人的说法：&amp;rdquo;&lt;code&gt;我们不主动作恶，但是在恶劣的环境下，要有保护自己的手段。&lt;/code&gt;&amp;ldquo;）&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

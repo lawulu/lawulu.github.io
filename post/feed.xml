@@ -17,13 +17,13 @@
       <guid>https://lawulu.github.io/post/%E5%B0%8F%E9%99%88%E4%B8%8E%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%9A%84%E6%95%85%E4%BA%8B/</guid>
       <description>
 
-&lt;p&gt;&lt;em&gt;本篇为公众号&lt;code&gt;码农翻身&lt;/code&gt;的约稿，最终想写4篇，所谓陈余罗严&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;本篇为公众号&lt;code&gt;码农翻身&lt;/code&gt;的约稿，最终想写4篇，分别为&lt;code&gt;陈余罗严&lt;/code&gt;&lt;/em&gt;&lt;/p&gt;
 
 &lt;h2 id=&#34;在学校&#34;&gt;在学校&lt;/h2&gt;
 
 &lt;p&gt;做为一个科班出身的程序员，在小陈还不明白自己所学的的数据结构和操作系统这些专业课跟未来的工作有什么关系，甚至未来做什么也不清楚时候，小陈最喜欢做的事就是看电影，看完还舍不得删。那个时代流行的还是“为人不识武藤兰，阅遍电影也枉然”，电影还有很多是rm格式的，几百兆都算大的，但是架不住小陈对一衣带水邻国文化的热爱，只有120G的硬盘让他很快有了另一个爱好：整理硬盘，每次有新资源出来，小陈都得想办法腾点空间出来。&lt;/p&gt;
 
-&lt;p&gt;后来教育网里一个叫Maze的软件在我校流行开来，这个软件可以在局域网内以P2P的方式完成资源共享。喜大普奔，小陈得意洋洋的宣布自己终于不用整理硬盘了，自己硬盘里面只存一部分经典的，想看什么电影从别人机器里面拖，哪怕自己临时要看一个美帝大片，删掉一部分电影，删掉之后都还能从别人机器里面拖回来。&lt;/p&gt;
+&lt;p&gt;后来教育网里一个叫Maze的软件在学校流行开来，这个软件可以在局域网内以P2P的方式完成资源共享。喜大普奔，小陈得意洋洋的宣布自己终于不用整理硬盘了，自己硬盘里面只存一部分经典的，想看什么电影从别人机器里面拖，哪怕自己临时要看一个美帝大片，删掉一部分电影，删掉之后都还能从别人机器里面拖回来。&lt;/p&gt;
 
 &lt;p&gt;直到有一天，小陈临时删了一位老师的代表作，等想找回来时候，不知道是学校调整了网络路由还是因为高年级学生的离校，这部本来在Maze中非常常见的电影居然一个都找不到了。小陈被室友嘲笑之余，怒而卸载了Maze，并决定要开发一套更好的共享资源软件：要有一个元数据服务器，所有使用者的硬盘的读写都由元数据服务器来管理，元数据保证每份电影都至少存在2份以上，而不是像现在这样保存什么电影，全靠用户心照不宣的默契和自己的兴趣。&lt;/p&gt;
 
@@ -132,6 +132,101 @@ nohup ssh  -ND 3128 user@jumpserver &amp;amp;
     </item>
     
     <item>
+      <title>Druid集群的数据迁移</title>
+      <link>https://lawulu.github.io/post/Druid%E9%9B%86%E7%BE%A4%E7%9A%84%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB/</link>
+      <pubDate>Wed, 08 Nov 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://lawulu.github.io/post/Druid%E9%9B%86%E7%BE%A4%E7%9A%84%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB/</guid>
+      <description>
+
+&lt;p&gt;公司重新购买了Hadoop集群，硬盘不足的问题解决了。想把HDFS作为Deep Storage用起来。先把思路记录下来，等折腾完了再补充。&lt;/p&gt;
+
+&lt;h2 id=&#34;mysql到druid&#34;&gt;Mysql到Druid&lt;/h2&gt;
+
+&lt;h3 id=&#34;确定时间点&#34;&gt;确定时间点&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;按照UTC时间划分&lt;/li&gt;
+&lt;li&gt;将Druid之前试跑数据废弃&lt;/li&gt;
+&lt;li&gt;将Mysql数据按天生成Json文件，批量导入&lt;/li&gt;
+&lt;li&gt;数据校验&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;影响&#34;&gt;影响&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;查询需要并两个dataSource&lt;/li&gt;
+&lt;li&gt;Mysql数据没有Uniq相关的Metric&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;nfs-based到hdfs-based&#34;&gt;NFS based到HDFS based&lt;/h2&gt;
+
+&lt;h3 id=&#34;目标&#34;&gt;目标&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;尽可能快的迁移&lt;/li&gt;
+&lt;li&gt;数据完整性和正确&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;方案一-基于offset&#34;&gt;方案一：基于Offset&lt;/h3&gt;
+
+&lt;h4 id=&#34;步骤&#34;&gt;步骤：&lt;/h4&gt;
+
+&lt;p&gt;①关掉旧Druid的KIS服务，并记录下消费的offset&lt;/p&gt;
+
+&lt;p&gt;②修改Segments的名字&lt;/p&gt;
+
+&lt;p&gt;③迁移Segements到HDFS&lt;/p&gt;
+
+&lt;p&gt;④重新Index&lt;/p&gt;
+
+&lt;p&gt;⑤在新Druid上面启动KIS，Offset设定&lt;/p&gt;
+
+&lt;h4 id=&#34;问题&#34;&gt;问题：&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;KIS的Offset问题&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;保存在metadata的DruidTask中？&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;quot;startPartitions&amp;quot; : {
+			&amp;quot;partitionOffsetMap&amp;quot; : {
+				&amp;quot;11&amp;quot; : 3,
+				&amp;quot;2&amp;quot; : 3,
+				&amp;quot;5&amp;quot; : 3,
+				&amp;quot;8&amp;quot; : 3
+			},
+			&amp;quot;topic&amp;quot; : &amp;quot;topic1&amp;quot;
+			
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;没有找到直接的办法，复制任务风险太大，可能需要修改源代码&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;同一Segment的数据是两个集群生成的，合并起来的风险？例如segment的Id是递增的&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;方案二-基于时间划分&#34;&gt;方案二：基于时间划分&lt;/h3&gt;
+
+&lt;h4 id=&#34;步骤-1&#34;&gt;步骤：&lt;/h4&gt;
+
+&lt;p&gt;①在新集群上面启动KIS服务，两个集群同时跑一段时间&lt;/p&gt;
+
+&lt;p&gt;②根据日期切割&lt;/p&gt;
+
+&lt;h4 id=&#34;问题-1&#34;&gt;问题：&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;对kafka集群的压力double&lt;/li&gt;
+&lt;li&gt;按照日期切割依旧存在合并时候Indexing问题&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;方案二的技术风险要小一些。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Imply和Confluent破解</title>
       <link>https://lawulu.github.io/post/Imply%E5%92%8CConfluent%E7%A0%B4%E8%A7%A3/</link>
       <pubDate>Wed, 20 Sep 2017 00:00:00 +0000</pubDate>
@@ -174,17 +269,21 @@ nohup ssh  -ND 3128 user@jumpserver &amp;amp;
 
 &lt;h2 id=&#34;confluent&#34;&gt;Confluent&lt;/h2&gt;
 
+&lt;p&gt;Confluent的前端要求比较简单，是一个Java Web项目（静态资源也用jar打包），通过Guice来管理对象依赖。反编译&lt;code&gt;io.confluent.controlcenter&lt;/code&gt;相关jar。很快发现这段代码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; return License.baseClaims(&amp;quot;demo&amp;quot;, bfa.creationTime().toMillis() + TimeUnit.DAYS.toMillis(30L), true);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;所以其实修改该文件的createTime就行了..&lt;/p&gt;
+
+&lt;p&gt;不过这个破解花了我半天时间..&lt;/p&gt;
+
 &lt;p&gt;坑一：一开始搞反了..一直没报错 还以为没生效&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;jar uf /service/app/confluent-4.0.0/share/java/confluent-control-center/control-center-4.0.0.jar io/confluent/controlcenter/license/LicenseModule.class
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;坑二：zsh ll不显示隐藏文件，习惯把ll = ls-al 而不是ls -ah&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt; return License.baseClaims(&amp;quot;demo&amp;quot;, bfa.creationTime().toMillis() + TimeUnit.DAYS.toMillis(30L), true);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;所以其实修改该文件的createTime就行了..&lt;/p&gt;
 </description>
     </item>
     
@@ -221,6 +320,8 @@ nohup ssh  -ND 3128 user@jumpserver &amp;amp;
 
 &lt;h3 id=&#34;server日志&#34;&gt;Server日志&lt;/h3&gt;
 
+&lt;p&gt;为了帮助运营快速的定位业务问题，如为什么某些App的填充低？为什么Erpm最低的某个Campaign还拿到了量？可以考虑将Serving的日志和业务关联起来。&lt;/p&gt;
+
 &lt;ul&gt;
 &lt;li&gt;ELK要用起来，亦可以调研一下阿里的日志服务&lt;/li&gt;
 &lt;li&gt;规范Server输出，尤其是Filter广告时候，要将挑选广告失败的原因记录到日志里面&lt;/li&gt;
@@ -248,7 +349,7 @@ nohup ssh  -ND 3128 user@jumpserver &amp;amp;
 
 &lt;ul&gt;
 &lt;li&gt;Impr,Click等事件上报因为只是记一个数字，要和Preload业务从逻辑和部署上都分开，避免互相干扰&lt;/li&gt;
-&lt;li&gt;并且上报地址应该是Preload下发下去，而非写死，并且支持同一事件的多重上报。这样易于控制，甚至以后可以作弊（按照某人的说法：&amp;rdquo;&lt;code&gt;我们不主动作恶，但是在恶劣的环境下，要有保护自己的手段。&lt;/code&gt;&amp;ldquo;）&lt;/li&gt;
+&lt;li&gt;并且上报地址应该是Preload下发下去，而非写死，并且支持同一事件的多地址上报。这样易于控制，甚至以后可以作弊（按照某人的说法：&amp;rdquo;&lt;code&gt;我们不主动作恶，但是在恶劣的环境下，要有保护自己的手段。&lt;/code&gt;&amp;ldquo;）&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>
@@ -261,7 +362,7 @@ nohup ssh  -ND 3128 user@jumpserver &amp;amp;
       <guid>https://lawulu.github.io/post/Preload%E5%92%8CPlay%E6%8E%A5%E5%8F%A3%E7%9A%84%E5%85%B4%E8%A1%B0%E5%8F%B2/</guid>
       <description>
 
-&lt;p&gt;对业务理解的深入和梳理，极大的方便了重构。先说结论：&lt;strong&gt;Preload的本质是告诉SDK下一次Impression应该展示哪个广告&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;通过对业务的深入理解和梳理，来优化架构。先说结论：&lt;strong&gt;Preload的本质是告诉SDK下一次Impression应该展示哪个广告&lt;/strong&gt;。&lt;/p&gt;
 
 &lt;h2 id=&#34;背景&#34;&gt;背景&lt;/h2&gt;
 
@@ -304,7 +405,115 @@ nohup ssh  -ND 3128 user@jumpserver &amp;amp;
 &lt;li&gt;在应用启动和每次播放完成之后调用一次Preload&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;p&gt;Play的逻辑前置到Preload里面，Play沦为一个上报接口&lt;/p&gt;
+&lt;p&gt;Play的逻辑前置和合并到Preload里面，Play沦为一个上报接口&lt;/p&gt;
+
+&lt;h2 id=&#34;推而广之&#34;&gt;推而广之&lt;/h2&gt;
+
+&lt;p&gt;SDK模式下，每个接口对userId是否是合法用户的检查也没有意义。&lt;/p&gt;
+
+&lt;p&gt;所谓SDK模式，因为SDK是自家的，流量和费用都是通过商务谈的。API的设计是建立在SDK可控和可以信任的基础之上的。现有架构之下，每次激活相当于获得了一个调用其他API的Token，而这个Token是保存在客户端本地的，所以，没必要去单独Check UserId，
+即使检查不通过，SDK自动会去调用用户激活接口，又会得到一个已经激活UserId。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>公司整体架构上的一些思考</title>
+      <link>https://lawulu.github.io/post/%E5%85%AC%E5%8F%B8%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84%E4%B8%8A%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/</link>
+      <pubDate>Fri, 21 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://lawulu.github.io/post/%E5%85%AC%E5%8F%B8%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84%E4%B8%8A%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/</guid>
+      <description>
+
+&lt;h2 id=&#34;server&#34;&gt;Server&lt;/h2&gt;
+
+&lt;h3 id=&#34;性能&#34;&gt;性能&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;流量高峰时候遇到过响应时间过大
+
+&lt;ul&gt;
+&lt;li&gt;充分利用WEB服务器性能(例如OpenResty或者Nginx+NgixScirpt），将简单通用的业务逻辑（如签名校验和去重逻辑）前置，降低后端容器的负荷，提高并发和响应&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;客户端重试导致的服务器雪崩
+
+&lt;ul&gt;
+&lt;li&gt;部分接口静态化（例如config接口），服务降级，例如直接返回null
+&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;redis依赖&#34;&gt;Redis依赖&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;太过于依赖Redis
+
+&lt;ul&gt;
+&lt;li&gt;引入二级缓存，降低和隔离对Redis的依赖&lt;/li&gt;
+&lt;li&gt;Redis数据分只读和读写两种，可以放到两个集群里面&lt;/li&gt;
+&lt;li&gt;上Redis集群？&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;阿里云Redis
+
+&lt;ul&gt;
+&lt;li&gt;考虑在某些场景用阿里云Redis
+&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;监控和日志&#34;&gt;监控和日志&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;现在已经有了基于Zabbix的机器性能的监控，需要业务层次的分布式监控系统（例如Cat），方便快速洞察和响应线上问题&lt;/li&gt;
+&lt;li&gt;日志统一格式到Json&lt;/li&gt;
+&lt;li&gt;ELK需要提到日程了&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;数据&#34;&gt;数据&lt;/h2&gt;
+
+&lt;h3 id=&#34;数据质量&#34;&gt;数据质量&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;使用python grep按小时检查原始日志，来和Hive对比保证数据完整和正确性
+&lt;code&gt;
+p = subprocess.Popen(&amp;quot;&amp;quot;&amp;quot; cat &amp;quot;&amp;quot;&amp;quot; + file + &amp;quot;&amp;quot;&amp;quot;| grep -avF &#39;[2.3.0]&#39; | grep -aF &#39;[04]&#39;  |  wc -l &amp;quot;&amp;quot;&amp;quot;, shell=True, stdout=subprocess.PIPE );
+&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;对某些阈值进行报警，例如Preload，没有转化，点击率过低等情况。帮助运营及早洞察线上问题。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;任务调度&#34;&gt;任务调度&lt;/h3&gt;
+
+&lt;p&gt;现在基于Crontab，缺点：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;没有任务依赖关系，通过较长的时间间隔来保证任务的先后顺序。&lt;/li&gt;
+&lt;li&gt;重跑起来比较麻烦。&lt;/li&gt;
+&lt;li&gt;报警实现起来有点难&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;解决方案：&lt;/p&gt;
+
+&lt;p&gt;根据开源实现，将现有的任务（任务类型主要：shell,hive,sqoop）整合到任务调度系统中。
+例如：&lt;a href=&#34;http://azkaban.github.io/azkaban/docs/latest/#new-hive-type&#34;&gt;http://azkaban.github.io/azkaban/docs/latest/#new-hive-type&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;查询引擎&#34;&gt;查询引擎&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;因为某些维度太细（手机型号，城市）报表查询慢
+
+&lt;ul&gt;
+&lt;li&gt;为报表预生成数据&lt;/li&gt;
+&lt;li&gt;更换查询引擎，如Druid，Kylin？&lt;/li&gt;
+&lt;li&gt;Ali RDS是否有优化Mysql（例如引擎）的可能&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;其他&#34;&gt;其他&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;对Serving的支持：数据和Server的界限问题。例如ImprNum per Campaign per app的计数，这个应该放到data还是server？&lt;/li&gt;
+&lt;li&gt;分层过多，如何快速响应业务变化？&lt;/li&gt;
+&lt;li&gt;如何能快速定位问题？如为什么填充下降了？不填充的原因要列出来。如为什么有些erpm低的拿到的量大？(4G网络下面包体大于100M的不下发， 前面高erpm的经过两轮（第一轮是否在线，第二轮数据网络条件下面包体大小过滤）过滤掉， 正好轮到了1789下发)&lt;/li&gt;
+&lt;/ul&gt;
 </description>
     </item>
     
@@ -574,6 +783,97 @@ for city in citys:
     </item>
     
     <item>
+      <title>Databricks:Spark knowledge base</title>
+      <link>https://lawulu.github.io/post/Databricks:Spark%20knowledge%20base/</link>
+      <pubDate>Sat, 18 Feb 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://lawulu.github.io/post/Databricks:Spark%20knowledge%20base/</guid>
+      <description>
+
+&lt;p&gt;内容来自：
+&lt;a href=&#34;https://databricks.gitbooks.io/databricks-spark-knowledge-base/&#34;&gt;https://databricks.gitbooks.io/databricks-spark-knowledge-base/&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;最佳实践&#34;&gt;最佳实践&lt;/h2&gt;
+
+&lt;h3 id=&#34;避免使用groupbykey&#34;&gt;避免使用GroupByKey&lt;/h3&gt;
+
+&lt;p&gt;在使用&lt;code&gt;groupByKey&lt;/code&gt;时候，Spark引擎并不清楚分组之后要做什么，所以无法在数据交换之前在Partition内部提前运算，而&lt;code&gt;reduceByKey&lt;/code&gt;不同，可以在分区内部提前调用&lt;code&gt;reduceByKey&lt;/code&gt;的&lt;code&gt;func&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;不要将大数据量copy到driver中&#34;&gt;不要将大数据量Copy到Driver中&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;myVeryLargeRDD.collect()&lt;/code&gt;这句话会试图将所有数据都Copy到Driver中，导致内存溢出和程序崩溃。为查看数据，可以使用&lt;code&gt;take&lt;/code&gt;或者&lt;code&gt;takeSample&lt;/code&gt;，或者将数据写到文件或者数据库。&lt;/p&gt;
+
+&lt;h3 id=&#34;优雅的处理错误数据&#34;&gt;优雅的处理错误数据&lt;/h3&gt;
+
+&lt;p&gt;使用&lt;code&gt;map&lt;/code&gt;、&lt;code&gt;filter&lt;/code&gt;、&lt;code&gt;flatMap&lt;/code&gt;来过滤错误数据&lt;/p&gt;
+
+&lt;h2 id=&#34;常规故障处理&#34;&gt;常规故障处理&lt;/h2&gt;
+
+&lt;h3 id=&#34;task-not-serializable&#34;&gt;Task not serializable&lt;/h3&gt;
+
+&lt;p&gt;这是因为堆对象只有在被序列化时候，才能在节点之间传递。解决办法:
+- 实现序列化
+- Declare the instance only within the lambda function passed in map.
+- 将实例声明为static,这样在每个节点都会重新初始化
+- 使用&lt;code&gt;rdd.forEachPartition&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;rdd.forEachPartition(iter -&amp;gt; {
+     NotSerializable notSerializable = new NotSerializable();
+   
+     // ...Now process iter
+   });
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;缺失依赖&#34;&gt;缺失依赖&lt;/h3&gt;
+
+&lt;p&gt;解决办法：在 Maven 打包的时候创建 shaded 或 uber 任务，并将Spark的lib设为provided&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://databricks.gitbooks.io/databricks-spark-knowledge-base/content/troubleshooting/missing_dependencies_in_jar_files.html&#34;&gt;https://databricks.gitbooks.io/databricks-spark-knowledge-base/content/troubleshooting/missing_dependencies_in_jar_files.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;mac-error-running-start-all-sh-connection-refused&#34;&gt;Mac：Error running start-all.sh Connection refused&lt;/h3&gt;
+
+&lt;p&gt;开启 “远程登录” 功能。进入 系统偏好设置 &amp;mdash;&amp;gt; 共享 勾选打开 远程登录。&lt;/p&gt;
+
+&lt;h3 id=&#34;spark组件的网络连接问题&#34;&gt;Spark组件的网络连接问题&lt;/h3&gt;
+
+&lt;h2 id=&#34;性能和优化&#34;&gt;性能和优化&lt;/h2&gt;
+
+&lt;h3 id=&#34;rdd有多少个分区&#34;&gt;RDD有多少个分区？&lt;/h3&gt;
+
+&lt;h4 id=&#34;使用-ui-查看在分区上执行的任务数&#34;&gt;使用 UI 查看在分区上执行的任务数&lt;/h4&gt;
+
+&lt;h4 id=&#34;使用-ui-查看storage&#34;&gt;使用 UI 查看Storage&lt;/h4&gt;
+
+&lt;h4 id=&#34;编程查看-rdd-分区&#34;&gt;编程查看 RDD 分区&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;scala&amp;gt; val someRDD = sc.parallelize(1 to 100, 30)
+someRDD: org.apache.spark.rdd.RDD[Int] = ParallelCollectionRDD[0] at parallelize at &amp;lt;console&amp;gt;:12
+
+scala&amp;gt; someRDD.partitions.size
+res0: Int = 30
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;数据本地性&#34;&gt;数据本地性&lt;/h3&gt;
+
+&lt;p&gt;任务应该在离数据尽可能近的地方执行(例如最少的数据传输)。&lt;/p&gt;
+
+&lt;h4 id=&#34;检查本地性&#34;&gt;检查本地性&lt;/h4&gt;
+
+&lt;p&gt;注意UI中的&lt;code&gt;Locality Level&lt;/code&gt;&lt;/p&gt;
+
+&lt;h4 id=&#34;调整本地性&#34;&gt;调整本地性&lt;/h4&gt;
+
+&lt;p&gt;You can adjust how long Spark will wait before it times out on each of the phases of data locality (data local &amp;ndash;&amp;gt; process local &amp;ndash;&amp;gt; node local &amp;ndash;&amp;gt; rack local &amp;ndash;&amp;gt; Any)&lt;/p&gt;
+
+&lt;h3 id=&#34;spark-streaming&#34;&gt;Spark Streaming&lt;/h3&gt;
+
+&lt;h4 id=&#34;error-oneforonestrategy&#34;&gt;ERROR OneForOneStrategy&lt;/h4&gt;
+
+&lt;p&gt;If you enable checkpointing in Spark Streaming, then objects used in a function called in forEachRDD should be Serializable. Otherwise, there will be an &amp;ldquo;ERROR OneForOneStrategy: &amp;hellip; java.io.NotSerializableException:&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>使用SparkSQL替代Hive做ETL</title>
       <link>https://lawulu.github.io/post/%E4%BD%BF%E7%94%A8SparkSQL%E6%9B%BF%E4%BB%A3Hive%E5%81%9AETL/</link>
       <pubDate>Wed, 18 Jan 2017 00:00:00 +0000</pubDate>
@@ -663,6 +963,36 @@ val right = Seq((&amp;ldquo;aa&amp;rdquo;, 0.99), (&amp;ldquo;bb&amp;rdquo;, 0.5
     </item>
     
     <item>
+      <title>基于Dubbo的Batch项目</title>
+      <link>https://lawulu.github.io/post/%E5%9F%BA%E4%BA%8EDubbo%E7%9A%84Batch%E9%A1%B9%E7%9B%AE/</link>
+      <pubDate>Tue, 17 Jan 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://lawulu.github.io/post/%E5%9F%BA%E4%BA%8EDubbo%E7%9A%84Batch%E9%A1%B9%E7%9B%AE/</guid>
+      <description>
+
+&lt;p&gt;这个Demo完成于去年，今天把一些敏感信息去掉，放到github上&lt;/p&gt;
+
+&lt;h1 id=&#34;dubbo-batch-demo&#34;&gt;dubbo batch demo&lt;/h1&gt;
+
+&lt;p&gt;包含了一个Batch项目和一个Portal。
+依赖当当的DubboX&lt;/p&gt;
+
+&lt;h2 id=&#34;batch&#34;&gt;Batch&lt;/h2&gt;
+
+&lt;p&gt;Batch使用了Spring batch，Quartz，Dubbo
+通过自定义的MetaData来管理所有数据&lt;/p&gt;
+
+&lt;h2 id=&#34;portal&#34;&gt;Portal&lt;/h2&gt;
+
+&lt;p&gt;一个实例项目，改造自当当的Elastic-job的Admin Portal，用到lombok和Freemarker&lt;/p&gt;
+
+&lt;h1 id=&#34;项目地址&#34;&gt;项目地址&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/lawulu/dubbo-batch-demo&#34;&gt;https://github.com/lawulu/dubbo-batch-demo&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>广告的Tracking(AdNetwork&#39;s Point of view)</title>
       <link>https://lawulu.github.io/post/%E5%B9%BF%E5%91%8A%E7%9A%84Tracking/</link>
       <pubDate>Thu, 01 Dec 2016 00:00:00 +0000</pubDate>
@@ -705,9 +1035,34 @@ val right = Seq((&amp;ldquo;aa&amp;rdquo;, 0.99), (&amp;ldquo;bb&amp;rdquo;, 0.5
 
 &lt;h3 id=&#34;宏替换&#34;&gt;宏替换&lt;/h3&gt;
 
-&lt;p&gt;由于AdNetwork要对接的第三方平台太多，而各家Tracking时候需要的参数是不一样的。（为什么没有一个广告协会之类规范一下？！），所以就会有宏替换这么一个奇特而又奇妙的东西。举一个例子：&lt;/p&gt;
+&lt;p&gt;由于AdNetwork要对接的第三方平台太多，而各家Tracking时候需要的参数是不一样的。（为什么没有一个广告协会之类规范一下？！），所以就会有宏替换这么一个奇特而又奇妙的东西。&lt;/p&gt;
 
-&lt;p&gt;假如，大家需要一个参数DeviceId，A家需要的上报是&lt;a href=&#34;http://a.com/tracking?did=XX,而B家需要的上报是http://b.com/tracking?device=XX，这时候客户需要让AdNetwork知道应该怎么上报，AdNetwork提供一批可供替换的变量，让客户自己填。例如DeviceId的变量是shebeihao，那么上面两家分别填写：http://a.com/tracking?did={shebeihao}，和http://a.com/tracking?device={shebeihao}，等上报时候，将这些信息都替换正确。等归因完成，Postback时候，也可以走同样的流程。&#34;&gt;http://a.com/tracking?did=XX,而B家需要的上报是http://b.com/tracking?device=XX，这时候客户需要让AdNetwork知道应该怎么上报，AdNetwork提供一批可供替换的变量，让客户自己填。例如DeviceId的变量是shebeihao，那么上面两家分别填写：http://a.com/tracking?did={shebeihao}，和http://a.com/tracking?device={shebeihao}，等上报时候，将这些信息都替换正确。等归因完成，Postback时候，也可以走同样的流程。&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;举一个例子：&lt;/p&gt;
+
+&lt;p&gt;假如，归因平台需要一个参数DeviceId，但是归因平台A用的参数是&lt;code&gt;did&lt;/code&gt;，例如&lt;code&gt;http://a.com/tracking?did=XX&lt;/code&gt;, 而归因平台B用的参数是&lt;code&gt;device&lt;/code&gt;，例如&lt;code&gt;http://b.com/tracking?device=XX&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;AdNetwork并不需要知道每一家归因平台的DeviceId应该怎么上报，只需要提供一批可供替换的变量，让客户自己填。例如DeviceId在AdNetwork的变量是shebeihao，那么上面两家分别填写：&lt;code&gt;http://a.com/tracking?did={shebeihao}&lt;/code&gt;，和&lt;code&gt;http://a.com/tracking?device={shebeihao}&lt;/code&gt;，等上报时候，将这些信息都被AdNetwork替换正确。&lt;/p&gt;
+
+&lt;p&gt;同样的，归因平台也有类似的宏替换的机制，如果AdNetwork的PostBack url是&lt;code&gt;http://ad.com/postback&lt;/code&gt;,那对于归因平台A，Postback url就是&lt;code&gt;http://ad.com/postback?shebeihao={did}&lt;/code&gt;,对于归因平台B，Postback url就是&lt;code&gt;http://ad.com/postback?shebeihao={device}&lt;/code&gt;
+归因平台也是，Postback时候，也可以走同样的流程。&lt;/p&gt;
+
+&lt;h2 id=&#34;系统演进&#34;&gt;系统演进&lt;/h2&gt;
+
+&lt;h3 id=&#34;第一版基于参数透传&#34;&gt;第一版基于参数透传&lt;/h3&gt;
+
+&lt;p&gt;并且自己组装了一个customParm,将所有需要的维度而又无法透传的参数组装到一起，回传回来直接根据这些透传参数生成安装报表。&lt;/p&gt;
+
+&lt;p&gt;问题：
+- 参数过程某些家解析会出错
+- 传递过程中参数容易丢&lt;/p&gt;
+
+&lt;h3 id=&#34;第二版基于clickid查找&#34;&gt;第二版基于ClickId查找&lt;/h3&gt;
+
+&lt;p&gt;只使用ClickId归因&lt;/p&gt;
+
+&lt;p&gt;问题：
+- 支持30天回溯的话，对系统压力比较大，需要引入NoSql
+- 如果ClickId丢失，基本就丢了&lt;/p&gt;
 </description>
     </item>
     
@@ -859,184 +1214,6 @@ jQuery.ajax() =&amp;gt; $http
 &lt;h3 id=&#34;解决办法&#34;&gt;解决办法&lt;/h3&gt;
 
 &lt;p&gt;用原始的值传递和&lt;code&gt;$scope.$apply&lt;/code&gt;来交互数据，弃掉自定义控件&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Phantomjs和Casperjs初窥</title>
-      <link>https://lawulu.github.io/post/Phantomjs%E5%92%8CCasperjs%E5%88%9D%E7%AA%A5/</link>
-      <pubDate>Sun, 23 Oct 2016 00:00:00 +0000</pubDate>
-      
-      <guid>https://lawulu.github.io/post/Phantomjs%E5%92%8CCasperjs%E5%88%9D%E7%AA%A5/</guid>
-      <description>
-
-&lt;p&gt;在这个浏览器最大的时代，JS越来越重的时代，做爬虫其实最好的办法是找一个Headless浏览器，必须要支持执行JS，这样做爬虫就不用去分析HTTP和JS了。我大Java有HtmlUnit，最近尝试的是传说中的PhantomJs。话说为什么没有基于Chrome dev tools的爬虫框架呢，或许可以尝试下油猴子。&lt;/p&gt;
-
-&lt;h2 id=&#34;简介&#34;&gt;简介&lt;/h2&gt;
-
-&lt;p&gt;PhantomJs提供了最原始的API，Casperjs是对PhantomJs的包装，最方便的是不用不停的写if/else（成功了执行下一步），而是用then/wait等方法增加代码的可读性和可写性。不过，Casperjs官方文档直接给出，遇到问题，应该使用PhantomJs的方式先去调用，有问题也要去PhantomJs那里去提…所以，看文档还是直接上PhantomJs吧。&lt;/p&gt;
-
-&lt;h2 id=&#34;示例&#34;&gt;示例&lt;/h2&gt;
-
-&lt;p&gt;casperjs提供了&lt;code&gt;echo&lt;/code&gt;、&lt;code&gt;waitfor&lt;/code&gt;、&lt;code&gt;click&lt;/code&gt;等原语，所以代码大概是这样：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;casper.thenClick(&#39;li.pg_next&#39;);
-
-casper.then(function () {
-    this.waitForSelector(&#39;li.pg_next&#39;,function () {
-         this.echo(this.getHTML(&#39;.post-list&#39;));
-    });
-})
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;比较苦逼的是，只有通过文件和console来跟外界交互…casperjs提供了一个server示例，直接标注说有内存溢出风险，phantomjs直接把webserver标注为不可在生产上用。&lt;/p&gt;
-
-&lt;h2 id=&#34;debug&#34;&gt;Debug&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code&gt;casperjs --ignore-ssl-errors=yes --ssl-protocol=any  sample.js  --remote-debugger-port=9000 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;这时候，可以在Safari里面打开，在Scripts里面设置断点，就可以Debug了。看似简单，但是很多坑在里面。&lt;/p&gt;
-
-&lt;p&gt;首先，要在console里面执行__run()，但是如果&lt;code&gt;sample.js&lt;/code&gt;如果太复杂的话，会直接把PhantomJs搞Crash。所以可以在代码里面加上&lt;code&gt;Debugger&lt;/code&gt;，这样直接能跳过Crash的地方。
-另外，PhantomJs是基于Webkit的，Chrome虽然有Webkit血统，但是只使用了起渲染HTML和CSS这一层，自己搞了一套V8去执行JS，所以，最新版本的Chrome是无法Debug PhantomJs的，最好使用血缘更近的Safari。另外再吐槽一下，PhantomJs的Bug真多，动不动就Crash。&lt;/p&gt;
-
-&lt;p&gt;而且Console实在是不方便，所以，我觉得，最好的Debug还是用capture截图和多用log输出，例如监听资源。&lt;/p&gt;
-
-&lt;h2 id=&#34;监听资源&#34;&gt;监听资源&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code&gt; var utils = require(&#39;utils&#39;);
-
-casper.options.onResourceReceived = function(casperObject, res) {
-     var contentType = res.contentType;
-     if(contentType.indexOf(&amp;quot;json&amp;quot;)!=-1){
-        console.log(utils.dump(res));
-
-     }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;这里可以打印出所有header为&lt;code&gt;application/json&lt;/code&gt;的请求，然而没什么卵用，因为一般来说，body都被Gzip了，这里比较适合的是打印出url。&lt;/p&gt;
-
-&lt;p&gt;另外一个坑是，PhantomJs退出时候，可能有很多Ajax请求还没有完成，所以这里要手动Wait……,不然很多请求抓不到，再所以，PhantomJs抓起来就比较慢，适合一些临时的小任务。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>闲言碎语·老人与孩</title>
-      <link>https://lawulu.github.io/post/%E8%80%81%E4%BA%BA%E4%B8%8E%E5%AD%A9/</link>
-      <pubDate>Fri, 07 Oct 2016 00:00:00 +0000</pubDate>
-      
-      <guid>https://lawulu.github.io/post/%E8%80%81%E4%BA%BA%E4%B8%8E%E5%AD%A9/</guid>
-      <description>&lt;p&gt;国庆前打车从西站回家，路遇一个炒房大叔司机，一路叨叨他们去河北买房的事情，中间有句话印象很深，是说和儿子商量怎么理财的事情：老人有老人的经验，年轻人有年轻人的闯劲。&lt;/p&gt;
-
-&lt;p&gt;我对本地人最羡慕的一点就是，一直生活在生活的传承之下。不仅是生活的一些小窍门，还有很多为人处世的言传身教。&lt;/p&gt;
-
-&lt;p&gt;这么多年没有和父母在一起生活，不管是生活理念还是人生观，因为缺少磨合和沟通，差距很大，如果按照一直以来连岳的说法，不要试图去改变他们。之前去郑州，父亲一直说我们办事情考虑问题不全面，没有把生孩子这件事给重视起来，万一某个环节出了问题，要后悔终生的。&lt;/p&gt;
-
-&lt;p&gt;我想起了另一件事，儿子刚出生时候，因为住院，睡成了偏头，一个耳朵有点招风，然后又折腾母乳过敏，所以招风耳这事，一直没有太重视。岳母曾经说过几次说要用胶布粘住，妻子觉得会把皮肤粘疼，也向我转述过这种想法，我下意识的把这事当成了笑话来听，说不用，招风耳就当听逆言了。直到上次因为偏头去保健科（去晚了），才听说耳朵长不回来了，只有月子里面粘住耳朵有用，才开始着急，力图让妻子赶紧淘宝买一个。因为这事，差点吵了一架。&lt;/p&gt;
-
-&lt;p&gt;另外，母亲最近在北京看孩子，向我展示了她的耳朵，我才知道她小时候耳朵也被压了，两个耳朵不对称。同样的教训竟然发生在一个家庭两代人身上！之前因为为尊者讳的原因，我从来不知道！幸好，现在头发长了，基本看不出来。&lt;/p&gt;
-
-&lt;p&gt;我相信网络和权威（医院），但是网络和权威并没有给一个完全性的指南。遇上问题再去搜索，肯定要晚了。&lt;/p&gt;
-
-&lt;p&gt;现在父母在这里看孩子，下意识的还是觉得父母的做法有问题，不如网上随便一个论坛里面的只言片语。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>知乎回答·河北高考分数高意味着什么</title>
-      <link>https://lawulu.github.io/post/%E6%B2%B3%E5%8C%97%E9%AB%98%E8%80%83%E5%88%86%E6%95%B0%E7%BA%BF/</link>
-      <pubDate>Mon, 27 Jun 2016 00:00:00 +0000</pubDate>
-      
-      <guid>https://lawulu.github.io/post/%E6%B2%B3%E5%8C%97%E9%AB%98%E8%80%83%E5%88%86%E6%95%B0%E7%BA%BF/</guid>
-      <description>&lt;p&gt;&lt;a href=&#34;https://www.zhihu.com/question/31762126/answer/107369501&#34;&gt;https://www.zhihu.com/question/31762126/answer/107369501&lt;/a&gt;
-利益相关:十几年前的河南考生&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;河南山西江西的考生的应试能力差不多,河北考生的应试能力完全碾压其他几省. 但这事是河北考生的悲哀而不是骄傲.&lt;/p&gt;
-
-&lt;p&gt;上面很多答案已经说了是衡水中学的影响, 有兴趣的可以研究一下衡水中学跟河北整体分数的相关性.
-我上学时候,貌似从来没有听说过河北考生的分数这么高,大概是衡水中学起来之后,河北高考分数越来越变态的.2016年河北700分以上达到了恐怖的168人,比去年多了90+..&lt;/p&gt;
-
-&lt;p&gt;这对高中生来说是好事还是坏事?&lt;/p&gt;
-
-&lt;p&gt;可能是好事,&lt;strong&gt;如果通过高中的训练,能有能力把一件事做的比全国其他同龄人更好,或许以后人生在其他竞争中应该更容易胜出.&lt;/strong&gt;
-但是,我觉得肯定大部分家长不愿意自己孩子在高强度压力和竞争之下,需要比全国其他同龄人花费更多的时间和精力去拼命学习,去刷题(天赋一般的话理科考高分基本靠刷题),去练字(可以搜下衡水中学的语文英语作文字体). 而对于没有进入超级中学,或者进入超级中学而高考失败的考生,更是残酷.&lt;/p&gt;
-
-&lt;p&gt;说说我老家的情况,豫南某县城. 县城两所高中,一个重点一个普通,我高考时候重点高中班级前十基本可以进一本线,而现在一个班前三名才有可能进一本线.
-跟我们那时候比,一个是生源差了,初中按片升学,没有重点初中,中考招生,教委要求重点高中在某个分数线之后需要和普通高中轮流录取,换句话来说,重点高中不重点了,想想90年代时候,母校每个年级还有重点班,也被教委给取消了;另外就是很多好老师都去大城市了,也招不来好老师了.事实上,跨县高中之间竞争不大,升学率跟校长和县教委政绩挂钩不大,教委和校长没有动力去高压学生.&lt;/p&gt;
-
-&lt;p&gt;高考不公平,单纯讨论分数没有意义. 因为各省市的情况不一样. 假如全国一套卷子一个录取线,相信我,不出三年,帝都人大附学生的考分绝对不比衡水差. 横向比较一本率(考虑到很多省内211招取了很多本地考生,或许用985录取率)才有意义.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>ML-决策树和回归</title>
-      <link>https://lawulu.github.io/post/ML-%E5%9B%9E%E5%BD%92%E5%92%8C%E5%86%B3%E7%AD%96%E6%A0%91/</link>
-      <pubDate>Fri, 20 May 2016 00:00:00 +0000</pubDate>
-      
-      <guid>https://lawulu.github.io/post/ML-%E5%9B%9E%E5%BD%92%E5%92%8C%E5%86%B3%E7%AD%96%E6%A0%91/</guid>
-      <description>
-
-&lt;h2 id=&#34;决策树&#34;&gt;决策树&lt;/h2&gt;
-
-&lt;h3 id=&#34;理论基础&#34;&gt;理论基础&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;信息熵：-p(x)*lnp(x)的和,如果信息熵高的话，说明不稳定，不确定性大。例如一个0.5vs0.5的硬币和一个0.99vs0.01的硬币。&lt;/li&gt;
-&lt;li&gt;条件熵：H(Y|X)=&lt;/li&gt;
-&lt;li&gt;信息增益：互信息&lt;/li&gt;
-&lt;li&gt;信息增益率&lt;/li&gt;
-&lt;li&gt;基尼系数（两个定义）
-ID3,C4.5,CART&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;建立决策树，核心的问题是如何选择特征值作为根节点？
-找到不确定性降低最快的，即构建一个信息熵下降最快的树&lt;/p&gt;
-
-&lt;p&gt;决策树的评价：&lt;/p&gt;
-
-&lt;p&gt;随机森林，对M个样本，是随机选出N个样本，并且放回，构造L颗树，然后投票选出分类，这是一种集中的思想，每一个树不完美，然后一起就很完美。（分类器不一定用决策树，也可能用SVM、LR之类，但是效果不好，因为是强分类器，对噪声比较敏感）
-事实上，回归也可以使用集中这种精神。&lt;/p&gt;
-
-&lt;p&gt;也有可能是在特征上加入了随机性，只取某些特征。降低了某些特征的影响。&lt;/p&gt;
-
-&lt;p&gt;怎么确定树的个数？
-这个是一个超参数，和lambda也一样，拍脑袋，然后验证。
-很多实践中，N=M,因为有1-1/e的概率会重复，会去掉捣乱分子，然后防止过拟合。各个大学的特征脸，加完除以n之后就会把不太好的特征给抹掉&lt;/p&gt;
-
-&lt;p&gt;平方根大法，每次平方根个样本&lt;/p&gt;
-
-&lt;h3 id=&#34;决策树也可以用来拟合&#34;&gt;决策树也可以用来拟合&lt;/h3&gt;
-
-&lt;p&gt;即每一段当做一个连续值&lt;/p&gt;
-
-&lt;p&gt;投票机制，可以加权。
-例如，电影加权评分调节冷门和热门比赛。
-拉普拉斯平滑，例如中韩比赛前四次都输了，计算最新比赛的胜率，本来应该是0/4，但是为了平滑，按照1/4+1来算。&lt;/p&gt;
-
-&lt;h2 id=&#34;回归&#34;&gt;回归&lt;/h2&gt;
-
-&lt;h3 id=&#34;数学理论&#34;&gt;数学理论&lt;/h3&gt;
-
-&lt;h4 id=&#34;中心极限定理&#34;&gt;中心极限定理&lt;/h4&gt;
-
-&lt;h4 id=&#34;e的含义&#34;&gt;e的含义&lt;/h4&gt;
-
-&lt;p&gt;a的x次方，只有a=e时候的导数是一致的，对应现实是利息，利息将时间考虑了进来。&lt;/p&gt;
-
-&lt;h3 id=&#34;回归分析&#34;&gt;回归分析&lt;/h3&gt;
-
-&lt;h4 id=&#34;目标函数&#34;&gt;目标函数&lt;/h4&gt;
-
-&lt;ol&gt;
-&lt;li&gt;假设误差是IID高斯分布，对真个样本空间来说，观察到所有样本的联合分布是所有的误差分布乘起来，对之求对数然后求导，得到均方误差公式，某种意义上来说，样本的因变量Y也是符合高斯分布的。&lt;/li&gt;
-&lt;li&gt;更一般意义的，均方误差公式其实对应的是欧氏距离。&lt;/li&gt;
-&lt;li&gt;均方误差公式可以写成矩阵相乘的形式，θX-Y&lt;/li&gt;
-&lt;li&gt;扰动，就类似于θ的值非常大的话，函数在样本空间之外的空间就可能出现过拟合，所以要防止θ过大，增加一个lamdaI矩阵，这个lamda叫做超常数，可以是指定的，例如=0.0001,根据训练数据&lt;/li&gt;
-&lt;/ol&gt;
 </description>
     </item>
     

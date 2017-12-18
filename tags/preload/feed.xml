@@ -16,7 +16,7 @@
       <guid>https://lawulu.github.io/post/Preload%E5%92%8CPlay%E6%8E%A5%E5%8F%A3%E7%9A%84%E5%85%B4%E8%A1%B0%E5%8F%B2/</guid>
       <description>
 
-&lt;p&gt;对业务理解的深入和梳理，极大的方便了重构。先说结论：&lt;strong&gt;Preload的本质是告诉SDK下一次Impression应该展示哪个广告&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;通过对业务的深入理解和梳理，来优化架构。先说结论：&lt;strong&gt;Preload的本质是告诉SDK下一次Impression应该展示哪个广告&lt;/strong&gt;。&lt;/p&gt;
 
 &lt;h2 id=&#34;背景&#34;&gt;背景&lt;/h2&gt;
 
@@ -59,7 +59,14 @@
 &lt;li&gt;在应用启动和每次播放完成之后调用一次Preload&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;p&gt;Play的逻辑前置到Preload里面，Play沦为一个上报接口&lt;/p&gt;
+&lt;p&gt;Play的逻辑前置和合并到Preload里面，Play沦为一个上报接口&lt;/p&gt;
+
+&lt;h2 id=&#34;推而广之&#34;&gt;推而广之&lt;/h2&gt;
+
+&lt;p&gt;SDK模式下，每个接口对userId是否是合法用户的检查也没有意义。&lt;/p&gt;
+
+&lt;p&gt;所谓SDK模式，因为SDK是自家的，流量和费用都是通过商务谈的。API的设计是建立在SDK可控和可以信任的基础之上的。现有架构之下，每次激活相当于获得了一个调用其他API的Token，而这个Token是保存在客户端本地的，所以，没必要去单独Check UserId，
+即使检查不通过，SDK自动会去调用用户激活接口，又会得到一个已经激活UserId。&lt;/p&gt;
 </description>
     </item>
     

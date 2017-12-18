@@ -17,6 +17,11 @@
   </url>
   
   <url>
+    <loc>https://lawulu.github.io/post/Druid%E9%9B%86%E7%BE%A4%E7%9A%84%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB/</loc>
+    <lastmod>2017-11-08T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://lawulu.github.io/post/Imply%E5%92%8CConfluent%E7%A0%B4%E8%A7%A3/</loc>
     <lastmod>2017-09-20T00:00:00+00:00</lastmod>
   </url>
@@ -29,6 +34,11 @@
   <url>
     <loc>https://lawulu.github.io/post/Preload%E5%92%8CPlay%E6%8E%A5%E5%8F%A3%E7%9A%84%E5%85%B4%E8%A1%B0%E5%8F%B2/</loc>
     <lastmod>2017-06-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://lawulu.github.io/post/%E5%85%AC%E5%8F%B8%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84%E4%B8%8A%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/</loc>
+    <lastmod>2017-04-21T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -52,8 +62,18 @@
   </url>
   
   <url>
+    <loc>https://lawulu.github.io/post/Databricks:Spark%20knowledge%20base/</loc>
+    <lastmod>2017-02-18T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://lawulu.github.io/post/%E4%BD%BF%E7%94%A8SparkSQL%E6%9B%BF%E4%BB%A3Hive%E5%81%9AETL/</loc>
     <lastmod>2017-01-18T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://lawulu.github.io/post/%E5%9F%BA%E4%BA%8EDubbo%E7%9A%84Batch%E9%A1%B9%E7%9B%AE/</loc>
+    <lastmod>2017-01-17T00:00:00+00:00</lastmod>
   </url>
   
   <url>

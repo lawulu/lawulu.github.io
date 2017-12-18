@@ -16,13 +16,13 @@
       <guid>https://lawulu.github.io/post/%E5%B0%8F%E9%99%88%E4%B8%8E%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%9A%84%E6%95%85%E4%BA%8B/</guid>
       <description>
 
-&lt;p&gt;&lt;em&gt;本篇为公众号&lt;code&gt;码农翻身&lt;/code&gt;的约稿，最终想写4篇，所谓陈余罗严&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;本篇为公众号&lt;code&gt;码农翻身&lt;/code&gt;的约稿，最终想写4篇，分别为&lt;code&gt;陈余罗严&lt;/code&gt;&lt;/em&gt;&lt;/p&gt;
 
 &lt;h2 id=&#34;在学校&#34;&gt;在学校&lt;/h2&gt;
 
 &lt;p&gt;做为一个科班出身的程序员，在小陈还不明白自己所学的的数据结构和操作系统这些专业课跟未来的工作有什么关系，甚至未来做什么也不清楚时候，小陈最喜欢做的事就是看电影，看完还舍不得删。那个时代流行的还是“为人不识武藤兰，阅遍电影也枉然”，电影还有很多是rm格式的，几百兆都算大的，但是架不住小陈对一衣带水邻国文化的热爱，只有120G的硬盘让他很快有了另一个爱好：整理硬盘，每次有新资源出来，小陈都得想办法腾点空间出来。&lt;/p&gt;
 
-&lt;p&gt;后来教育网里一个叫Maze的软件在我校流行开来，这个软件可以在局域网内以P2P的方式完成资源共享。喜大普奔，小陈得意洋洋的宣布自己终于不用整理硬盘了，自己硬盘里面只存一部分经典的，想看什么电影从别人机器里面拖，哪怕自己临时要看一个美帝大片，删掉一部分电影，删掉之后都还能从别人机器里面拖回来。&lt;/p&gt;
+&lt;p&gt;后来教育网里一个叫Maze的软件在学校流行开来，这个软件可以在局域网内以P2P的方式完成资源共享。喜大普奔，小陈得意洋洋的宣布自己终于不用整理硬盘了，自己硬盘里面只存一部分经典的，想看什么电影从别人机器里面拖，哪怕自己临时要看一个美帝大片，删掉一部分电影，删掉之后都还能从别人机器里面拖回来。&lt;/p&gt;
 
 &lt;p&gt;直到有一天，小陈临时删了一位老师的代表作，等想找回来时候，不知道是学校调整了网络路由还是因为高年级学生的离校，这部本来在Maze中非常常见的电影居然一个都找不到了。小陈被室友嘲笑之余，怒而卸载了Maze，并决定要开发一套更好的共享资源软件：要有一个元数据服务器，所有使用者的硬盘的读写都由元数据服务器来管理，元数据保证每份电影都至少存在2份以上，而不是像现在这样保存什么电影，全靠用户心照不宣的默契和自己的兴趣。&lt;/p&gt;
 
@@ -55,6 +55,101 @@
 &lt;p&gt;小陈已经拖家带口了，感觉自己不再年轻，在机构Offer之间犹豫了很久之后，选择了去一个大厂做螺丝钉，这里流程和工具都已经非常完善了，用的Hadoop都是自己定制甚至已经跟社区不兼容了。小陈业务时间乐于参加各种线下各种活动，积攒自己的人脉，坚持更新Blog，提升自己的名气。&lt;/p&gt;
 
 &lt;p&gt;这个时候Google推出了Beam计算框架。其实Google抛出了三大论文之后，表面上很沉寂，自己内部的系统却一直在向前演进，例如老版的GFS已经被Colossus被代替。直到Google眼红AWS投身云计算时候，发现客户都更习惯开源的那套东西，甚至Google把自己的BigTable服务往外卖的时候，不得不兼容BigTable的山寨产品HBase的API。这就好比一个欧洲人找到一个中国建筑师建一个亚洲古代建筑，中国建筑师给建了一个唐朝风格的建筑，欧洲人说，你这建的不大对，我在日本看到的都是这样那样。Google为了争夺话语权，把自己最新的产品拿出来开源，要一统所有的计算框架，不管你底层是Storm还是Spark，按照Beam的API来处理数据，底层可以随意切换Spark和自家的Cloud Dataflow，甚至为了师出有因，大力提携Flink和Spark打擂台。小陈相信这个框架会一统江湖，为了自己的KPI和升级, 准备在公司推Apache Beam。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Druid集群的数据迁移</title>
+      <link>https://lawulu.github.io/post/Druid%E9%9B%86%E7%BE%A4%E7%9A%84%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB/</link>
+      <pubDate>Wed, 08 Nov 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://lawulu.github.io/post/Druid%E9%9B%86%E7%BE%A4%E7%9A%84%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB/</guid>
+      <description>
+
+&lt;p&gt;公司重新购买了Hadoop集群，硬盘不足的问题解决了。想把HDFS作为Deep Storage用起来。先把思路记录下来，等折腾完了再补充。&lt;/p&gt;
+
+&lt;h2 id=&#34;mysql到druid&#34;&gt;Mysql到Druid&lt;/h2&gt;
+
+&lt;h3 id=&#34;确定时间点&#34;&gt;确定时间点&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;按照UTC时间划分&lt;/li&gt;
+&lt;li&gt;将Druid之前试跑数据废弃&lt;/li&gt;
+&lt;li&gt;将Mysql数据按天生成Json文件，批量导入&lt;/li&gt;
+&lt;li&gt;数据校验&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;影响&#34;&gt;影响&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;查询需要并两个dataSource&lt;/li&gt;
+&lt;li&gt;Mysql数据没有Uniq相关的Metric&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;nfs-based到hdfs-based&#34;&gt;NFS based到HDFS based&lt;/h2&gt;
+
+&lt;h3 id=&#34;目标&#34;&gt;目标&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;尽可能快的迁移&lt;/li&gt;
+&lt;li&gt;数据完整性和正确&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;方案一-基于offset&#34;&gt;方案一：基于Offset&lt;/h3&gt;
+
+&lt;h4 id=&#34;步骤&#34;&gt;步骤：&lt;/h4&gt;
+
+&lt;p&gt;①关掉旧Druid的KIS服务，并记录下消费的offset&lt;/p&gt;
+
+&lt;p&gt;②修改Segments的名字&lt;/p&gt;
+
+&lt;p&gt;③迁移Segements到HDFS&lt;/p&gt;
+
+&lt;p&gt;④重新Index&lt;/p&gt;
+
+&lt;p&gt;⑤在新Druid上面启动KIS，Offset设定&lt;/p&gt;
+
+&lt;h4 id=&#34;问题&#34;&gt;问题：&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;KIS的Offset问题&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;保存在metadata的DruidTask中？&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;quot;startPartitions&amp;quot; : {
+			&amp;quot;partitionOffsetMap&amp;quot; : {
+				&amp;quot;11&amp;quot; : 3,
+				&amp;quot;2&amp;quot; : 3,
+				&amp;quot;5&amp;quot; : 3,
+				&amp;quot;8&amp;quot; : 3
+			},
+			&amp;quot;topic&amp;quot; : &amp;quot;topic1&amp;quot;
+			
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;没有找到直接的办法，复制任务风险太大，可能需要修改源代码&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;同一Segment的数据是两个集群生成的，合并起来的风险？例如segment的Id是递增的&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;方案二-基于时间划分&#34;&gt;方案二：基于时间划分&lt;/h3&gt;
+
+&lt;h4 id=&#34;步骤-1&#34;&gt;步骤：&lt;/h4&gt;
+
+&lt;p&gt;①在新集群上面启动KIS服务，两个集群同时跑一段时间&lt;/p&gt;
+
+&lt;p&gt;②根据日期切割&lt;/p&gt;
+
+&lt;h4 id=&#34;问题-1&#34;&gt;问题：&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;对kafka集群的压力double&lt;/li&gt;
+&lt;li&gt;按照日期切割依旧存在合并时候Indexing问题&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;方案二的技术风险要小一些。&lt;/p&gt;
 </description>
     </item>
     
@@ -101,17 +196,21 @@
 
 &lt;h2 id=&#34;confluent&#34;&gt;Confluent&lt;/h2&gt;
 
+&lt;p&gt;Confluent的前端要求比较简单，是一个Java Web项目（静态资源也用jar打包），通过Guice来管理对象依赖。反编译&lt;code&gt;io.confluent.controlcenter&lt;/code&gt;相关jar。很快发现这段代码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; return License.baseClaims(&amp;quot;demo&amp;quot;, bfa.creationTime().toMillis() + TimeUnit.DAYS.toMillis(30L), true);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;所以其实修改该文件的createTime就行了..&lt;/p&gt;
+
+&lt;p&gt;不过这个破解花了我半天时间..&lt;/p&gt;
+
 &lt;p&gt;坑一：一开始搞反了..一直没报错 还以为没生效&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;jar uf /service/app/confluent-4.0.0/share/java/confluent-control-center/control-center-4.0.0.jar io/confluent/controlcenter/license/LicenseModule.class
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;坑二：zsh ll不显示隐藏文件，习惯把ll = ls-al 而不是ls -ah&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt; return License.baseClaims(&amp;quot;demo&amp;quot;, bfa.creationTime().toMillis() + TimeUnit.DAYS.toMillis(30L), true);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;所以其实修改该文件的createTime就行了..&lt;/p&gt;
 </description>
     </item>
     
@@ -377,6 +476,97 @@ for city in citys:
 可以说跟IP138差别还是比较大的。&lt;/p&gt;
 
 &lt;p&gt;但是三线城市比较准。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Databricks:Spark knowledge base</title>
+      <link>https://lawulu.github.io/post/Databricks:Spark%20knowledge%20base/</link>
+      <pubDate>Sat, 18 Feb 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://lawulu.github.io/post/Databricks:Spark%20knowledge%20base/</guid>
+      <description>
+
+&lt;p&gt;内容来自：
+&lt;a href=&#34;https://databricks.gitbooks.io/databricks-spark-knowledge-base/&#34;&gt;https://databricks.gitbooks.io/databricks-spark-knowledge-base/&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;最佳实践&#34;&gt;最佳实践&lt;/h2&gt;
+
+&lt;h3 id=&#34;避免使用groupbykey&#34;&gt;避免使用GroupByKey&lt;/h3&gt;
+
+&lt;p&gt;在使用&lt;code&gt;groupByKey&lt;/code&gt;时候，Spark引擎并不清楚分组之后要做什么，所以无法在数据交换之前在Partition内部提前运算，而&lt;code&gt;reduceByKey&lt;/code&gt;不同，可以在分区内部提前调用&lt;code&gt;reduceByKey&lt;/code&gt;的&lt;code&gt;func&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;不要将大数据量copy到driver中&#34;&gt;不要将大数据量Copy到Driver中&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;myVeryLargeRDD.collect()&lt;/code&gt;这句话会试图将所有数据都Copy到Driver中，导致内存溢出和程序崩溃。为查看数据，可以使用&lt;code&gt;take&lt;/code&gt;或者&lt;code&gt;takeSample&lt;/code&gt;，或者将数据写到文件或者数据库。&lt;/p&gt;
+
+&lt;h3 id=&#34;优雅的处理错误数据&#34;&gt;优雅的处理错误数据&lt;/h3&gt;
+
+&lt;p&gt;使用&lt;code&gt;map&lt;/code&gt;、&lt;code&gt;filter&lt;/code&gt;、&lt;code&gt;flatMap&lt;/code&gt;来过滤错误数据&lt;/p&gt;
+
+&lt;h2 id=&#34;常规故障处理&#34;&gt;常规故障处理&lt;/h2&gt;
+
+&lt;h3 id=&#34;task-not-serializable&#34;&gt;Task not serializable&lt;/h3&gt;
+
+&lt;p&gt;这是因为堆对象只有在被序列化时候，才能在节点之间传递。解决办法:
+- 实现序列化
+- Declare the instance only within the lambda function passed in map.
+- 将实例声明为static,这样在每个节点都会重新初始化
+- 使用&lt;code&gt;rdd.forEachPartition&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;rdd.forEachPartition(iter -&amp;gt; {
+     NotSerializable notSerializable = new NotSerializable();
+   
+     // ...Now process iter
+   });
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;缺失依赖&#34;&gt;缺失依赖&lt;/h3&gt;
+
+&lt;p&gt;解决办法：在 Maven 打包的时候创建 shaded 或 uber 任务，并将Spark的lib设为provided&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://databricks.gitbooks.io/databricks-spark-knowledge-base/content/troubleshooting/missing_dependencies_in_jar_files.html&#34;&gt;https://databricks.gitbooks.io/databricks-spark-knowledge-base/content/troubleshooting/missing_dependencies_in_jar_files.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;mac-error-running-start-all-sh-connection-refused&#34;&gt;Mac：Error running start-all.sh Connection refused&lt;/h3&gt;
+
+&lt;p&gt;开启 “远程登录” 功能。进入 系统偏好设置 &amp;mdash;&amp;gt; 共享 勾选打开 远程登录。&lt;/p&gt;
+
+&lt;h3 id=&#34;spark组件的网络连接问题&#34;&gt;Spark组件的网络连接问题&lt;/h3&gt;
+
+&lt;h2 id=&#34;性能和优化&#34;&gt;性能和优化&lt;/h2&gt;
+
+&lt;h3 id=&#34;rdd有多少个分区&#34;&gt;RDD有多少个分区？&lt;/h3&gt;
+
+&lt;h4 id=&#34;使用-ui-查看在分区上执行的任务数&#34;&gt;使用 UI 查看在分区上执行的任务数&lt;/h4&gt;
+
+&lt;h4 id=&#34;使用-ui-查看storage&#34;&gt;使用 UI 查看Storage&lt;/h4&gt;
+
+&lt;h4 id=&#34;编程查看-rdd-分区&#34;&gt;编程查看 RDD 分区&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;scala&amp;gt; val someRDD = sc.parallelize(1 to 100, 30)
+someRDD: org.apache.spark.rdd.RDD[Int] = ParallelCollectionRDD[0] at parallelize at &amp;lt;console&amp;gt;:12
+
+scala&amp;gt; someRDD.partitions.size
+res0: Int = 30
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;数据本地性&#34;&gt;数据本地性&lt;/h3&gt;
+
+&lt;p&gt;任务应该在离数据尽可能近的地方执行(例如最少的数据传输)。&lt;/p&gt;
+
+&lt;h4 id=&#34;检查本地性&#34;&gt;检查本地性&lt;/h4&gt;
+
+&lt;p&gt;注意UI中的&lt;code&gt;Locality Level&lt;/code&gt;&lt;/p&gt;
+
+&lt;h4 id=&#34;调整本地性&#34;&gt;调整本地性&lt;/h4&gt;
+
+&lt;p&gt;You can adjust how long Spark will wait before it times out on each of the phases of data locality (data local &amp;ndash;&amp;gt; process local &amp;ndash;&amp;gt; node local &amp;ndash;&amp;gt; rack local &amp;ndash;&amp;gt; Any)&lt;/p&gt;
+
+&lt;h3 id=&#34;spark-streaming&#34;&gt;Spark Streaming&lt;/h3&gt;
+
+&lt;h4 id=&#34;error-oneforonestrategy&#34;&gt;ERROR OneForOneStrategy&lt;/h4&gt;
+
+&lt;p&gt;If you enable checkpointing in Spark Streaming, then objects used in a function called in forEachRDD should be Serializable. Otherwise, there will be an &amp;ldquo;ERROR OneForOneStrategy: &amp;hellip; java.io.NotSerializableException:&lt;/p&gt;
 </description>
     </item>
     

@@ -9,6 +9,148 @@
     <atom:link href="https://lawulu.github.io/tags/debug/feed/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
+      <title>一次Ajax上传文件的调试过程</title>
+      <link>https://lawulu.github.io/post/%E4%B8%80%E6%AC%A1Ajax%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E8%B0%83%E8%AF%95%E8%BF%87%E7%A8%8B/</link>
+      <pubDate>Sat, 19 Dec 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://lawulu.github.io/post/%E4%B8%80%E6%AC%A1Ajax%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E8%B0%83%E8%AF%95%E8%BF%87%E7%A8%8B/</guid>
+      <description>
+
+&lt;p&gt;很久不做Web了,帮一同事解决的一个问题.发现新人解决问题都是在Search and Try,据他说无脑搜了很久,但是不会利用Chrome,也不会分析问题.&lt;/p&gt;
+
+&lt;h2 id=&#34;现象和代码&#34;&gt;现象和代码&lt;/h2&gt;
+
+&lt;h3 id=&#34;js端&#34;&gt;Js端&lt;/h3&gt;
+
+&lt;p&gt;使用的FormData&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var formData = new FormData();
+    var actionUrl = &amp;quot;/report/agentUpload&amp;quot;;
+    var form = new FormData();
+    form.append(&amp;quot;file&amp;quot;, $(&amp;quot;#reportFile&amp;quot; )[0]);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open(&amp;quot;post&amp;quot;, actionUrl, true);
+    xhr.onload = function () {
+         alert(&amp;quot;上传完成!&amp;quot;);
+    };
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;server端&#34;&gt;Server端&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;public String upload(HttpServletRequest request, @RequestParam(value=&amp;quot;file&amp;quot;,required = true) MultipartFile file, ModelMap model)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;但是就是取不到,报错：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Required MultipartFile parameter &#39;file&#39; is not present
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;server端的问题&#34;&gt;Server端的问题？&lt;/h2&gt;
+
+&lt;p&gt;是否发到了Server？&lt;/p&gt;
+
+&lt;p&gt;看Chrome Network面板里面这次请求的Request：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;------WebKitFormBoundaryNLPhxKE21THaBaN1
+Content-Disposition: form-data; name=&amp;quot;file&amp;quot;
+
+[object HTMLInputElement]
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;貌似是正确的,在Server端确认一下,将参数加上required=false
+查看request:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;multipartParameters = {HashMap@8882}  size = 1
+multipartParameterContentTypes = {HashMap@8883}  size = 1
+multipartFiles = {LinkedMultiValueMap@8884}  size = 0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Request里面有东西,但是multipartFiles没有东西……&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;其实这时候应该已经看出问题了,因为那个值是一个String,但是没注意,自己盲目以为只要带multipartParameters就是文件&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;debug到CommonsMultipartResolver的resolveMultipart方法,里面有这段判断&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;protected MultipartParsingResult parseFileItems(List&amp;lt;FileItem&amp;gt; fileItems, String encoding) {
+		MultiValueMap&amp;lt;String, MultipartFile&amp;gt; multipartFiles = new LinkedMultiValueMap&amp;lt;String, MultipartFile&amp;gt;();
+		Map&amp;lt;String, String[]&amp;gt; multipartParameters = new HashMap&amp;lt;String, String[]&amp;gt;();
+		Map&amp;lt;String, String&amp;gt; multipartParameterContentTypes = new HashMap&amp;lt;String, String&amp;gt;();
+
+		// Extract multipart files and multipart parameters.
+		for (FileItem fileItem : fileItems) {
+			if (fileItem.isFormField()) {
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;如果是false…就往MultipartFile里面填值.
+难道是Content-type的问题？&lt;/p&gt;
+
+&lt;h3 id=&#34;去js端&#34;&gt;去Js端&lt;/h3&gt;
+
+&lt;p&gt;先找到如何打印Formdata的：
+&lt;a href=&#34;http://stackoverflow.com/questions/17066875/how-to-inspect-formdata&#34;&gt;http://stackoverflow.com/questions/17066875/how-to-inspect-formdata&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;for (var pair of formData.entries()) {
+    console.log(pair[0]+ &#39;, &#39; + pair[1]); 
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;打印的东西是：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;file, [object HTMLInputElement]
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;决定采用原始的document.getElementById(&amp;ldquo;reportFile&amp;rdquo;).files[]&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;lastModifiedDate: Tue Dec 20 2015 10:39:39 GMT+0800 (CST)name: &amp;quot;工作簿1.xlsx&amp;quot;size: 23168type: &amp;quot;application/vnd.openxmlformats-officedocument.spreadsheetml.sheet&amp;quot;webkitRelativePath: &amp;quot;&amp;quot;__proto__: File
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;最终发现问题：
+应该用&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; $(&amp;quot;#reportFile&amp;quot; )[0].files[0]
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;结论&#34;&gt;结论&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;盲目的去搜索其实非常浪费时间&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;要善用Chrome Console&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;chrome的一些调试技巧&#34;&gt;Chrome的一些调试技巧&lt;/h2&gt;
+
+&lt;h3 id=&#34;如何找到对应的元素触发的function&#34;&gt;如何找到对应的元素触发的function？&lt;/h3&gt;
+
+&lt;p&gt;可以在EventListerner里面把Click当做断点，也可以点击某个元素，找到对应监听的EventListener,或者对某一个片dom点击&lt;code&gt;Break on subtree modification&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;缓存相关&#34;&gt;缓存相关&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;强制刷新 cmd+shift+r&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;可以在设置中禁止缓存&lt;/p&gt;
+
+&lt;h3 id=&#34;console&#34;&gt;console&lt;/h3&gt;
+
+&lt;p&gt;在某个页面，可以在console页面随时调试,甚至可以执行函数：&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;pre&gt;&lt;code&gt;$(&#39;.choose_endcard&#39;).click()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;But,为什么Xpath选择的不能调用Click…&lt;/p&gt;
+
+&lt;h3 id=&#34;setting里面可以对console-log加上timestamp&#34;&gt;Setting里面可以对console.log加上Timestamp&lt;/h3&gt;
+</description>
+    </item>
+    
+    <item>
       <title>开发调试中的一些工具和技巧</title>
       <link>https://lawulu.github.io/post/%E5%BC%80%E5%8F%91%E8%B0%83%E8%AF%95%E4%B8%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B7%A5%E5%85%B7%E5%92%8C%E6%8A%80%E5%B7%A7/</link>
       <pubDate>Fri, 13 Feb 2015 00:00:00 +0000</pubDate>

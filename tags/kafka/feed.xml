@@ -9,6 +9,101 @@
     <atom:link href="https://lawulu.github.io/tags/kafka/feed/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
+      <title>Druid集群的数据迁移</title>
+      <link>https://lawulu.github.io/post/Druid%E9%9B%86%E7%BE%A4%E7%9A%84%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB/</link>
+      <pubDate>Wed, 08 Nov 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://lawulu.github.io/post/Druid%E9%9B%86%E7%BE%A4%E7%9A%84%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB/</guid>
+      <description>
+
+&lt;p&gt;公司重新购买了Hadoop集群，硬盘不足的问题解决了。想把HDFS作为Deep Storage用起来。先把思路记录下来，等折腾完了再补充。&lt;/p&gt;
+
+&lt;h2 id=&#34;mysql到druid&#34;&gt;Mysql到Druid&lt;/h2&gt;
+
+&lt;h3 id=&#34;确定时间点&#34;&gt;确定时间点&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;按照UTC时间划分&lt;/li&gt;
+&lt;li&gt;将Druid之前试跑数据废弃&lt;/li&gt;
+&lt;li&gt;将Mysql数据按天生成Json文件，批量导入&lt;/li&gt;
+&lt;li&gt;数据校验&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;影响&#34;&gt;影响&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;查询需要并两个dataSource&lt;/li&gt;
+&lt;li&gt;Mysql数据没有Uniq相关的Metric&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;nfs-based到hdfs-based&#34;&gt;NFS based到HDFS based&lt;/h2&gt;
+
+&lt;h3 id=&#34;目标&#34;&gt;目标&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;尽可能快的迁移&lt;/li&gt;
+&lt;li&gt;数据完整性和正确&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;方案一-基于offset&#34;&gt;方案一：基于Offset&lt;/h3&gt;
+
+&lt;h4 id=&#34;步骤&#34;&gt;步骤：&lt;/h4&gt;
+
+&lt;p&gt;①关掉旧Druid的KIS服务，并记录下消费的offset&lt;/p&gt;
+
+&lt;p&gt;②修改Segments的名字&lt;/p&gt;
+
+&lt;p&gt;③迁移Segements到HDFS&lt;/p&gt;
+
+&lt;p&gt;④重新Index&lt;/p&gt;
+
+&lt;p&gt;⑤在新Druid上面启动KIS，Offset设定&lt;/p&gt;
+
+&lt;h4 id=&#34;问题&#34;&gt;问题：&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;KIS的Offset问题&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;保存在metadata的DruidTask中？&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;quot;startPartitions&amp;quot; : {
+			&amp;quot;partitionOffsetMap&amp;quot; : {
+				&amp;quot;11&amp;quot; : 3,
+				&amp;quot;2&amp;quot; : 3,
+				&amp;quot;5&amp;quot; : 3,
+				&amp;quot;8&amp;quot; : 3
+			},
+			&amp;quot;topic&amp;quot; : &amp;quot;topic1&amp;quot;
+			
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;没有找到直接的办法，复制任务风险太大，可能需要修改源代码&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;同一Segment的数据是两个集群生成的，合并起来的风险？例如segment的Id是递增的&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;方案二-基于时间划分&#34;&gt;方案二：基于时间划分&lt;/h3&gt;
+
+&lt;h4 id=&#34;步骤-1&#34;&gt;步骤：&lt;/h4&gt;
+
+&lt;p&gt;①在新集群上面启动KIS服务，两个集群同时跑一段时间&lt;/p&gt;
+
+&lt;p&gt;②根据日期切割&lt;/p&gt;
+
+&lt;h4 id=&#34;问题-1&#34;&gt;问题：&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;对kafka集群的压力double&lt;/li&gt;
+&lt;li&gt;按照日期切割依旧存在合并时候Indexing问题&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;方案二的技术风险要小一些。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Imply和Confluent破解</title>
       <link>https://lawulu.github.io/post/Imply%E5%92%8CConfluent%E7%A0%B4%E8%A7%A3/</link>
       <pubDate>Wed, 20 Sep 2017 00:00:00 +0000</pubDate>
@@ -51,17 +146,21 @@
 
 &lt;h2 id=&#34;confluent&#34;&gt;Confluent&lt;/h2&gt;
 
+&lt;p&gt;Confluent的前端要求比较简单，是一个Java Web项目（静态资源也用jar打包），通过Guice来管理对象依赖。反编译&lt;code&gt;io.confluent.controlcenter&lt;/code&gt;相关jar。很快发现这段代码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; return License.baseClaims(&amp;quot;demo&amp;quot;, bfa.creationTime().toMillis() + TimeUnit.DAYS.toMillis(30L), true);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;所以其实修改该文件的createTime就行了..&lt;/p&gt;
+
+&lt;p&gt;不过这个破解花了我半天时间..&lt;/p&gt;
+
 &lt;p&gt;坑一：一开始搞反了..一直没报错 还以为没生效&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;jar uf /service/app/confluent-4.0.0/share/java/confluent-control-center/control-center-4.0.0.jar io/confluent/controlcenter/license/LicenseModule.class
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;坑二：zsh ll不显示隐藏文件，习惯把ll = ls-al 而不是ls -ah&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt; return License.baseClaims(&amp;quot;demo&amp;quot;, bfa.creationTime().toMillis() + TimeUnit.DAYS.toMillis(30L), true);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;所以其实修改该文件的createTime就行了..&lt;/p&gt;
 </description>
     </item>
     

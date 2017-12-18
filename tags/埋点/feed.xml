@@ -41,6 +41,8 @@
 
 &lt;h3 id=&#34;server日志&#34;&gt;Server日志&lt;/h3&gt;
 
+&lt;p&gt;为了帮助运营快速的定位业务问题，如为什么某些App的填充低？为什么Erpm最低的某个Campaign还拿到了量？可以考虑将Serving的日志和业务关联起来。&lt;/p&gt;
+
 &lt;ul&gt;
 &lt;li&gt;ELK要用起来，亦可以调研一下阿里的日志服务&lt;/li&gt;
 &lt;li&gt;规范Server输出，尤其是Filter广告时候，要将挑选广告失败的原因记录到日志里面&lt;/li&gt;
@@ -68,7 +70,7 @@
 
 &lt;ul&gt;
 &lt;li&gt;Impr,Click等事件上报因为只是记一个数字，要和Preload业务从逻辑和部署上都分开，避免互相干扰&lt;/li&gt;
-&lt;li&gt;并且上报地址应该是Preload下发下去，而非写死，并且支持同一事件的多重上报。这样易于控制，甚至以后可以作弊（按照某人的说法：&amp;rdquo;&lt;code&gt;我们不主动作恶，但是在恶劣的环境下，要有保护自己的手段。&lt;/code&gt;&amp;ldquo;）&lt;/li&gt;
+&lt;li&gt;并且上报地址应该是Preload下发下去，而非写死，并且支持同一事件的多地址上报。这样易于控制，甚至以后可以作弊（按照某人的说法：&amp;rdquo;&lt;code&gt;我们不主动作恶，但是在恶劣的环境下，要有保护自己的手段。&lt;/code&gt;&amp;ldquo;）&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>

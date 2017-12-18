@@ -790,6 +790,11 @@ for city in citys:
       <guid>https://lawulu.github.io/about/</guid>
       <description>
 
+&lt;h3 id=&#34;关于本站&#34;&gt;关于本站&lt;/h3&gt;
+
+&lt;p&gt;把一个技术搞懂再讲清楚,是很花费精力和体现能力的事,
+貌似,我都比较欠缺,所以本站技术类文章都是只言片语的泛泛而谈,先做到&lt;code&gt;只为记录,不为分享&lt;/code&gt;吧.&lt;/p&gt;
+
 &lt;h3 id=&#34;分类说明&#34;&gt;分类说明&lt;/h3&gt;
 
 &lt;ul&gt;
@@ -797,13 +802,7 @@ for city in citys:
 &lt;li&gt;&lt;code&gt;Aij一思考&lt;/code&gt; 工作生活中的一些感悟,取自“人类一思考上帝就发笑”和黑客帝国里面的Matrix&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;以德服人&lt;/code&gt; 关于公司管理和职业生涯的一些思考和经验,取自功夫皇帝方世玉中雷老虎的口头禅“以德服人”和三国杀刘备的台词.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;AkiRoss&lt;/code&gt; 技术架构或者业界新闻相关,比&lt;code&gt;爆栈&amp;amp;基线期&lt;/code&gt;要宏观,取自当年最终幻想电影版的女主角&lt;a href=&#34;http://finalfantasy.wikia.com/wiki/Aki_Ross&#34;&gt;Aki Ross&lt;/a&gt;的名字,&lt;code&gt;AkiRoss&lt;/code&gt;和&lt;code&gt;architect&lt;/code&gt;前面读音一样.Aki Ross是我刚接触计算机时候认为最完美的女性形象.&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;code&gt;促进大数据发展行动纲要&lt;/code&gt; 关于大数据,数据科学的一些学习笔记,工程实践.取自国务院的通知名字.&lt;/p&gt;
-
-&lt;h3 id=&#34;关于本站&#34;&gt;关于本站&lt;/h3&gt;
-
-&lt;p&gt;把一个技术搞懂再讲清楚,是很花费精力和体现能力的事,
-貌似,我都比较欠缺,所以本站技术类文章都是只言片语的泛泛而谈,先做到&lt;code&gt;只为记录,不为分享&lt;/code&gt;吧.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;促进大数据发展行动纲要&lt;/code&gt; 关于大数据,数据科学的一些学习笔记,工程实践.取自国务院的通知名字.&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h3 id=&#34;本站历史&#34;&gt;本站历史&lt;/h3&gt;

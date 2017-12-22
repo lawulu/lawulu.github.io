@@ -106,6 +106,12 @@ p = subprocess.Popen(&amp;quot;&amp;quot;&amp;quot; cat &amp;quot;&amp;quot;&amp
 &lt;li&gt;分层过多，如何快速响应业务变化？&lt;/li&gt;
 &lt;li&gt;如何能快速定位问题？如为什么填充下降了？不填充的原因要列出来。如为什么有些erpm低的拿到的量大？(4G网络下面包体大于100M的不下发， 前面高erpm的经过两轮（第一轮是否在线，第二轮数据网络条件下面包体大小过滤）过滤掉， 正好轮到了1789下发)&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;h3 id=&#34;统计维度&#34;&gt;统计维度&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;如何才能将&lt;code&gt;产生转化的意愿和原因&lt;/code&gt;，可视化出来？有效点击（对应安装的点击）？用户观看数？&lt;/li&gt;
+&lt;/ul&gt;
 </description>
     </item>
     

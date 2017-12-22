@@ -9,101 +9,6 @@
     <atom:link href="https://lawulu.github.io/tags/druid/feed/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
-      <title>Druid集群的数据迁移</title>
-      <link>https://lawulu.github.io/post/Druid%E9%9B%86%E7%BE%A4%E7%9A%84%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB/</link>
-      <pubDate>Wed, 08 Nov 2017 00:00:00 +0000</pubDate>
-      
-      <guid>https://lawulu.github.io/post/Druid%E9%9B%86%E7%BE%A4%E7%9A%84%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB/</guid>
-      <description>
-
-&lt;p&gt;公司重新购买了Hadoop集群，硬盘不足的问题解决了。想把HDFS作为Deep Storage用起来。先把思路记录下来，等折腾完了再补充。&lt;/p&gt;
-
-&lt;h2 id=&#34;mysql到druid&#34;&gt;Mysql到Druid&lt;/h2&gt;
-
-&lt;h3 id=&#34;确定时间点&#34;&gt;确定时间点&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;按照UTC时间划分&lt;/li&gt;
-&lt;li&gt;将Druid之前试跑数据废弃&lt;/li&gt;
-&lt;li&gt;将Mysql数据按天生成Json文件，批量导入&lt;/li&gt;
-&lt;li&gt;数据校验&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;影响&#34;&gt;影响&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;查询需要并两个dataSource&lt;/li&gt;
-&lt;li&gt;Mysql数据没有Uniq相关的Metric&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;nfs-based到hdfs-based&#34;&gt;NFS based到HDFS based&lt;/h2&gt;
-
-&lt;h3 id=&#34;目标&#34;&gt;目标&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;尽可能快的迁移&lt;/li&gt;
-&lt;li&gt;数据完整性和正确&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;方案一-基于offset&#34;&gt;方案一：基于Offset&lt;/h3&gt;
-
-&lt;h4 id=&#34;步骤&#34;&gt;步骤：&lt;/h4&gt;
-
-&lt;p&gt;①关掉旧Druid的KIS服务，并记录下消费的offset&lt;/p&gt;
-
-&lt;p&gt;②修改Segments的名字&lt;/p&gt;
-
-&lt;p&gt;③迁移Segements到HDFS&lt;/p&gt;
-
-&lt;p&gt;④重新Index&lt;/p&gt;
-
-&lt;p&gt;⑤在新Druid上面启动KIS，Offset设定&lt;/p&gt;
-
-&lt;h4 id=&#34;问题&#34;&gt;问题：&lt;/h4&gt;
-
-&lt;ol&gt;
-&lt;li&gt;KIS的Offset问题&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;保存在metadata的DruidTask中？&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;quot;startPartitions&amp;quot; : {
-			&amp;quot;partitionOffsetMap&amp;quot; : {
-				&amp;quot;11&amp;quot; : 3,
-				&amp;quot;2&amp;quot; : 3,
-				&amp;quot;5&amp;quot; : 3,
-				&amp;quot;8&amp;quot; : 3
-			},
-			&amp;quot;topic&amp;quot; : &amp;quot;topic1&amp;quot;
-			
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;没有找到直接的办法，复制任务风险太大，可能需要修改源代码&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;同一Segment的数据是两个集群生成的，合并起来的风险？例如segment的Id是递增的&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h3 id=&#34;方案二-基于时间划分&#34;&gt;方案二：基于时间划分&lt;/h3&gt;
-
-&lt;h4 id=&#34;步骤-1&#34;&gt;步骤：&lt;/h4&gt;
-
-&lt;p&gt;①在新集群上面启动KIS服务，两个集群同时跑一段时间&lt;/p&gt;
-
-&lt;p&gt;②根据日期切割&lt;/p&gt;
-
-&lt;h4 id=&#34;问题-1&#34;&gt;问题：&lt;/h4&gt;
-
-&lt;ol&gt;
-&lt;li&gt;对kafka集群的压力double&lt;/li&gt;
-&lt;li&gt;按照日期切割依旧存在合并时候Indexing问题&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;方案二的技术风险要小一些。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
       <title>Imply和Confluent破解</title>
       <link>https://lawulu.github.io/post/Imply%E5%92%8CConfluent%E7%A0%B4%E8%A7%A3/</link>
       <pubDate>Wed, 20 Sep 2017 00:00:00 +0000</pubDate>
@@ -161,6 +66,189 @@
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;坑二：zsh ll不显示隐藏文件，习惯把ll = ls-al 而不是ls -ah&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Druid的一些实践</title>
+      <link>https://lawulu.github.io/post/Druid%E7%9A%84%E4%B8%80%E4%BA%9B%E5%AE%9E%E8%B7%B5/</link>
+      <pubDate>Fri, 08 Sep 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://lawulu.github.io/post/Druid%E7%9A%84%E4%B8%80%E4%BA%9B%E5%AE%9E%E8%B7%B5/</guid>
+      <description>
+
+&lt;h2 id=&#34;安装&#34;&gt;安装&lt;/h2&gt;
+
+&lt;h3 id=&#34;文档&#34;&gt;文档&lt;/h3&gt;
+
+&lt;p&gt;参考 &lt;a href=&#34;https://docs.imply.io/on-premise/cluster&#34;&gt;https://docs.imply.io/on-premise/cluster&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;不同之处：
+- 使用了多个ZK
+- 修改&lt;code&gt;imply/conf/druid/middleManager/runtime.properties&lt;/code&gt;的&lt;code&gt;druid.worker.capacity&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;监控&#34;&gt;监控&lt;/h3&gt;
+
+&lt;p&gt;官方提供两个扩展graphite-emitter和statsd-emitter，跟我们现在用的Zabbix+grafana不能无缝对接。需要调研&lt;/p&gt;
+
+&lt;h3 id=&#34;日志滚动&#34;&gt;日志滚动&lt;/h3&gt;
+
+&lt;p&gt;因为启动脚本是共用的，而不同的模块需要指定不同的路径，修改起来比较麻烦。所以直接使用logrotate&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cat /etc/logrotate.d/druid
+
+/root/imply/var/sv/historical.log
+/root/imply/var/sv/middleManager.log
+/root/imply/var/sv/broker.log
+/root/imply/var/sv/coordinator.log
+/root/imply/var/sv/overlord.log
+{
+    daily
+    rotate 7
+    copytruncate
+    dateext
+    compress
+    delaycompress
+    missingok
+    notifempty
+}
+
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;使用&#34;&gt;使用&lt;/h2&gt;
+
+&lt;h3 id=&#34;topn取代groupby&#34;&gt;TopN取代GroupBy&lt;/h3&gt;
+
+&lt;p&gt;可以参考Imply生成的Json，基本都是用的TopN，默认是&lt;code&gt;max(1000, threshold)&lt;/code&gt;，一般来说，Top1000的话前900肯定是准确的.
+- 为什么TopN会快？
+&lt;a href=&#34;https://groups.google.com/forum/#!topic/druid-development/zUKGEkSAAMo&#34;&gt;https://groups.google.com/forum/#!topic/druid-development/zUKGEkSAAMo&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;使用kis而非tranquility&#34;&gt;使用KIS而非Tranquility&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Tranquility 时间窗口太死，不适合我们的场景&lt;/li&gt;
+&lt;li&gt;架构/代码复杂&lt;/li&gt;
+&lt;li&gt;测试有丢数据&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;利用hyperhyperlog&#34;&gt;利用hyperHyperLog&lt;/h3&gt;
+
+&lt;p&gt;将UserId和其他Id拼在一起，完成group by userId, bizId&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+  &amp;quot;type&amp;quot;: &amp;quot;hyperUnique&amp;quot;,
+  &amp;quot;name&amp;quot;: &amp;quot;uniUser&amp;quot;,
+  &amp;quot;fieldName&amp;quot;: &amp;quot;userId&amp;quot;
+},
+{
+  &amp;quot;type&amp;quot;: &amp;quot;hyperUnique&amp;quot;,
+  &amp;quot;name&amp;quot;: &amp;quot;uniAppUser&amp;quot;,
+  &amp;quot;fieldName&amp;quot;: &amp;quot;appUserId&amp;quot;
+},
+{
+   &amp;quot;type&amp;quot;: &amp;quot;hyperUnique&amp;quot;,
+  &amp;quot;name&amp;quot;: &amp;quot;uniCampaignUser&amp;quot;,
+  &amp;quot;fieldName&amp;quot;: &amp;quot;campaignUserId&amp;quot;
+},
+
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;维护&#34;&gt;维护&lt;/h2&gt;
+
+&lt;h3 id=&#34;废弃掉segement&#34;&gt;废弃掉Segement&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;update ad_druid2.druid_segments  set used = 0 
+where id &amp;lt; &#39;ad_request_2017-09-27T08:00:00.000+08:00_2017-09-28T08:00:00.000+08:00_2017-09-27T00:00:06.479Z&#39;
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;迁移&#34;&gt;迁移&lt;/h2&gt;
+
+&lt;p&gt;公司重新购买了Hadoop集群，硬盘不足的问题解决了。想把HDFS作为Deep Storage用起来。先把思路记录下来，等折腾完了再补充。&lt;/p&gt;
+
+&lt;h3 id=&#34;mysql到druid&#34;&gt;Mysql到Druid&lt;/h3&gt;
+
+&lt;h4 id=&#34;确定时间点&#34;&gt;确定时间点&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;按照UTC时间划分&lt;/li&gt;
+&lt;li&gt;将Druid之前试跑数据废弃&lt;/li&gt;
+&lt;li&gt;将Mysql数据按天生成Json文件，批量导入&lt;/li&gt;
+&lt;li&gt;数据校验&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;影响&#34;&gt;影响&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;查询需要并两个dataSource&lt;/li&gt;
+&lt;li&gt;Mysql数据没有Uniq相关的Metric&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;nfs-based到hdfs-based&#34;&gt;NFS based到HDFS based&lt;/h3&gt;
+
+&lt;h4 id=&#34;目标&#34;&gt;目标&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;尽可能快的迁移&lt;/li&gt;
+&lt;li&gt;数据完整性和正确&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;方案一-基于offset&#34;&gt;方案一：基于Offset&lt;/h4&gt;
+
+&lt;h5 id=&#34;步骤&#34;&gt;步骤：&lt;/h5&gt;
+
+&lt;p&gt;①关掉旧Druid的KIS服务，并记录下消费的offset&lt;/p&gt;
+
+&lt;p&gt;②修改Segments的名字&lt;/p&gt;
+
+&lt;p&gt;③迁移Segements到HDFS&lt;/p&gt;
+
+&lt;p&gt;④重新Index&lt;/p&gt;
+
+&lt;p&gt;⑤在新Druid上面启动KIS，Offset设定&lt;/p&gt;
+
+&lt;h5 id=&#34;问题&#34;&gt;问题：&lt;/h5&gt;
+
+&lt;ol&gt;
+&lt;li&gt;KIS的Offset问题&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;保存在metadata的DruidTask中？&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;quot;startPartitions&amp;quot; : {
+			&amp;quot;partitionOffsetMap&amp;quot; : {
+				&amp;quot;11&amp;quot; : 3,
+				&amp;quot;2&amp;quot; : 3,
+				&amp;quot;5&amp;quot; : 3,
+				&amp;quot;8&amp;quot; : 3
+			},
+			&amp;quot;topic&amp;quot; : &amp;quot;topic1&amp;quot;
+			
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;没有找到直接的办法，复制任务风险太大，可能需要修改源代码&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;同一Segment的数据是两个集群生成的，合并起来的风险？例如segment的Id是递增的&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4 id=&#34;方案二-基于时间划分&#34;&gt;方案二：基于时间划分&lt;/h4&gt;
+
+&lt;h5 id=&#34;步骤-1&#34;&gt;步骤：&lt;/h5&gt;
+
+&lt;p&gt;①在新集群上面启动KIS服务，两个集群同时跑一段时间&lt;/p&gt;
+
+&lt;p&gt;②根据日期切割&lt;/p&gt;
+
+&lt;h5 id=&#34;问题-1&#34;&gt;问题：&lt;/h5&gt;
+
+&lt;ol&gt;
+&lt;li&gt;对kafka集群的压力double&lt;/li&gt;
+&lt;li&gt;按照日期切割依旧存在合并时候Indexing问题&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;方案二的技术风险要小一些。&lt;/p&gt;
 </description>
     </item>
     

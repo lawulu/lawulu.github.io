@@ -270,7 +270,7 @@ nohup ssh  -ND 3128 user@jumpserver &amp;amp;
 &lt;code&gt;
 p = subprocess.Popen(&amp;quot;&amp;quot;&amp;quot; cat &amp;quot;&amp;quot;&amp;quot; + file + &amp;quot;&amp;quot;&amp;quot;| grep -avF &#39;[2.3.0]&#39; | grep -aF &#39;[04]&#39;  |  wc -l &amp;quot;&amp;quot;&amp;quot;, shell=True, stdout=subprocess.PIPE );
 &lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;对某些阈值进行报警，例如Preload，没有转化，点击率过低等情况。帮助运营及早洞察线上问题。&lt;/li&gt;
+&lt;li&gt;对某些阈值进行报警，例如Preload，没有转化，点击率过低，CDN消耗太低等情况。帮助运营及早洞察线上问题。&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h3 id=&#34;任务调度&#34;&gt;任务调度&lt;/h3&gt;

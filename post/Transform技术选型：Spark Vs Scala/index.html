@@ -2,20 +2,20 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>Protocolbuffer - 璐濒殉漂流记</title>
+  <title>Transform技术选型：Spark Structured Streaming Vs Pure Scala - 璐濒殉漂流记</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
   
-  <meta name="description" content="Protocolbuffer">
+  <meta name="description" content="需求 公司要上实时，对原始日志进行转换，写回到Kafka，简单来说： 从Kafka读取数据，然后写回到Kafka 对日志和数据进行合并 完成归因、去">
   <meta name="author" content="Lawulu">
-  <meta itemprop="name" content="Protocolbuffer - 璐濒殉漂流记">
-  <meta itemprop="description" content="Protocolbuffer">
+  <meta itemprop="name" content="Transform技术选型：Spark Structured Streaming Vs Pure Scala - 璐濒殉漂流记">
+  <meta itemprop="description" content="需求 公司要上实时，对原始日志进行转换，写回到Kafka，简单来说： 从Kafka读取数据，然后写回到Kafka 对日志和数据进行合并 完成归因、去">
   <meta itemprop="image" content="https://lawulu.github.io/img/author.jpg">
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@inza9hi" />
-  <meta name="twitter:title" content="Protocolbuffer - 璐濒殉漂流记" />
+  <meta name="twitter:title" content="Transform技术选型：Spark Structured Streaming Vs Pure Scala - 璐濒殉漂流记" />
   
   <meta name="twitter:description" content="">
-  <link rel="alternate" href="https://lawulu.github.io/feed.xml" title="璐濒殉漂流记" type="application/rss+xml"/>
+  
   <link rel="shortcut icon" href="https://lawulu.github.io/img/favicon.ico"/>
   <link rel="apple-touch-icon" href="https://lawulu.github.io/apple-touch-icon.png" />
   <link rel="apple-touch-icon-precomposed" href="https://lawulu.github.io/apple-touch-icon.png" />
@@ -59,21 +59,185 @@
 
   </header>
   <div id="container">
-    <div id="main">
-      
-      <h2 id="2014-11">2014-11</h2>
-      
-      <section class="post" itemscope itemprop="blogPost">
-    <a href="https://lawulu.github.io/post/%E4%BD%BF%E7%94%A8Hbase%E5%8D%8F%E5%A4%84%E7%90%86%E5%99%A8%E5%AE%9E%E7%8E%B0group%20by/" title="使用HBase协处理器实现group by" itemprop="url">
-    <h1 itemprop="name">使用HBase协处理器实现group by</h1>
-    <p itemprop="description">老印催着我们上新技术，一会研究Shark(Spark的Sql引擎)，一会研究Storm，现在终于上了HBase，其实不太适合我们的业务。现在</p>
-    <time datetime="2014-11-20 00:00:00 &#43;0000 UTC" itemprop="datePublished">2014年11月20日</time>
-  </a>
-</section>
+    <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody">
+    <header class="article-info clearfix">
+  <h1 itemprop="name">
+      <a href="https://lawulu.github.io/post/Transform%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B%EF%BC%9ASpark%20Vs%20Scala/" title="Transform技术选型：Spark Structured Streaming Vs Pure Scala" itemprop="url">Transform技术选型：Spark Structured Streaming Vs Pure Scala</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="" title="Lawulu">Lawulu</a>
+    
+  </p>
+  <p class="article-time">
+    <time datetime="2017-07-18 00:00:00 &#43;0000 UTC" itemprop="datePublished">2017年07月18日</time>
+  </p>
+</header>
 
-      
-      
+	<div class="article-content">
+    
+		<div class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+      <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#需求">需求</a></li>
+<li><a href="#spark-or-scala">Spark or Scala</a>
+<ul>
+<li><a href="#技术需求">技术需求</a></li>
+<li><a href="#非技术需求">非技术需求</a></li>
+</ul></li>
+<li><a href="#结论">结论</a></li>
+</ul></li>
+</ul>
+</nav>
+		</div>
+    
+    
+
+<h2 id="需求">需求</h2>
+
+<p>公司要上实时，对原始日志进行转换，写回到Kafka，简单来说：</p>
+
+<ol>
+<li>从Kafka读取数据，然后写回到Kafka</li>
+<li>对日志和数据进行合并</li>
+<li>完成归因、去重、真实点击等其他需求</li>
+<li>完成计费</li>
+</ol>
+
+<p>需要解决这么几个技术需求：</p>
+
+<ol>
+<li>Json的处理，FileBeat产生的In和Druid需要的Out都是Json形式。</li>
+<li>Kafka读写</li>
+<li>外部数据源，Mysql，Redis和MongoDB的读取</li>
+<li>逻辑处理</li>
+</ol>
+
+<h2 id="spark-or-scala">Spark or Scala</h2>
+
+<p>所谓的Spark，即Spark Structured Streaming，所谓的Scala是Scala based on Play Framework
+优先考虑的是Spark（Spark Structured Streaming），因为Spark可以做流处理和即席查询，某种程度上可以复用很多逻辑，并且可以接入Hive-serde表，与无缝与Hive切换。</p>
+
+<h3 id="技术需求">技术需求</h3>
+
+<ul>
+<li>Json
+
+<ul>
+<li>Spark：问题不大，但需要调研，Scala貌似没什么好用的Json库</li>
+<li>Scala：Play自带Json库</li>
+</ul></li>
+<li>Kafka
+
+<ul>
+<li>Spark：官方提供有类库，但是屏蔽的细节太多了。现在项目内没人清楚DStream/Spark.readStream是怎么个机制</li>
+<li>Scala：Kafka官方的Client是Java的，Akka Stream有对应的封装。如果不能用，解决起来也比较方便</li>
+</ul></li>
+<li>外部DB
+
+<ul>
+<li>Spark：问题不大，需要调研如果精细的控制Partiton与连接之间的关系，还有Lookup问题</li>
+<li>Scala：Scala有各种Reactive的驱动</li>
+</ul></li>
+</ul>
+
+<h3 id="非技术需求">非技术需求</h3>
+
+<ul>
+<li>监控&amp;日志
+
+<ul>
+<li>用Spark的话，现有公司/阿里云的各种基础设施很难用的上</li>
+</ul></li>
+<li>补数，关键是对Kafka的Offset做精细的控制
+
+<ul>
+<li>搜了一下，Spark这块放到Checkpoint了</li>
+</ul></li>
+<li>TroubleShooting
+
+<ul>
+<li>Spark：？？？公司现在并没有用Spark跑大规模的应用</li>
+<li>Scala：Akka这块</li>
+</ul></li>
+</ul>
+
+<h2 id="结论">结论</h2>
+
+<p>所谓Spark的优势：
+1. 以RDD/DataFrame/SQL形式提供的对数据处理的DSL，虽然比Hive效率更高，可以和Scala程序同时工作
+2. 横向扩展以及容错
+3. Broadcast/Accumulator原语
+4. 可以有效利用HDFS对应的计算资源，并且做为一个Unified的平台，理论上可以重用很多逻辑</p>
+
+<p>Spark的问题：
+1. Structured Streaming API 不稳定，我自己测试发现有Job莫名奇妙不运行的情况。
+2. 任务调度和执行都是黑盒</p>
+
+<p>Spark并不是银弹，更倾向于用纯Java应用来做。Spark的优势在一个纯Transform的应用里面发挥不出来（上面三点：1显然不如直接写程序，对于2瓶颈在Kafka，3引入Redis可以解决类似问题。
+）。后续可以研究一下Kafka Streams。</p>
+
+	</div>
+  <footer class="article-footer clearfix">
+  
+
+<div class="article-tags">
+  <span></span>
+  
+  <a href="https://lawulu.github.io/tags/spark">spark</a>
+  
+  <a href="https://lawulu.github.io/tags/scala">scala</a>
+  
+  <a href="https://lawulu.github.io/tags/streaming">streaming</a>
+  
+</div>
+
+
+
+
+
+<div class="article-categories">
+  <span></span>
+  
+  <a class="article-category-link" href="https://lawulu.github.io/categories/%E4%BF%83%E8%BF%9B%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%8F%91%E5%B1%95%E8%A1%8C%E5%8A%A8%E7%BA%B2%E8%A6%81">促进大数据发展行动纲要</a>
+  
+</div>
+
+
+
+  <div class="article-share" id="share">
+    <div data-url="https://lawulu.github.io/post/Transform%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B%EF%BC%9ASpark%20Vs%20Scala/" data-title="Transform技术选型：Spark Structured Streaming Vs Pure Scala" data-tsina="" class="share clearfix">
     </div>
+  </div>
+</footer>
+
+	</article>
+  
+<section class="comment">
+  <div class="ds-thread" data-thread-key="https://lawulu.github.io/post/Transform%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B%EF%BC%9ASpark%20Vs%20Scala/"
+   data-title="Transform技术选型：Spark Structured Streaming Vs Pure Scala" data-url="https://lawulu.github.io/post/Transform%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B%EF%BC%9ASpark%20Vs%20Scala/"></div>
+</section>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"inza9hi"};
+(function() {
+  var ds = document.createElement('script');
+  ds.type = 'text/javascript';ds.async = true;
+  ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+  ds.charset = 'UTF-8';
+  (document.getElementsByTagName('head')[0]
+  || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+</script>
+
+
+
+
+</div>
+
     <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
 <div id="asidepart">
 <div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
@@ -480,10 +644,6 @@
 
 
   
-<div class="rsspart">
-  <a rel="nofollow" href="https://lawulu.github.io/feed.xml" type="application/rss+xml" target="_blank">RSS 订阅</a>
-</div>
-
 
 </aside>
 </div>
@@ -578,6 +738,38 @@ $(document).ready(function(){
 
 <script type="text/javascript">
 $(document).ready(function(){
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){
   var $this = $('.share'),
       url = $this.attr('data-url'),
       encodedUrl = encodeURIComponent(url),
@@ -604,6 +796,27 @@ $(document).ready(function(){
 });
 </script>
 
+
+<link rel="stylesheet" href="https://lawulu.github.io/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="https://lawulu.github.io/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+});
+</script>
 
 
 

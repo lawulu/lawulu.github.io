@@ -2,11 +2,11 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>璐濒殉漂流记</title>
-    <link>https://lawulu.github.io/tags/scala/feed/index.xml</link>
+    <link>https://lawulu.github.io/tags/streaming/feed/index.xml</link>
     <description>Recent content on 璐濒殉漂流记</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <atom:link href="https://lawulu.github.io/tags/scala/feed/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://lawulu.github.io/tags/streaming/feed/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Transform技术选型：Spark Structured Streaming Vs Pure Scala</title>
@@ -99,24 +99,6 @@
 
 &lt;p&gt;Spark并不是银弹，更倾向于用纯Java应用来做。Spark的优势在一个纯Transform的应用里面发挥不出来（上面三点：1显然不如直接写程序，对于2瓶颈在Kafka，3引入Redis可以解决类似问题。
 ）。后续可以研究一下Kafka Streams。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>使用Scala开发自己的DSL</title>
-      <link>https://lawulu.github.io/post/%E4%BD%BF%E7%94%A8Scala%E5%BC%80%E5%8F%91%E8%87%AA%E5%B7%B1%E7%9A%84DSL/</link>
-      <pubDate>Thu, 20 Apr 2017 00:00:00 +0000</pubDate>
-      
-      <guid>https://lawulu.github.io/post/%E4%BD%BF%E7%94%A8Scala%E5%BC%80%E5%8F%91%E8%87%AA%E5%B7%B1%E7%9A%84DSL/</guid>
-      <description>
-
-&lt;h2 id=&#34;scala为什么适合dsl&#34;&gt;Scala为什么适合DSL&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;对于一个参数的方法可以省略点/括号&lt;/li&gt;
-&lt;li&gt;可以使用特殊符号做方法&lt;/li&gt;
-&lt;li&gt;函数式编程&lt;/li&gt;
-&lt;/ul&gt;
 </description>
     </item>
     

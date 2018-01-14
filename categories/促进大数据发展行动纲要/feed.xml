@@ -403,6 +403,237 @@ where id &amp;lt; &#39;ad_request_2017-09-27T08:00:00.000+08:00_2017-09-28T08:00
     </item>
     
     <item>
+      <title>SparkML-卡方检验</title>
+      <link>https://lawulu.github.io/post/SparkML-%E5%8D%A1%E6%96%B9%E6%A3%80%E9%AA%8C/</link>
+      <pubDate>Tue, 18 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://lawulu.github.io/post/SparkML-%E5%8D%A1%E6%96%B9%E6%A3%80%E9%AA%8C/</guid>
+      <description>
+
+&lt;h2 id=&#34;spark例子&#34;&gt;Spark例子&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;//org.apache.spark.examples.ml.ChiSquareTestExample
+
+val data = Seq(
+      (0.0, Vectors.dense(0.5, 10.0)),
+      (0.0, Vectors.dense(1.5, 20.0)),
+      (1.0, Vectors.dense(1.5, 30.0)),
+      (0.0, Vectors.dense(3.5, 30.0)),
+      (0.0, Vectors.dense(3.5, 40.0)),
+      (1.0, Vectors.dense(3.5, 40.0))
+    )
+
+val df = data.toDF(&amp;quot;label&amp;quot;, &amp;quot;features&amp;quot;)
+val chi = ChiSquareTest.test(df, &amp;quot;features&amp;quot;, &amp;quot;label&amp;quot;).head
+println(&amp;quot;pValues = &amp;quot; + chi.getAs[Vector](0))
+println(&amp;quot;degreesOfFreedom = &amp;quot; + chi.getSeq[Int](1).mkString(&amp;quot;[&amp;quot;, &amp;quot;,&amp;quot;, &amp;quot;]&amp;quot;))
+println(&amp;quot;statistics = &amp;quot; + chi.getAs[Vector](2))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;结果：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;chi: org.apache.spark.sql.Row = [[0.6872892787909721,0.6822703303362126],WrappedArray(2, 3),[0.75,1.5]]
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;因为Vector是两列，所以结果也是两列，即，需要检测每一个维度和label相关性。&lt;/p&gt;
+
+&lt;h2 id=&#34;几个概念&#34;&gt;几个概念&lt;/h2&gt;
+
+&lt;h3 id=&#34;卡方检验&#34;&gt;卡方检验&lt;/h3&gt;
+
+&lt;p&gt;卡方检验两个用途：
+- 检测一批样本是否符合某种分布(Goodeness of Fit Test)
+- 检测两个变量是否独立（本文着重讨论相关性检测）&lt;/p&gt;
+
+&lt;h3 id=&#34;卡方检验计算过程&#34;&gt;卡方检验计算过程&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;假设变量是独立的，没有相关性&lt;/li&gt;
+&lt;li&gt;计算统计值：按照假设计算理论值，然后计算每一项的sqrt（实际值-理论值）/理论值，把所有的项都加起来&lt;/li&gt;
+&lt;li&gt;自由度，（distinctCount(label)-1）x（distinctCount(feature)-1），可以用(行-1) x(列-1)来理解&lt;/li&gt;
+&lt;li&gt;查表求p值，如果p值非常小（例如0.05），就拒绝假设&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;计算过程&#34;&gt;计算过程&lt;/h2&gt;
+
+&lt;h3 id=&#34;举个例子&#34;&gt;举个例子&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt; val data = Seq(
+      (0.0, Vectors.dense(0.5)),
+      (0.0, Vectors.dense(0.5)),
+      (1.0, Vectors.dense(1.5)),
+      (0.0, Vectors.dense(3.5)),
+      (2.0, Vectors.dense(3.5)),
+      (1.0, Vectors.dense(1.5))
+    )
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;统计每个维度取值和label的对应关系&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;label&lt;/th&gt;
+&lt;th&gt;0.5&lt;/th&gt;
+&lt;th&gt;1.5&lt;/th&gt;
+&lt;th&gt;3.5&lt;/th&gt;
+&lt;th&gt;总数&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;3&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;合计&lt;/td&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;6&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;假设该维度和label是独立的，那么无论维度如何取值，取到的label为0的数目都是总数的1/2。&lt;/p&gt;
+
+&lt;p&gt;维度取0.5的一共为2个，则理论上，0.5对应的label数目为1. 做出对应的表格如下：&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;label&lt;/th&gt;
+&lt;th&gt;0.5&lt;/th&gt;
+&lt;th&gt;1.5&lt;/th&gt;
+&lt;th&gt;3.5&lt;/th&gt;
+&lt;th&gt;总数&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;3&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;&lt;sup&gt;2&lt;/sup&gt;&amp;frasl;&lt;sub&gt;3&lt;/sub&gt;&lt;/td&gt;
+&lt;td&gt;&lt;sup&gt;2&lt;/sup&gt;&amp;frasl;&lt;sub&gt;3&lt;/sub&gt;&lt;/td&gt;
+&lt;td&gt;&lt;sup&gt;2&lt;/sup&gt;&amp;frasl;&lt;sub&gt;3&lt;/sub&gt;&lt;/td&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;&lt;sup&gt;1&lt;/sup&gt;&amp;frasl;&lt;sub&gt;3&lt;/sub&gt;&lt;/td&gt;
+&lt;td&gt;&lt;sup&gt;1&lt;/sup&gt;&amp;frasl;&lt;sub&gt;3&lt;/sub&gt;&lt;/td&gt;
+&lt;td&gt;&lt;sup&gt;1&lt;/sup&gt;&amp;frasl;&lt;sub&gt;3&lt;/sub&gt;&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;合计&lt;/td&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;6&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;计算统计值为8&lt;/p&gt;
+
+&lt;h3 id=&#34;验证统计值&#34;&gt;验证统计值&lt;/h3&gt;
+
+&lt;p&gt;用Python验证：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;
+from scipy import stats
+import fractions
+obs = [2, 0, 1, 0, 2, 0, 0, 0, 1]
+obs = [2, 0, 1, 0, 2, 0]
+# 0, 2, 0, 0, 0, 1]
+exp = [1, 1, 1,
+       fractions.Fraction(2,3),fractions.Fraction(2,3), fractions.Fraction(2,3),
+       fractions.Fraction(1,3),fractions.Fraction(1,3), fractions.Fraction(1,3)]
+
+exp = [1, 1, 1,
+       fractions.Fraction(2,3),fractions.Fraction(2,3), fractions.Fraction(2,3)]
+       # fractions.Fraction(1,3),fractions.Fraction(1,3), fractions.Fraction(1,3)]
+
+print(stats.chisquare(obs, f_exp = exp ,ddof=4))
+
+
+obs= [0, 0, 1]
+#exp= [fractions.Fraction(1,3),fractions.Fraction(1,3), fractions.Fraction(1,3)]
+exp= [0.33333, 0.33333, 0.33333]
+
+print(stats.chisquare(obs, f_exp = exp ))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;结果正确&lt;/p&gt;
+
+&lt;h3 id=&#34;计算p值&#34;&gt;计算P值&lt;/h3&gt;
+
+&lt;p&gt;//TODO&lt;/p&gt;
+
+&lt;h3 id=&#34;验证结论&#34;&gt;验证结论&lt;/h3&gt;
+
+&lt;p&gt;假设数据是这样子的：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; val data = Seq(
+      (0.0, Vectors.dense(0.5)),
+      (0.0, Vectors.dense(0.5)),
+      (1.0, Vectors.dense(1.5)),
+      (1.0, Vectors.dense(1.5)),
+      (2.0, Vectors.dense(3.5)),
+      (2.0, Vectors.dense(3.5))
+    )
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;肉眼可查，feature和label相关性很高。计算的P值为&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;pValues = [0.017351265236664526]
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这样理解：假如feature和label独立不相关的，只有1.7%的可能取到像样本这样的数据。所以假设不成立。&lt;/p&gt;
+
+&lt;p&gt;参考：
+&lt;a href=&#34;http://www.statisticshowto.com/probability-and-statistics/chi-square/&#34;&gt;http://www.statisticshowto.com/probability-and-statistics/chi-square/&lt;/a&gt;
+&lt;a href=&#34;https://segmentfault.com/a/1190000003719712&#34;&gt;https://segmentfault.com/a/1190000003719712&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>元数据管理</title>
       <link>https://lawulu.github.io/post/%E5%85%83%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86/</link>
       <pubDate>Sun, 02 Apr 2017 00:00:00 +0000</pubDate>

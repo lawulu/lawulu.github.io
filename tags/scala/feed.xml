@@ -111,18 +111,33 @@
     <item>
       <title>使用Scala开发自己的DSL</title>
       <link>https://lawulu.github.io/post/%E4%BD%BF%E7%94%A8Scala%E5%BC%80%E5%8F%91%E8%87%AA%E5%B7%B1%E7%9A%84DSL/</link>
-      <pubDate>Thu, 20 Apr 2017 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 30 May 2017 00:00:00 +0000</pubDate>
       
       <guid>https://lawulu.github.io/post/%E4%BD%BF%E7%94%A8Scala%E5%BC%80%E5%8F%91%E8%87%AA%E5%B7%B1%E7%9A%84DSL/</guid>
       <description>
 
-&lt;h2 id=&#34;scala为什么适合dsl&#34;&gt;Scala为什么适合DSL&lt;/h2&gt;
+&lt;h2 id=&#34;缘起&#34;&gt;缘起&lt;/h2&gt;
+
+&lt;p&gt;yinwang写了一篇关于DSL的文章：&lt;a href=&#34;http://www.yinwang.org/blog-cn/2017/05/25/dsl&#34;&gt;http://www.yinwang.org/blog-cn/2017/05/25/dsl&lt;/a&gt;
+，认为大部分情况是不需要DSL的：&lt;code&gt;绝大部分 DSL 的存在，都是因为设计它的人没有理解问题的本质，没有意识到这问题其实不需要通过设计新的语言来解决。&lt;/code&gt;并且拿出Scala来当做反例，从某种程度上，我很支持yinwang的观点，因为最近看Scala的一些项目，经常会有一些奇怪的操作符，极大的增加了阅读的难度。&lt;/p&gt;
+
+&lt;p&gt;yinwang认为因为大家已经熟悉了本语言，所以对库函数的认知会更容易一些。比如，大部分程序员已经习惯了C语言设定的DSL（比如for if while)，所以跨语言学习会减少了很多的难度。&lt;/p&gt;
+
+&lt;p&gt;虽然yinwang反对，我们还是要好奇一下，怎么用Scala开发自己的DSL&lt;/p&gt;
+
+&lt;h2 id=&#34;实现dsl&#34;&gt;实现DSL&lt;/h2&gt;
+
+&lt;h3 id=&#34;scala为什么适合dsl&#34;&gt;Scala为什么适合DSL&lt;/h3&gt;
 
 &lt;ul&gt;
 &lt;li&gt;对于一个参数的方法可以省略点/括号&lt;/li&gt;
 &lt;li&gt;可以使用特殊符号做方法&lt;/li&gt;
 &lt;li&gt;函数式编程&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;h3 id=&#34;定义&#34;&gt;定义&lt;/h3&gt;
+
+&lt;p&gt;参考：&lt;a href=&#34;https://dzone.com/articles/rolling-your-own-dsl-in-scala&#34;&gt;https://dzone.com/articles/rolling-your-own-dsl-in-scala&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     

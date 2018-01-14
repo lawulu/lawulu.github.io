@@ -85,6 +85,18 @@
 
       
       
+      <h2 id="2017-04">2017-04</h2>
+      
+      <section class="post" itemscope itemprop="blogPost">
+    <a href="https://lawulu.github.io/post/SparkML-%E5%8D%A1%E6%96%B9%E6%A3%80%E9%AA%8C/" title="SparkML-卡方检验" itemprop="url">
+    <h1 itemprop="name">SparkML-卡方检验</h1>
+    <p itemprop="description">Spark例子 //org.apache.spark.examples.ml.ChiSquareTestExample val data = Seq( (0.0, Vectors.dense(0.5, 10.0)), (0.0, Vectors.dense(1.5, 20.0)), (1.0, Vectors.dense(1.5, 30.0)), (0.0, Vectors.dense(3.5, 30.0)), (0.0, Vectors.dense(3.5, 40.0)), (1.0, Vectors.dense(3.5, 40.0)) ) val df = data.toDF(&quot;label&quot;, &quot;features&quot;) val chi = ChiSquareTest.test(df, &quot;features&quot;, &quot;label&quot;).head println(&quot;pValues = &quot; + chi.getAs[Vector](0)) println(&quot;degreesOfFreedom = &quot; + chi.getSeq[Int](1).mkString(&quot;[&quot;, &quot;,&quot;, &quot;]&quot;)) println(&quot;statistics = &quot; + chi.getAs[Vector](2)) 结果： chi: org.apache.spark.sql.Row = [[0.6872892787909721,0.6822703303362126],WrappedArray(2, 3),[0.75,1.5]] 因为V</p>
+    <time datetime="2017-04-18 00:00:00 &#43;0000 UTC" itemprop="datePublished">2017年04月18日</time>
+  </a>
+</section>
+
+      
+      
       <h2 id="2017-02">2017-02</h2>
       
       <section class="post" itemscope itemprop="blogPost">
@@ -114,7 +126,7 @@
     
     <li><a href="https://lawulu.github.io/categories/%e4%bb%a5%e5%be%b7%e6%9c%8d%e4%ba%ba" title="以德服人">以德服人<sup>3</sup></a></li>
     
-    <li><a href="https://lawulu.github.io/categories/%e4%bf%83%e8%bf%9b%e5%a4%a7%e6%95%b0%e6%8d%ae%e5%8f%91%e5%b1%95%e8%a1%8c%e5%8a%a8%e7%ba%b2%e8%a6%81" title="促进大数据发展行动纲要">促进大数据发展行动纲要<sup>13</sup></a></li>
+    <li><a href="https://lawulu.github.io/categories/%e4%bf%83%e8%bf%9b%e5%a4%a7%e6%95%b0%e6%8d%ae%e5%8f%91%e5%b1%95%e8%a1%8c%e5%8a%a8%e7%ba%b2%e8%a6%81" title="促进大数据发展行动纲要">促进大数据发展行动纲要<sup>14</sup></a></li>
     
     <li><a href="https://lawulu.github.io/categories/%e7%88%86%e6%a0%88%e5%9f%ba%e7%ba%bf%e5%99%a8" title="爆栈基线器">爆栈基线器<sup>13</sup></a></li>
     
@@ -183,7 +195,7 @@
       
 			<li><a href="https://lawulu.github.io/tags/math" title="math">math<sup>2</sup></a></li>
       
-			<li><a href="https://lawulu.github.io/tags/ml" title="ml">ml<sup>2</sup></a></li>
+			<li><a href="https://lawulu.github.io/tags/ml" title="ml">ml<sup>3</sup></a></li>
       
 			<li><a href="https://lawulu.github.io/tags/mysql" title="mysql">mysql<sup>1</sup></a></li>
       
@@ -205,7 +217,7 @@
       
 			<li><a href="https://lawulu.github.io/tags/solr" title="solr">solr<sup>1</sup></a></li>
       
-			<li><a href="https://lawulu.github.io/tags/spark" title="spark">spark<sup>3</sup></a></li>
+			<li><a href="https://lawulu.github.io/tags/spark" title="spark">spark<sup>4</sup></a></li>
       
 			<li><a href="https://lawulu.github.io/tags/spring" title="spring">spring<sup>1</sup></a></li>
       
@@ -266,6 +278,11 @@
       
       <li class="archive-list-item">
         <a class="archive-list-link" href="https://lawulu.github.io/post/#2017-06">2017年06月</a><span class="archive-list-count">2</span>
+      </li>
+      
+      
+      <li class="archive-list-item">
+        <a class="archive-list-link" href="https://lawulu.github.io/post/#2017-05">2017年05月</a><span class="archive-list-count">1</span>
       </li>
       
       

@@ -5,10 +5,10 @@
   <title>使用Scala开发自己的DSL - 璐濒殉漂流记</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
   
-  <meta name="description" content="Scala为什么适合DSL 对于一个参数的方法可以省略点/括号 可以使用特殊符号做方法 函数式编程">
+  <meta name="description" content="缘起 yinwang写了一篇关于DSL的文章：http://www.yinwang.org/blog-cn/2017/05/25/dsl ，认为">
   <meta name="author" content="Lawulu">
   <meta itemprop="name" content="使用Scala开发自己的DSL - 璐濒殉漂流记">
-  <meta itemprop="description" content="Scala为什么适合DSL 对于一个参数的方法可以省略点/括号 可以使用特殊符号做方法 函数式编程">
+  <meta itemprop="description" content="缘起 yinwang写了一篇关于DSL的文章：http://www.yinwang.org/blog-cn/2017/05/25/dsl ，认为">
   <meta itemprop="image" content="https://lawulu.github.io/img/author.jpg">
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@inza9hi" />
@@ -71,7 +71,7 @@
     
   </p>
   <p class="article-time">
-    <time datetime="2017-04-20 00:00:00 &#43;0000 UTC" itemprop="datePublished">2017年04月20日</time>
+    <time datetime="2017-05-30 00:00:00 &#43;0000 UTC" itemprop="datePublished">2017年05月30日</time>
   </p>
 </header>
 
@@ -83,7 +83,12 @@
 <ul>
 <li>
 <ul>
+<li><a href="#缘起">缘起</a></li>
+<li><a href="#实现dsl">实现DSL</a>
+<ul>
 <li><a href="#scala为什么适合dsl">Scala为什么适合DSL</a></li>
+<li><a href="#定义">定义</a></li>
+</ul></li>
 </ul></li>
 </ul>
 </nav>
@@ -91,13 +96,28 @@
     
     
 
-<h2 id="scala为什么适合dsl">Scala为什么适合DSL</h2>
+<h2 id="缘起">缘起</h2>
+
+<p>yinwang写了一篇关于DSL的文章：<a href="http://www.yinwang.org/blog-cn/2017/05/25/dsl">http://www.yinwang.org/blog-cn/2017/05/25/dsl</a>
+，认为大部分情况是不需要DSL的：<code>绝大部分 DSL 的存在，都是因为设计它的人没有理解问题的本质，没有意识到这问题其实不需要通过设计新的语言来解决。</code>并且拿出Scala来当做反例，从某种程度上，我很支持yinwang的观点，因为最近看Scala的一些项目，经常会有一些奇怪的操作符，极大的增加了阅读的难度。</p>
+
+<p>yinwang认为因为大家已经熟悉了本语言，所以对库函数的认知会更容易一些。比如，大部分程序员已经习惯了C语言设定的DSL（比如for if while)，所以跨语言学习会减少了很多的难度。</p>
+
+<p>虽然yinwang反对，我们还是要好奇一下，怎么用Scala开发自己的DSL</p>
+
+<h2 id="实现dsl">实现DSL</h2>
+
+<h3 id="scala为什么适合dsl">Scala为什么适合DSL</h3>
 
 <ul>
 <li>对于一个参数的方法可以省略点/括号</li>
 <li>可以使用特殊符号做方法</li>
 <li>函数式编程</li>
 </ul>
+
+<h3 id="定义">定义</h3>
+
+<p>参考：<a href="https://dzone.com/articles/rolling-your-own-dsl-in-scala">https://dzone.com/articles/rolling-your-own-dsl-in-scala</a></p>
 
 	</div>
   <footer class="article-footer clearfix">
@@ -170,7 +190,7 @@ var duoshuoQuery = {short_name:"inza9hi"};
     
     <li><a href="https://lawulu.github.io/categories/%e4%bb%a5%e5%be%b7%e6%9c%8d%e4%ba%ba" title="以德服人">以德服人<sup>3</sup></a></li>
     
-    <li><a href="https://lawulu.github.io/categories/%e4%bf%83%e8%bf%9b%e5%a4%a7%e6%95%b0%e6%8d%ae%e5%8f%91%e5%b1%95%e8%a1%8c%e5%8a%a8%e7%ba%b2%e8%a6%81" title="促进大数据发展行动纲要">促进大数据发展行动纲要<sup>13</sup></a></li>
+    <li><a href="https://lawulu.github.io/categories/%e4%bf%83%e8%bf%9b%e5%a4%a7%e6%95%b0%e6%8d%ae%e5%8f%91%e5%b1%95%e8%a1%8c%e5%8a%a8%e7%ba%b2%e8%a6%81" title="促进大数据发展行动纲要">促进大数据发展行动纲要<sup>14</sup></a></li>
     
     <li><a href="https://lawulu.github.io/categories/%e7%88%86%e6%a0%88%e5%9f%ba%e7%ba%bf%e5%99%a8" title="爆栈基线器">爆栈基线器<sup>13</sup></a></li>
     
@@ -239,7 +259,7 @@ var duoshuoQuery = {short_name:"inza9hi"};
       
 			<li><a href="https://lawulu.github.io/tags/math" title="math">math<sup>2</sup></a></li>
       
-			<li><a href="https://lawulu.github.io/tags/ml" title="ml">ml<sup>2</sup></a></li>
+			<li><a href="https://lawulu.github.io/tags/ml" title="ml">ml<sup>3</sup></a></li>
       
 			<li><a href="https://lawulu.github.io/tags/mysql" title="mysql">mysql<sup>1</sup></a></li>
       
@@ -261,7 +281,7 @@ var duoshuoQuery = {short_name:"inza9hi"};
       
 			<li><a href="https://lawulu.github.io/tags/solr" title="solr">solr<sup>1</sup></a></li>
       
-			<li><a href="https://lawulu.github.io/tags/spark" title="spark">spark<sup>3</sup></a></li>
+			<li><a href="https://lawulu.github.io/tags/spark" title="spark">spark<sup>4</sup></a></li>
       
 			<li><a href="https://lawulu.github.io/tags/spring" title="spring">spring<sup>1</sup></a></li>
       
@@ -322,6 +342,11 @@ var duoshuoQuery = {short_name:"inza9hi"};
       
       <li class="archive-list-item">
         <a class="archive-list-link" href="https://lawulu.github.io/post/#2017-06">2017年06月</a><span class="archive-list-count">2</span>
+      </li>
+      
+      
+      <li class="archive-list-item">
+        <a class="archive-list-link" href="https://lawulu.github.io/post/#2017-05">2017年05月</a><span class="archive-list-count">1</span>
       </li>
       
       
